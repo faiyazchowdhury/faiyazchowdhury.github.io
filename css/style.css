@@ -39,7 +39,7 @@ a:hover,a:focus,a:active {
 	outline:none!important;
 }
 p {
-	color:#8c9398;
+	color:#5C5C5C;
 	word-spacing:1px;
 	line-height:25px;
 	font-size:14px;
@@ -59,7 +59,7 @@ h2::after {
 }
 h6 {
 	font-size:15px;
-	color:#8c8c8c;
+	color:#4C4C4C;
 	text-transform:uppercase;
 	font-weight:bold;
 }
@@ -605,7 +605,7 @@ h1.arrow span {
 .about-text h1 {
 	text-transform:uppercase;
 	font-size:24px;
-	color: #8C8C8C;
+	color: #4C4C4C;
 }
 .color-bg h1.arrow span {
     color: #FFE800;
@@ -889,8 +889,8 @@ img.grayscale:hover {
 .weight-outline-btn {
 	display:inline-block;
 	padding:20px 30px;
-	color:#8C8C8C;
-	border:solid 1px #8C8C8C;
+	color:#4C4C4C;
+	border:solid 1px #4C4C4C;
 	text-transform:uppercase;
 	font-weight:bold;
 	letter-spacing:1px;
