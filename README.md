@@ -12,8 +12,9 @@ What I will do:
 - Put Music
 - Put Inventions
 - Put Perspecitivism
-- Put Main Values: Intrinsic Motivation, Love, Freedon, Positivity, Change, Imagination, Balance, Curiosity
+- Put Main Values: Intrinsic Motivation, Love, Freedom, Positivity, Change, Imagination, Balance, Curiosity, Minimalism, Non-Exhaustivity, Flexibility, Autonomy, Peace, Reason, Perspective
 - Cookbook
+- Favorite books, songs, reading list
 
 Inventions:
 - Folor Notation
