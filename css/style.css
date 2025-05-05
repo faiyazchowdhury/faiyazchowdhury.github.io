@@ -34,38 +34,38 @@ a {
 	outline:none!important;
 }
 a:hover,a:focus,a:active {
-	color:#0D0D0D;
+	color: #98D8C1;  /* Pastel green */
 	text-decoration:none;
 	outline:none!important;
 }
 p {
-	color:#5C5C5C;
+	color: #5C5C5C;
 	word-spacing:1px;
 	line-height:25px;
 	font-size:14px;
 }
 h2 {
 	font-size:15px;
-	color:#353535!important;
+	color: #7FB3D5 !important;  /* Pastel blue */
 	text-transform:uppercase;
 	font-weight:bold;
 }
 h2::after {
 	content:" ";
-	border:solid 1px #CCCCCC;
+	border:solid 1px #98D8C1;  /* Pastel green */
 	display:block;
 	width:65px;
 	margin:20px auto;
 }
 h6 {
 	font-size:15px;
-	color:#4C4C4C;
+	color: #7FB3D5;  /* Pastel blue */
 	text-transform:uppercase;
 	font-weight:bold;
 }
 h6::after {
 	content:" ";
-	border:solid 1px #CCCCCC;
+	border:solid 1px #98D8C1;  /* Pastel green */
 	display:block;
 	width:65px;
 	margin-top: 20px;
@@ -1264,4 +1264,35 @@ ul.slides li {
 	.subscribe {
 	    padding-bottom: 40px;
 	}
+}
+
+/* Fable specific styles */
+.fable-content {
+    background-color: #F5F5F5;  /* Light gray background */
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.fable-content h1 {
+    color: #7FB3D5;  /* Pastel blue */
+    margin-bottom: 1.5rem;
+}
+
+.fable-text p {
+    color: #5C5C5C;
+    margin-bottom: 1rem;
+}
+
+.back-link {
+    color: #7FB3D5;  /* Pastel blue */
+    display: inline-block;
+    margin-top: 2rem;
+    text-decoration: none;
+    border-bottom: 1px dashed #7FB3D5;
+}
+
+.back-link:hover {
+    color: #98D8C1;  /* Pastel green */
+    border-bottom-color: #98D8C1;
 }
