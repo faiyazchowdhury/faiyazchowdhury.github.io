@@ -25,7 +25,7 @@
 	Global Styles
 ========================================================================== */
 a {
-	color: #4346E0;
+	color: #7FB3D5;  /* Pastel blue */
 	-webkit-transition:all 0.5s;
 	-moz-transition:all 0.5s;
 	-o-transition:all 0.5s;
@@ -321,7 +321,7 @@ table {
 	padding:0;
 }
 .inner {
-	padding-top: 138px;
+	padding-top: 20px;
 }
 /* ==========================================================================Navigation========================================================================== */
 .menu-wrap a {
@@ -454,15 +454,15 @@ table {
 /* ==========================================================================Hero========================================================================== */
 .hero {
 	background: none;
-	padding:0px 0 100px 0;
-	height:auto;
+	padding: 20px 0 40px 0;
+	height: auto;
 	background-color: #FBFBFB;
 }
 .hero h1 {
-	font-size: 100px;
+	font-size: 60px;
 	margin: 0;
 	font-weight: 600;
-	line-height: 95px;
+	line-height: 65px;
 	text-transform: uppercase;
 }
 .hero h1 span {
@@ -474,7 +474,7 @@ table {
 	margin:0;
 	padding:0;
 	opacity:0.5;
-	color: #4346E0;
+	color: #7FB3D5;  /* Pastel blue */
 	letter-spacing: 18px;
 	line-height: 50px;
 	text-transform: uppercase;
@@ -483,6 +483,13 @@ table {
 	letter-spacing:1px;
 	color:#fff;
 	font-size: 15px;
+}
+.intro-text {
+	color: #5C5C5C;
+	font-size: 14px;
+	line-height: 1.6;
+	margin-bottom: 15px;
+	max-width: 100%;
 }
 /* Boucing Arrow Animation */
 @keyframes arrowbounce {
@@ -566,7 +573,7 @@ h1.arrow {
 	font-weight: bold;
 }
 h1.arrow span {
-    color: #4346E0;
+    color: #7FB3D5;  /* Pastel blue */
 }
 /* ==========================================================================About========================================================================== */
 .about-image {
@@ -577,11 +584,11 @@ h1.arrow span {
 	background-size:cover;
 }
 .color-bg {
-	background: #4346E0;
+	background: #7FB3D5;  /* Pastel blue */
 }
 
 .color-bg a {
-    color: #FFE800;
+    color: #98D8AA;  /* Pastel green */
 }
 .color-bg h6, .color-bg p {
     color: white;
@@ -595,7 +602,7 @@ h1.arrow span {
 }
 .color-bg .weight-outline-btn:hover {
   background: #FFF;
-  color: #4346E0;
+  color: #7FB3D5;  /* Pastel blue */
   border-color: rgba(0, 0, 0, 0);
 }
 .about-text {
@@ -607,36 +614,36 @@ h1.arrow span {
 	color: #4C4C4C;
 }
 .color-bg h1.arrow span {
-    color: #FFE800;
+    color: #98D8AA;  /* Pastel green */
 }
 .color-bg h1.arrow {
     color: #FFF;
 }
 /* ==========================================================================Services========================================================================== */
 .services {
-	margin-top:80px;
+	margin-top: 20px;
 	margin-bottom:40px;
 }
 .services .icon {
 	position:relative;
-	width:175px;
-	height:175px;
+	width: 120px;
+	height: 120px;
 	margin:0 auto;
 	text-align:center;
-	line-height:180px;
-	font-size:56px;
+	line-height:120px;
+	font-size:40px;
 	color:#fff;
 	border-radius:50%;
 	box-shadow:0 0 0 0 rgba(0,0,0,0.0);
-	margin-bottom:40px;
+	margin-bottom:20px;
 	-webkit-transition:all .3s ease-out;
 	transition:all .3s ease-out;
-	border: 1px solid #4346E0;
-	color: #4346E0;
+	border: 1px solid #7FB3D5;  /* Pastel blue */
+	color: #7FB3D5;  /* Pastel blue */
 }
 .services .item:hover .icon {
-	background: #4346E0;
-	border: 1px solid #4346E0;
+	background: #7FB3D5;  /* Pastel blue */
+	border: 1px solid #7FB3D5;  /* Pastel blue */
 }
 .services .item [class*=fa] {
 	-webkit-transition:all .3s ease-out;
@@ -648,6 +655,10 @@ h1.arrow span {
 	-webkit-transition:all .3s ease-out;
 	transition:all .3s ease-out;
 	color:#fff;
+}
+.services h2 {
+	font-size: 14px;
+	margin-top: 10px;
 }
 .features-wrapper {
 	margin:70px 0 0;
@@ -840,7 +851,7 @@ img.grayscale:hover {
 }
 .subscribe input[type=text] {
 	background-color:rgba(255,255,255,0.1);
-	border: solid 1px #FFE800;
+	border: solid 1px #98D8AA;  /* Pastel green */
 	padding:20px;
 	width:30%;
 	color:#808080;
@@ -850,10 +861,10 @@ img.grayscale:hover {
     outline: none;
 }
 .subscribe input[type=submit] {
-	background: #FFE800;
-	border: solid 1px #FFE800;
+	background: #98D8AA;  /* Pastel green */
+	border: solid 1px #98D8AA;  /* Pastel green */
 	padding:20px;
-	color: #4346E0;
+	color: #7FB3D5;  /* Pastel blue */
 	text-transform:uppercase;
 	letter-spacing:1px;
 	transition:all 0.5s ease;
@@ -862,28 +873,28 @@ img.grayscale:hover {
 	-o-transition:all 0.5s ease;
 }
 .subscribe input[type=submit]:hover {
-	background: rgba(255, 232, 0, 0.9);
-	border: solid 1px #FFE800;
-	color: #4346E0;
+	background: rgba(152, 216, 170, 0.9);  /* Pastel green with opacity */
+	border: solid 1px #98D8AA;  /* Pastel green */
+	color: #7FB3D5;  /* Pastel blue */
 }
 /* ==========================================================================CTA========================================================================== */
 .spacer-cta {
-	background-color: #4346E0;
+	background-color: #7FB3D5;  /* Pastel blue */
 	padding:70px 0;
 }
 .outline-btn {
 	display:inline-block;
 	padding:25px 40px;
-	color: #FFE801;
-	border: solid 1px #FFE801;
+	color: #98D8AA;  /* Pastel green */
+	border: solid 1px #98D8AA;  /* Pastel green */
 	text-transform:uppercase;
 	font-weight:bold;
 	letter-spacing:1px;
 }
 .outline-btn:hover,.outline-btn:focus {
-	color: #4346E0;
-	border: solid 1px #4346E0;
-	background: #FFE801;
+	color: #7FB3D5;  /* Pastel blue */
+	border: solid 1px #7FB3D5;  /* Pastel blue */
+	background: #98D8AA;  /* Pastel green */
 }
 .weight-outline-btn {
 	display:inline-block;
@@ -917,7 +928,7 @@ ul.social-buttons li:last-child {
 .social-btn {
 	width:40px;
 	height:40px;
-	background: #4346E0;
+	background: #7FB3D5;  /* Pastel blue */
 	display:inline-block;
 	color:#fff;
 	font-size:17px;
@@ -925,8 +936,8 @@ ul.social-buttons li:last-child {
 	text-align:center;
 }
 .social-btn:hover,.social-btn:focus {
-	background: rgba(255, 232, 0, 1);
-	color: #4346E0;
+	background: #98D8AA;  /* Pastel green */
+	color: #7FB3D5;  /* Pastel blue */
 }
 .social {
 	margin-top: 25px
@@ -935,10 +946,10 @@ ul.social-buttons li:last-child {
 .up-btn {
 	width:55px;
 	height:55px;
-	background: rgba(255, 232, 1, 0.9);
+	background: rgba(152, 216, 170, 0.9);  /* Pastel green with opacity */
 	display:block;
 	margin:0 auto;
-	color: #4346E0;
+	color: #7FB3D5;  /* Pastel blue */
 	font-size:18px;
 	line-height:52px;
 	text-align:center;
@@ -950,8 +961,8 @@ ul.social-buttons li:last-child {
 	margin-right:auto;
 }
 .up-btn:hover,up-btn:focus {
-	color: black;
-	background: #FFE800;
+	color: #7FB3D5;  /* Pastel blue */
+	background: #98D8AA;  /* Pastel green */
 }
 .contact-details {
 	margin:70px 0;
@@ -1005,7 +1016,7 @@ ul.social-buttons li:last-child {
 }
 
 .btn-send{
-	background:#4346E0;
+	background:#7FB3D5;  /* Pastel blue */
 	color: white;
 	transition: all 0.4s;
 	border-radius: 0;
@@ -1013,8 +1024,8 @@ ul.social-buttons li:last-child {
 }
 
 .btn-send:hover{
-	background: #FFE800;
-	color: #4346E0
+	background: #98D8AA;  /* Pastel green */
+	color: #7FB3D5;  /* Pastel blue */
 }
 
 button,button:focus,button:hover,button:active {
@@ -1229,6 +1240,18 @@ ul.slides li {
 
 	.show-menu .menu-wrap {
 		height: 100%;
+	}
+
+	.hero h1 {
+		font-size: 40px;
+		line-height: 45px;
+	}
+	
+	.services .icon {
+		width: 100px;
+		height: 100px;
+		line-height: 100px;
+		font-size: 30px;
 	}
 }
 
