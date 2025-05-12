@@ -16,6 +16,48 @@
   <link href="css/style.css" rel="stylesheet">
   <!-- Custom Favicon -->
   <link href="img/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+  <style>
+    .video-container {
+      position: relative;
+      width: 100%;
+      padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+      height: 0;
+      overflow: hidden;
+      background: #000;
+      margin-bottom: 20px;
+    }
+    
+    .video-container iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
+    .video-placeholder {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #f0f0f0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .video-placeholder i {
+      font-size: 48px;
+      color: #666;
+    }
+
+    .piece-item {
+      margin-bottom: 40px;
+    }
+  </style>
 </head>
 
 <body id="top">
@@ -130,10 +172,12 @@
           <div class="music-card">
             <h2>My Music</h2>
             <div class="music-links">
-              <iframe width="100%" height="315" src="https://www.youtube.com/embed/MJ3oCtdD6s4" title="Katerina's Waltz"
-                frameborder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowfullscreen></iframe>
+              <div class="video-container">
+                <iframe data-src="MJ3oCtdD6s4" title="Katerina's Waltz" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                <div class="video-placeholder">
+                  <i class="fas fa-play-circle"></i>
+                </div>
+              </div>
               <a href="https://open.spotify.com/artist/3htYgReeKdnC4tBuVmHv1o?si=Px-8de17QZSWi-FKD2Mgeg" target="_blank"
                 class="music-platform spotify">
                 <i class="fab fa-spotify"></i> Spotify
@@ -193,109 +237,121 @@
               <div class="piece-item">
                 <h3>Wild Mountain Thyme</h3>
                 <p class="composer">Traditional Irish/Scottish Folk Song. Arranged by Scott Tennant</p>
-                <div class="piece-links">
-                  <iframe width="560" height="315" src="https://www.youtube.com/embed/B2U_wn3S0fE" frameborder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowfullscreen></iframe>
+                <div class="video-container">
+                  <iframe data-src="B2U_wn3S0fE" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                  <div class="video-placeholder">
+                    <i class="fas fa-play-circle"></i>
+                  </div>
                 </div>
               </div>
               <div class="piece-item">
                 <h3>Lady Daydream (Flower OST)</h3>
                 <p class="composer">Vincent Diamante</p>
-                <div class="piece-links">
-                  <iframe width="560" height="315" src="https://www.youtube.com/embed/t-gXQqtjBjU" frameborder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowfullscreen></iframe>
+                <div class="video-container">
+                  <iframe data-src="t-gXQqtjBjU" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                  <div class="video-placeholder">
+                    <i class="fas fa-play-circle"></i>
+                  </div>
                 </div>
               </div>
               <div class="piece-item">
                 <h3>Cullare la Tempesta</h3>
                 <p class="composer">Scott Ouellette</p>
-                <div class="piece-links">
-                  <iframe width="560" height="315" src="https://www.youtube.com/embed/sqsmDwL6v2w" frameborder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowfullscreen></iframe>
+                <div class="video-container">
+                  <iframe data-src="sqsmDwL6v2w" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                  <div class="video-placeholder">
+                    <i class="fas fa-play-circle"></i>
+                  </div>
                 </div>
               </div>
               <div class="piece-item">
                 <h3>Dolomiti Dance</h3>
                 <p class="composer">Ralph Towner</p>
-                <div class="piece-links">
-                  <iframe width="560" height="315" src="https://www.youtube.com/embed/fTZeZcWA88k" frameborder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowfullscreen></iframe>
+                <div class="video-container">
+                  <iframe data-src="fTZeZcWA88k" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                  <div class="video-placeholder">
+                    <i class="fas fa-play-circle"></i>
+                  </div>
                 </div>
               </div>
               <div class="piece-item">
                 <h3>Bannered Mare (Skyrim OST)</h3>
                 <p class="composer">Jeremy Soule</p>
-                <div class="piece-links">
-                  <iframe width="560" height="315" src="https://www.youtube.com/embed/2XtvRB1mMWo" frameborder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowfullscreen></iframe>
+                <div class="video-container">
+                  <iframe data-src="2XtvRB1mMWo" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                  <div class="video-placeholder">
+                    <i class="fas fa-play-circle"></i>
+                  </div>
                 </div>
               </div>
               <div class="piece-item">
                 <h3>The Last of Us OST</h3>
                 <p class="composer">João Pernambuco</p>
-                <div class="piece-links">
-                  <iframe width="560" height="315" src="https://www.youtube.com/embed/8SWhBsbxmpk" frameborder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowfullscreen></iframe>
+                <div class="video-container">
+                  <iframe data-src="8SWhBsbxmpk" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                  <div class="video-placeholder">
+                    <i class="fas fa-play-circle"></i>
+                  </div>
                 </div>
               </div>
               <div class="piece-item">
                 <h3>Concerting Hobbits (Lord of the Rings OST)</h3>
                 <p class="composer">Howard Shore</p>
-                <div class="piece-links">
-                  <iframe width="560" height="315" src="https://www.youtube.com/embed/1ZYwuqCMXBM" frameborder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowfullscreen></iframe>
+                <div class="video-container">
+                  <iframe data-src="1ZYwuqCMXBM" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                  <div class="video-placeholder">
+                    <i class="fas fa-play-circle"></i>
+                  </div>
                 </div>
               </div>
               <div class="piece-item">
                 <h3>Sons de Carrilhoes</h3>
                 <p class="composer">João Pernambuco</p>
-                <div class="piece-links">
-                  <iframe width="560" height="315" src="https://www.youtube.com/embed/1KO0rkOAiig" frameborder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowfullscreen></iframe>
+                <div class="video-container">
+                  <iframe data-src="1KO0rkOAiig" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                  <div class="video-placeholder">
+                    <i class="fas fa-play-circle"></i>
+                  </div>
                 </div>
               </div>
               <div class="piece-item">
                 <h3>Julia Florida (Performed by Taso Comanescu)</h3>
                 <p class="composer">Agustín Barrios</p>
-                <div class="piece-links">
-                  <iframe width="560" height="315" src="https://www.youtube.com/embed/bEgeuuZUJLo" frameborder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowfullscreen></iframe>
+                <div class="video-container">
+                  <iframe data-src="bEgeuuZUJLo" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                  <div class="video-placeholder">
+                    <i class="fas fa-play-circle"></i>
+                  </div>
                 </div>
               </div>
               <div class="piece-item">
                 <h3>Howl's Moving Castle</h3>
                 <p class="composer">Joe Hisaishi</p>
-                <div class="piece-links">
-                  <iframe width="560" height="315" src="https://www.youtube.com/embed/LZjkKjj0VEs" frameborder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowfullscreen></iframe>
+                <div class="video-container">
+                  <iframe data-src="LZjkKjj0VEs" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                  <div class="video-placeholder">
+                    <i class="fas fa-play-circle"></i>
+                  </div>
                 </div>
               </div>
               <div class="piece-item">
                 <h3>Los Sueños</h3>
                 <p class="composer">Astor Piazzolla</p>
-                <div class="piece-links">
-                  <iframe width="560" height="315" src="https://www.youtube.com/embed/EPoaaRD6h7s" frameborder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowfullscreen></iframe>
+                <div class="video-container">
+                  <iframe data-src="EPoaaRD6h7s" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                  <div class="video-placeholder">
+                    <i class="fas fa-play-circle"></i>
+                  </div>
                 </div>
               </div>
               <div class="piece-item">
                 <h3>Gran Vals</h3>
                 <p class="composer">Francisco Tarrega</p>
-                <div class="piece-links">
-                  <iframe width="560" height="315" src="https://www.youtube.com/embed/r79PDtIE4xw" frameborder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowfullscreen></iframe>
+                <div class="video-container">
+                  <iframe data-src="r79PDtIE4xw" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                  <div class="video-placeholder">
+                    <i class="fas fa-play-circle"></i>
+                  </div>
                 </div>
               </div>
             </div>
@@ -311,128 +367,142 @@
               <div class="piece-item">
                 <h3>Liebestraum No. 3 (Love Dream)</h3>
                 <p class="composer">Liszt</p>
-                <div class="piece-links">
-                  <iframe width="560" height="315" src="https://www.youtube.com/embed/MBOa-2b4uQQ" frameborder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowfullscreen></iframe>
+                <div class="video-container">
+                  <iframe data-src="MBOa-2b4uQQ" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                  <div class="video-placeholder">
+                    <i class="fas fa-play-circle"></i>
+                  </div>
                 </div>
               </div>
               <div class="piece-item">
                 <h3>Raindrop Prelude (Op. 28 No. 15)</h3>
                 <p class="composer">Chopin</p>
-                <div class="piece-links">
-                  <iframe width="560" height="315" src="https://www.youtube.com/embed/HVau-JRGirg" frameborder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowfullscreen></iframe>
+                <div class="video-container">
+                  <iframe data-src="HVau-JRGirg" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                  <div class="video-placeholder">
+                    <i class="fas fa-play-circle"></i>
+                  </div>
                 </div>
               </div>
               <div class="piece-item">
                 <h3>Moment Musicaux No. 3</h3>
                 <p class="composer">Schubert</p>
-                <div class="piece-links">
-                  <iframe width="560" height="315" src="https://www.youtube.com/embed/t0A3zvqUZuw" frameborder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowfullscreen></iframe>
+                <div class="video-container">
+                  <iframe data-src="t0A3zvqUZuw" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                  <div class="video-placeholder">
+                    <i class="fas fa-play-circle"></i>
+                  </div>
                 </div>
               </div>
               <div class="piece-item">
                 <h3>Dolly's Dreaming and Awakening</h3>
                 <p class="composer">Oesten</p>
-                <div class="piece-links">
-                  <iframe width="560" height="315" src="https://www.youtube.com/embed/9fIGIlbuZqs" frameborder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowfullscreen></iframe>
+                <div class="video-container">
+                  <iframe data-src="9fIGIlbuZqs" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                  <div class="video-placeholder">
+                    <i class="fas fa-play-circle"></i>
+                  </div>
                 </div>
               </div>
               <div class="piece-item">
                 <h3>La Priere D'un Vierge (The Maiden's Prayer)</h3>
                 <p class="composer">Badarzewska</p>
-                <div class="piece-links">
-                  <iframe width="560" height="315" src="https://www.youtube.com/embed/t0A3zvqUZuw" frameborder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowfullscreen></iframe>
+                <div class="video-container">
+                  <iframe data-src="t0A3zvqUZuw" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                  <div class="video-placeholder">
+                    <i class="fas fa-play-circle"></i>
+                  </div>
                 </div>
               </div>
               <div class="piece-item">
                 <h3>Howl's Moving Castle</h3>
                 <p class="composer">Hisaishi</p>
-                <div class="piece-links">
-                  <iframe width="560" height="315" src="https://www.youtube.com/embed/9qS68rkG334" frameborder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowfullscreen></iframe>
+                <div class="video-container">
+                  <iframe data-src="9qS68rkG334" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                  <div class="video-placeholder">
+                    <i class="fas fa-play-circle"></i>
+                  </div>
                 </div>
               </div>
               <div class="piece-item">
                 <h3>Ecruteak City (Pokemon GSC OST)</h3>
                 <p class="composer">Ichinose</p>
-                <div class="piece-links">
-                  <iframe width="560" height="315" src="https://www.youtube.com/embed/gIUE-851D9Q" frameborder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowfullscreen></iframe>
+                <div class="video-container">
+                  <iframe data-src="gIUE-851D9Q" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                  <div class="video-placeholder">
+                    <i class="fas fa-play-circle"></i>
+                  </div>
                 </div>
               </div>
               <div class="piece-item">
                 <h3>National Park (Pokemon GSC OST)</h3>
                 <p class="composer">Ichinose</p>
-                <div class="piece-links">
-                  <iframe width="560" height="315" src="https://www.youtube.com/embed/Hk8_NNnammE" frameborder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowfullscreen></iframe>
+                <div class="video-container">
+                  <iframe data-src="Hk8_NNnammE" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                  <div class="video-placeholder">
+                    <i class="fas fa-play-circle"></i>
+                  </div>
                 </div>
               </div>
             </div>
             <div class="piece-item">
               <h3>Verdenturf Town (Pokemon RSE OST)</h3>
               <p class="composer">Ichinose</p>
-              <div class="piece-links">
-                <iframe width="560" height="315" src="https://www.youtube.com/embed/CkarqAJ-lik" frameborder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowfullscreen></iframe>
+              <div class="video-container">
+                <iframe data-src="CkarqAJ-lik" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                <div class="video-placeholder">
+                  <i class="fas fa-play-circle"></i>
+                </div>
               </div>
             </div>
             <div class="piece-item">
               <h3>Canalave City (Pokémon DPP OST)</h3>
               <p class="composer">Ichinose</p>
-              <div class="piece-links">
-                <iframe width="560" height="315" src="https://www.youtube.com/embed/ZPFmZ1f_9x0" frameborder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowfullscreen></iframe>
+              <div class="video-container">
+                <iframe data-src="ZPFmZ1f_9x0" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                <div class="video-placeholder">
+                  <i class="fas fa-play-circle"></i>
+                </div>
               </div>
             </div>
             <div class="piece-item">
               <h3>Kiss the Rain</h3>
               <p class="composer">Yiruma</p>
-              <div class="piece-links">
-                <iframe width="560" height="315" src="https://www.youtube.com/embed/GJWU2Y_tGRk" frameborder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowfullscreen></iframe>
+              <div class="video-container">
+                <iframe data-src="GJWU2Y_tGRk" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                <div class="video-placeholder">
+                  <i class="fas fa-play-circle"></i>
+                </div>
               </div>
             </div>
             <div class="piece-item">
               <h3>Amelie | Comptine d'un autre été</h3>
               <p class="composer">Tiersen</p>
-              <div class="piece-links">
-                <iframe width="560" height="315" src="https://www.youtube.com/embed/EZUZKgAvLdQ" frameborder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowfullscreen></iframe>
+              <div class="video-container">
+                <iframe data-src="EZUZKgAvLdQ" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                <div class="video-placeholder">
+                  <i class="fas fa-play-circle"></i>
+                </div>
               </div>
             </div>
             <div class="piece-item">
               <h3>Nocturne in E Flat Major (Op. 9 No. 2)</h3>
               <p class="composer">Chopin</p>
-              <div class="piece-links">
-                <iframe width="560" height="315" src="https://www.youtube.com/embed/p29JUpsOSTE" frameborder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowfullscreen></iframe>
+              <div class="video-container">
+                <iframe data-src="p29JUpsOSTE" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                <div class="video-placeholder">
+                  <i class="fas fa-play-circle"></i>
+                </div>
               </div>
             </div>
             <div class="piece-item">
               <h3>The Entertainer</h3>
               <p class="composer">Joplin</p>
-              <div class="piece-links">
-                <iframe width="560" height="315" src="https://www.youtube.com/embed/TSoXBkF832I" frameborder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowfullscreen></iframe>
+              <div class="video-container">
+                <iframe data-src="TSoXBkF832I" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                <div class="video-placeholder">
+                  <i class="fas fa-play-circle"></i>
+                </div>
               </div>
             </div>
           </div>
@@ -471,6 +541,39 @@
   <!-- Theme JavaScript Core -->
   <script src="js/main.js"></script>
   <script src="js/script.js"></script>
+  <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Function to load YouTube video
+    function loadYouTubeVideo(container) {
+      const iframe = container.querySelector('iframe');
+      const placeholder = container.querySelector('.video-placeholder');
+      const videoId = iframe.getAttribute('data-src');
+      
+      if (videoId) {
+        iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=0&rel=0`;
+        placeholder.style.display = 'none';
+      }
+    }
+
+    // Intersection Observer for lazy loading
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          loadYouTubeVideo(entry.target);
+          observer.unobserve(entry.target);
+        }
+      });
+    }, {
+      rootMargin: '50px 0px',
+      threshold: 0.1
+    });
+
+    // Initialize all video containers
+    document.querySelectorAll('.video-container').forEach(container => {
+      observer.observe(container);
+    });
+  });
+  </script>
 </body>
 
 </html>
