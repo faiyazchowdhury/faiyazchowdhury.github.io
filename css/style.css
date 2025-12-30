@@ -1571,3 +1571,48 @@ ul.slides li {
         font-size: 1.2rem;
     }
 }
+
+/* Mobile/Desktop visibility */
+.mobile-only {
+    display: none;
+}
+
+.desktop-only {
+    display: block;
+}
+
+@media screen and (max-width: 767px) {
+    .mobile-only {
+        display: block;
+    }
+    
+    .desktop-only {
+        display: none;
+    }
+}
+
+/* PDF Button for mobile */
+.pdf-button {
+    display: inline-block;
+    padding: 15px 30px;
+    background-color: #7FB3D5;
+    color: white;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 1.1rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    border: none;
+}
+
+.pdf-button:hover {
+    background-color: #98D8AA;
+    color: white;
+    text-decoration: none;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.pdf-button i {
+    margin-right: 8px;
+}
