@@ -314,6 +314,21 @@ table {
 	-webkit-transform:translate(0,-15px);
 	-ms-transform:translate(0,-15px);
 }
+.book-container {
+    width: 100%;
+    height: 600px; /* Adjust this to fit your page layout */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f2f2f2; /* Light gray background for the viewer area */
+    overflow: hidden;
+    position: relative;
+}
+
+/* Optional: Add a shadow to the book for realism */
+.stf__wrapper {
+    box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+}
 .wrapper {
 	height:650px;
 }

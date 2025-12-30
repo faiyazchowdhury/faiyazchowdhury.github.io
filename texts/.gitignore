@@ -1,0 +1,15 @@
+# Ignore all files
+*
+
+# But not directories
+!*/
+
+# And not .tex files
+!*.tex
+
+# And not .pdf files
+!*.pdf
+
+# And not this .gitignore
+!.gitignore
+
