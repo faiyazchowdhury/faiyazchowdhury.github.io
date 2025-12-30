@@ -57,6 +57,39 @@
     .piece-item {
       margin-bottom: 40px;
     }
+
+    .instrument-menu {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .instrument-jump-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 24px;
+      background-color: #7FB3D5;
+      color: white;
+      border-radius: 25px;
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      border: none;
+    }
+
+    .instrument-jump-btn:hover {
+      background-color: #98D8AA;
+      color: white;
+      text-decoration: none;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+
+    .instrument-jump-btn i {
+      font-size: 1.1rem;
+    }
   </style>
 </head>
 
@@ -164,7 +197,20 @@
     </div>
   </section>
 
-  <section class="music-section section-padding">
+  <!-- Jump Menu -->
+  <div class="instrument-menu" style="text-align: center; padding: 20px 0; background-color: #f8f9fa;">
+    <a href="#my-music" class="instrument-jump-btn">
+      <i class="fas fa-headphones"></i> My Music
+    </a>
+    <a href="#guitar-section" class="instrument-jump-btn">
+      <i class="fas fa-guitar"></i> Guitar
+    </a>
+    <a href="#piano-section" class="instrument-jump-btn">
+      <i class="fas fa-music"></i> Piano
+    </a>
+  </div>
+
+  <section class="music-section section-padding" id="my-music">
     <div class="container">
       <div class="row">
         <div class="col-md-8 col-md-offset-2">
@@ -230,7 +276,7 @@
             these are performed by Alexandra Whittingham. I adore her!
           </p>
 
-          <div class="instrument-section">
+          <div class="instrument-section" id="guitar-section">
             <h2><i class="fas fa-guitar"></i> Classical Guitar</h2>
             <div class="piece-list">
               <div class="piece-item">
@@ -355,8 +401,8 @@
               </div>
             </div>
           </div>
-          <div class="instrument-section">
-            <h2><i class="fas fa-piano"></i> Piano</h2>
+          <div class="instrument-section" id="piano-section">
+            <h2><i class="fas fa-music"></i> Piano</h2>
             <p class="intro-text text-center">
               I don't like claiming to play the piano because it is downplaying people who are actually good at it. I
               just started off with sheet music, and just playing the notes, and with how difficult it is to play the
