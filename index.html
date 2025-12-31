@@ -16,6 +16,60 @@
   <link href="css/style.css" rel="stylesheet">
   <!-- Custom Favicon -->
   <link href="img/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+  <style>
+    .timeline-container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+    .timeline-explanation {
+      text-align: center;
+      color: #5C5C5C;
+      font-size: 16px;
+      margin-bottom: 30px;
+      font-style: italic;
+    }
+    .timeline {
+      position: relative;
+      padding-left: 30px;
+    }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 10px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: linear-gradient(to bottom, #7FB3D5, #98D8AA);
+    }
+    .timeline-item {
+      position: relative;
+      margin-bottom: 30px;
+      padding-left: 40px;
+    }
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -6px;
+      top: 5px;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: #7FB3D5;
+      border: 2px solid #fff;
+      box-shadow: 0 0 0 2px #7FB3D5;
+    }
+    .timeline-year {
+      font-weight: bold;
+      color: #7FB3D5;
+      font-size: 18px;
+      margin-bottom: 5px;
+    }
+    .timeline-location {
+      color: #5C5C5C;
+      font-size: 15px;
+    }
+  </style>
 </head>
 
 <body id="top">
@@ -99,6 +153,81 @@
       </div>
     </section>
   </header>
+
+  <section class="section-padding" style="background-color: #FBFBFB;">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="timeline-container">
+            <p class="timeline-explanation">Here's a timeline of my life. So much goes on, I feel like I'm losing my memory, so having this helps.</p>
+            <h2 style="text-align: center; color: #7FB3D5; margin-bottom: 30px;">Life History</h2>
+            <div class="timeline">
+              <div class="timeline-item">
+                <div class="timeline-year">1995</div>
+                <div class="timeline-location">Belgium</div>
+              </div>
+              <div class="timeline-item">
+                <div class="timeline-year">1997</div>
+                <div class="timeline-location">China (Daycare)</div>
+              </div>
+              <div class="timeline-item">
+                <div class="timeline-year">1999</div>
+                <div class="timeline-location">China (Indian Embassy School)</div>
+              </div>
+              <div class="timeline-item">
+                <div class="timeline-year">2001</div>
+                <div class="timeline-location">Bangladesh</div>
+              </div>
+              <div class="timeline-item">
+                <div class="timeline-year">2004</div>
+                <div class="timeline-location">England</div>
+              </div>
+              <div class="timeline-item">
+                <div class="timeline-year">2006</div>
+                <div class="timeline-location">Bangladesh</div>
+              </div>
+              <div class="timeline-item">
+                <div class="timeline-year">2009</div>
+                <div class="timeline-location">New York</div>
+              </div>
+              <div class="timeline-item">
+                <div class="timeline-year">2012</div>
+                <div class="timeline-location">Mauritius</div>
+              </div>
+              <div class="timeline-item">
+                <div class="timeline-year">2014</div>
+                <div class="timeline-location">Georgia Tech Undergrad</div>
+              </div>
+              <div class="timeline-item">
+                <div class="timeline-year">2019</div>
+                <div class="timeline-location">Masters</div>
+              </div>
+              <div class="timeline-item">
+                <div class="timeline-year">2020</div>
+                <div class="timeline-location">CCF</div>
+              </div>
+              <div class="timeline-item">
+                <div class="timeline-year">2021</div>
+                <div class="timeline-location">Boston &amp; Berkshire Grey</div>
+              </div>
+              <div class="timeline-item">
+                <div class="timeline-year">2022</div>
+                <div class="timeline-location">Atlanta &amp; OMP</div>
+              </div>
+              <div class="timeline-item">
+                <div class="timeline-year">2023</div>
+                <div class="timeline-location">Mableton &amp; OMP</div>
+              </div>
+              <div class="timeline-item">
+                <div class="timeline-year">2025</div>
+                <div class="timeline-location">Atlanta &amp; OMP</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <footer>
     <div class="container">
