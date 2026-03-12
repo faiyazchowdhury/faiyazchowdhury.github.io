@@ -144,6 +144,12 @@
                 </p>
               </div>
             </li>
+            <li>
+              <h4>Saturation Control — a model-based control system for modelling how people choose actions to satisfy their emotions.</h4>
+              <p style="color: #5C5C5C; margin-top: 8px;">
+                <a href="https://github.com/faiyazchowdhury/sat-control/tree/master/MATLAB" target="_blank">View on GitHub <i class="fab fa-github"></i></a>
+              </p>
+            </li>
           </ul>
         </div>
       </div>
@@ -158,24 +164,6 @@
           <ul class="invention-list">
             <li>
               <h4>Iris, a platform to share and view google/instagram/twitter/etc feeds to the world, to defeat echo chambers</h4>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="projects section-padding" id="future-research">
-    <div class="container">
-      <div class="row">
-        <div class="col-md-8 col-md-offset-2">
-          <h2 class="text-center">Future Research</h2>
-          <ul class="invention-list">
-            <li>
-              <h4>Reasonism: assigning value to truth with set-valued logic as a set "reasons", to create a framework for paraconsistent logic. Will publish to Journal of Logic and Computation.</h4>
-            </li>
-            <li>
-              <h4>Saturation Control, a model-based control system for modelling how people choose actions to satisfy their emotions.</h4>
             </li>
           </ul>
         </div>
@@ -218,6 +206,33 @@
                 </ul>
 
                 <p><strong>Mediary ecosystem:</strong> Third-party validators could let users subscribe to validation engines (e.g., "Scientific Consensus Validator" that dims non-academic sources). Truth mediated by trust in institutions.</p>
+              </div>
+            </li>
+            <li>
+              <div class="completed-item" style="margin-bottom: 30px;">
+                <h4>Reasonism</h4>
+                <p class="text-center" style="font-style: italic; margin-bottom: 20px;">A framework for paraconsistent logic that assigns value to truth using set-valued logic—where truth is a set of "reasons."</p>
+
+                <h5 style="color: #7FB3D5; font-size: 14px; margin-top: 20px;">The Idea</h5>
+                <p>Truth is not assigned true/false values but rather a set of "reasons." The negation of a set may be empty or contain elements. Some reasons can be generated from a set being empty or not empty.</p>
+
+                <p><strong>Basic rules:</strong></p>
+                <ul style="color: #5C5C5C; margin-left: 20px;">
+                  <li>Once a reason exists in the set, it cannot be removed.</li>
+                  <li>Some reasons can be generated from a set being empty, or not empty.</li>
+                </ul>
+
+                <p><strong>Self-referential example:</strong> "This Reason is empty." We keep a set for "This Reason is empty" and another for "That Reason is not empty." At first the reason is empty, so it generates a reason that goes back to itself. Then it's no longer empty. "That reason is not empty" gets filled because it sees "This reason is empty" is not empty. Both sets stabilize with one element each—and the process terminates. No infinite loop. Unlike "This statement is false," this framework terminates: one reason for being empty, one for being not empty.</p>
+
+                <h5 style="color: #7FB3D5; font-size: 14px; margin-top: 24px;">Application in Boolean circuits</h5>
+                <ul style="color: #5C5C5C; margin-left: 20px;">
+                  <li><strong>AND gate:</strong> If reasons for being false are empty → output is the union of reasons for being true. Else → union of reasons for being false.</li>
+                  <li><strong>OR gate:</strong> If reasons for being true are empty → output is the union of reasons for being false. Else → union of reasons for being true.</li>
+                </ul>
+                <p>Using this for circuits, one can immediately know <em>why</em> a boolean output has the value it has.</p>
+
+                <h5 style="color: #7FB3D5; font-size: 14px; margin-top: 24px;">Why it won't work (in the current world)</h5>
+                <p>Philosophically, it might be a powerful step toward epistemology—but calculating truth this way would be extremely costly. Perhaps worth researching. Will publish to Journal of Logic and Computation.</p>
               </div>
             </li>
           </ul>
