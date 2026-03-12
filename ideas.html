@@ -101,21 +101,6 @@
     </section>
   </header>
 
-  <section class="intro text-center section-padding color-bg" id="about">
-    <div class="container">
-      <div class="row">
-        <div class="col-md-8 col-md-offset-2 wp1">
-          <h1 class="arrow">Why inventor?</h1>
-        </div>
-        <div class="col-md-12">
-          <div class="intro-text" style="color: #4682B4; background: rgba(255,255,255,0.8); padding: 20px; border-radius: 10px; text-align: left;">
-            <p style="color: #333;">Well, I've always wanted to make people happy. Being an inventor was the most efficient way I thought that would be possible</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
   <section class="projects section-padding" id="current-work">
     <div class="container">
       <div class="row">
@@ -138,7 +123,7 @@
           <h2 class="text-center">Completed Ideas</h2>
           <ul class="research-list">
             <li>
-              <h4>Enharmonic Multisets and Hidden Triads/ A Cyclical Scale Transformation from Lydian to Pentatonic. Submitted to Journal of Music Theory.</h4>
+              <h4>Enharmonic Multisets and Hidden Triads/ A Cyclical Scale Transformation from Lydian to Pentatonic. Submitted to <a href="https://www.jstor.org/stable/10.5758/jmt.112.1.0017" target="_blank">Journal of Music Theory</a>.</h4>
             </li>
             <li>
               <h4>Color Coding Sheetmusic in MuseScore (Look at <a href="files/Katerina's Waltz.pdf" target="_blank">Katerina's Waltz PDF</a> for example)</h4>
@@ -165,23 +150,75 @@
     </div>
   </section>
 
-  <section class="projects section-padding" id="future-ideas">
+  <section class="projects section-padding" id="future-projects">
     <div class="container">
       <div class="row">
         <div class="col-md-8 col-md-offset-2">
-          <h2 class="text-center">Future Ideas</h2>
+          <h2 class="text-center">Future Projects</h2>
           <ul class="invention-list">
             <li>
-              <h4>Saturation Control, a model-based control system for modelling how people choose actions to satisfy their emotions.</h4>
+              <h4>Iris, a platform to share and view google/instagram/twitter/etc feeds to the world, to defeat echo chambers</h4>
             </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="projects section-padding" id="future-research">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+          <h2 class="text-center">Future Research</h2>
+          <ul class="invention-list">
             <li>
               <h4>Reasonism: assigning value to truth with set-valued logic as a set "reasons", to create a framework for paraconsistent logic. Will publish to Journal of Logic and Computation.</h4>
             </li>
             <li>
-              <h4>Iris, a platform to share and view google/instagram/twitter/etc feeds to the world, to defeat echo chambers</h4>
+              <h4>Saturation Control, a model-based control system for modelling how people choose actions to satisfy their emotions.</h4>
             </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="projects section-padding" id="in-a-perfect-world">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+          <h2 class="text-center">In a Perfect World</h2>
+          <p class="text-center">These ideas would have significant impact on the world, but they are too costly to implement in the current world.</p>
+          <ul class="invention-list">
             <li>
-              <h4>HyperSet, a way to track sources of information</h4>
+              <div class="completed-item" style="margin-bottom: 30px;">
+                <h4>HyperMap — a way to track sources of information</h4>
+                <p class="text-center" style="font-style: italic; margin-bottom: 20px;">A Chrome extension concept called HyperMap: a map of hyperlinks where each link carries a stance (n-dimensional vector, label, author) to trace information back to root sources.</p>
+
+                <h5 style="color: #7FB3D5; font-size: 14px; margin-top: 20px;">The Idea</h5>
+                <p>When you copy a hypermap and embed it in your text, that text becomes supported or opposed by your hypermap. You can merge hypermaps: pasting one onto your own merges the maps. Crucially, it's a single flat map—not a web. If site A has {1,2} and site B has {3,4}, site C copying from both gets {1,2,3,4}, not {A,B}. Everything goes straight to the root.</p>
+
+                <p><strong>Example:</strong> Text "Eggs are good for you" with embedded hypermap:</p>
+                <pre style="background: #f5f5f5; padding: 15px; border-radius: 6px; overflow-x: auto; font-size: 12px;"><code>{
+  "bbc.com/articles/eggs_increase_cholesterol": &lt;{-1,0,0}, "Eggs increase cholesterol", "bbc.com"&gt;,
+  "fda.gov/articles/eggs_protein": &lt;{1,0,0,0}, "Eggs give protein", "fda.gov"&gt;,
+  "webmd.com/articles/eggs_the_good_the_bad_the_ugly": &lt;{1,-1,0,0}, "Eggs give protein but also increase cholesterol", "webmd.com"&gt;
+}</code></pre>
+
+                <h5 style="color: #7FB3D5; font-size: 14px; margin-top: 24px;">Why it won't work (in the current world)</h5>
+                <p>An ambitious reimagining of citation and truth on the internet—flattening the citation graph eliminates the "broken telephone" effect. Visually representing debate as a color spectrum on the link itself is a strong UX concept.</p>
+
+                <p><strong>Technical architecture</strong> would need: (1) Data layer—inject <code>data-hypermap</code> into HTML; (2) Clipboard logic—intercept copy/paste to merge JSON; (3) Visual layer—parse vectors and apply CSS gradients for the spectrum.</p>
+
+                <p><strong>Key hurdles:</strong></p>
+                <ul style="color: #5C5C5C; margin-left: 20px;">
+                  <li><strong>Dimension alignment:</strong> Index 0 must mean the same thing to everyone. We'd need a centralized ontology or tagged system like <code>{"health": 1, "economy": -1}</code>.</li>
+                  <li><strong>Friction of creation:</strong> Writing is hard enough; manually building JSON maps with vector weights is prohibitive. Would need an intuitive UI (e.g., drop links + sliders).</li>
+                  <li><strong>Data bloat:</strong> 500 root sources = massive <code>data-hypermap</code> attributes; clipboard + platforms like Twitter strip custom HTML.</li>
+                </ul>
+
+                <p><strong>Mediary ecosystem:</strong> Third-party validators could let users subscribe to validation engines (e.g., "Scientific Consensus Validator" that dims non-academic sources). Truth mediated by trust in institutions.</p>
+              </div>
             </li>
           </ul>
         </div>
