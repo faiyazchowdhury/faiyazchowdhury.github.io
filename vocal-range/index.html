@@ -501,10 +501,12 @@
     function compute(v) {
       return SONGS.map(function (s) {
         var b = bestShift(s, v);
-        var shown = state.key === "best" ? (b === null ? 0 : b) : 0;
+        // No key fits: anchor the lowest note on the working bottom (D3 by default).
+        var fallback = b === null ? v.workLow - s.lo : null;
+        var shown = state.key === "best" ? (b === null ? fallback : b) : 0;
         var lo = s.lo + shown, hi = s.hi + shown;
         return {
-          s: s, best: b, shown: shown, lo: lo, hi: hi,
+          s: s, best: b, fallback: fallback, shown: shown, lo: lo, hi: hi,
           lvl: state.key === "best" && b === null ? 5 : level(lo, hi, v),
           origLvl: level(s.lo, s.hi, v)
         };
@@ -514,8 +516,10 @@
     function card(r, v, zoneHtml) {
       var s = r.s, col = "var(--l" + r.lvl + ")";
       var shiftHtml;
+      var rec = r.best === null ? r.fallback : r.best;
       if (r.best === null) {
-        shiftHtml = '<div class="shift"><span class="val" style="color:var(--l5)">—</span><span class="lbl">no key fits</span></div>';
+        shiftHtml = '<div class="shift' + (r.fallback === 0 ? " ok" : "") + '"><span class="val">' + (r.fallback === 0 ? "Original key" : signed(r.fallback)) +
+          '</span><span class="lbl">lowest note on ' + voice.workLow + " · no key fits</span></div>";
       } else if (r.best === 0) {
         shiftHtml = '<div class="shift ok"><span class="val">Original key</span><span class="lbl">no change</span></div>';
       } else {
@@ -528,8 +532,8 @@
         '<div class="best" style="' + span(r.lo, r.hi) + ";background:" + col + '"></div></div>';
 
       var rng = '<span class="mono">' + nm(s.lo) + "–" + nm(s.hi) + "</span>";
-      if (r.best !== null && r.best !== 0) {
-        rng += ' → <span class="mono">' + nm(s.lo + r.best) + "–" + nm(s.hi + r.best) + "</span>";
+      if (rec !== 0) {
+        rng += ' → <span class="mono">' + nm(s.lo + rec) + "–" + nm(s.hi + rec) + "</span>";
       }
       var pills = state.sort === "diff" ? "" : '<span class="pill"><i style="background:' + col + '"></i>' + LEVELS[r.lvl].name + "</span>";
       if (state.key === "best" && r.best !== 0 && r.best !== null && r.origLvl !== r.lvl) {
@@ -538,11 +542,11 @@
 
       // transposition table
       var cells = "";
-      var center = r.best === null ? 0 : r.best;
+      var center = rec;
       var from = Math.min(-3, center - 3), to = Math.max(3, center + 3);
       for (var t = from; t <= to; t++) {
         var lo = s.lo + t, hi = s.hi + t, L = level(lo, hi, v);
-        cells += '<div class="' + (t === r.best ? "rec" : "") + '" style="border-left-color:var(--l' + L + ')">' +
+        cells += '<div class="' + (t === rec ? "rec" : "") + '" style="border-left-color:var(--l' + L + ')">' +
           '<span class="s">' + (t === 0 ? "Orig" : signed(t)) + "</span>" +
           '<span class="r">' + nm(lo) + "–" + nm(hi) + "</span></div>";
       }
