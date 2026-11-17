@@ -12,9 +12,9 @@
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="Apps" />
-  <link rel="manifest" href="/manifest.webmanifest" />
-  <link rel="icon" href="/icon.svg" type="image/svg+xml" />
-  <link rel="apple-touch-icon" href="/icon-180.png" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" href="icon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="icon-180.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500&display=swap" rel="stylesheet" />
@@ -172,7 +172,7 @@
     <ul class="grid" id="grid"></ul>
   </main>
 
-  <script src="/apps.js"></script>
+  <script src="apps.js"></script>
   <script>
     (function () {
       var d = new Date();
@@ -200,7 +200,7 @@
         var li = document.createElement("li");
         var a = document.createElement("a");
         a.className = "app";
-        a.href = app.href || "/" + app.slug + "/";
+        a.href = app.href || app.slug + "/" + (location.protocol === "file:" ? "index.html" : "");
         a.style.setProperty("--i", i);
         if (app.blurb) a.title = app.blurb;
         a.setAttribute("aria-label", app.name + (app.blurb ? " — " + app.blurb : ""));
