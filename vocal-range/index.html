@@ -1,0 +1,670 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Vocal Range</title>
+  <meta name="description" content="Songs that fit my voice, ranked by difficulty, with the best transposition for each." />
+  <meta name="theme-color" content="#0b0b10" media="(prefers-color-scheme: dark)" />
+  <meta name="theme-color" content="#f4f1ea" media="(prefers-color-scheme: light)" />
+  <meta name="color-scheme" content="dark light" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Range" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0b0b10;
+      --surface: #15151c;
+      --surface-2: #1d1d26;
+      --fg: #f4f1ea;
+      --muted: rgba(244, 241, 234, 0.55);
+      --faint: rgba(244, 241, 234, 0.1);
+      --line: rgba(244, 241, 234, 0.08);
+      --zone-outer: rgba(244, 241, 234, 0.07);
+      --zone-work: rgba(244, 241, 234, 0.14);
+      --zone-ext: rgba(244, 241, 234, 0.05);
+      --l0: #5fd49a; --l1: #4fc3d6; --l2: #e8c55a; --l3: #f0904f; --l4: #e0607a; --l5: #7a7883;
+    }
+    @media (prefers-color-scheme: light) {
+      :root {
+        --bg: #f4f1ea;
+        --surface: #fffdf8;
+        --surface-2: #ece8de;
+        --fg: #17161c;
+        --muted: rgba(23, 22, 28, 0.58);
+        --faint: rgba(23, 22, 28, 0.1);
+        --line: rgba(23, 22, 28, 0.08);
+        --zone-outer: rgba(23, 22, 28, 0.06);
+        --zone-work: rgba(23, 22, 28, 0.13);
+        --zone-ext: rgba(23, 22, 28, 0.035);
+        --l0: #1e9a62; --l1: #138aa0; --l2: #b58a10; --l3: #cf6420; --l4: #c4304f; --l5: #8a8794;
+      }
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--fg);
+      font-family: Inter, system-ui, -apple-system, sans-serif;
+      font-size: 15px;
+      -webkit-font-smoothing: antialiased;
+      -webkit-tap-highlight-color: transparent;
+      padding:
+        calc(env(safe-area-inset-top) + 18px)
+        calc(env(safe-area-inset-right) + 16px)
+        calc(env(safe-area-inset-bottom) + 48px)
+        calc(env(safe-area-inset-left) + 16px);
+    }
+    main { max-width: 720px; margin: 0 auto; }
+    button, select, input { font: inherit; color: inherit; }
+    .mono { font-family: "JetBrains Mono", ui-monospace, monospace; font-weight: 500; }
+
+    .back {
+      display: inline-flex; align-items: center; gap: 6px;
+      color: var(--muted); text-decoration: none; font-size: 14px; padding: 6px 0;
+    }
+    header { margin: 14px 0 18px; }
+    h1 {
+      font-family: "Instrument Serif", Georgia, serif;
+      font-weight: 400; font-size: clamp(40px, 11vw, 60px); line-height: 1;
+    }
+    h1 em { color: var(--muted); }
+    .voice {
+      margin-top: 12px; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px;
+      color: var(--muted); font-size: 14px;
+    }
+    .voice b { color: var(--fg); font-weight: 500; }
+    .linkbtn {
+      background: none; border: 0; color: var(--fg); text-decoration: underline;
+      text-underline-offset: 3px; text-decoration-color: var(--faint); cursor: pointer; padding: 4px 0;
+    }
+
+    /* settings */
+    .settings {
+      display: none; margin-top: 14px; background: var(--surface); border-radius: 16px; padding: 16px;
+      box-shadow: inset 0 0 0 1px var(--line);
+    }
+    .settings.open { display: block; }
+    .settings-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 14px; }
+    .settings label { display: flex; flex-direction: column; gap: 5px; font-size: 12.5px; color: var(--muted); }
+    .settings select {
+      background: var(--surface-2); border: 0; border-radius: 10px; padding: 10px 12px; font-size: 15px;
+      appearance: none; -webkit-appearance: none;
+    }
+    .settings .row { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-top: 14px; }
+    .check { display: flex !important; flex-direction: row !important; align-items: center; gap: 8px !important; color: var(--fg) !important; font-size: 14px !important; }
+    .check input { width: 18px; height: 18px; accent-color: var(--fg); }
+
+    /* controls */
+    .controls {
+      position: sticky; top: 0; z-index: 5;
+      margin: 0 -16px; padding: calc(env(safe-area-inset-top) + 10px) 16px 10px;
+      background: color-mix(in srgb, var(--bg) 88%, transparent);
+      backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+    }
+    .controls-inner { max-width: 720px; margin: 0 auto; display: flex; flex-direction: column; gap: 10px; }
+    .search {
+      width: 100%; background: var(--surface); border: 0; border-radius: 12px; padding: 11px 14px;
+      font-size: 16px; box-shadow: inset 0 0 0 1px var(--line); outline: none;
+    }
+    .search:focus { box-shadow: inset 0 0 0 1.5px var(--muted); }
+    .bar { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+    .seg { display: inline-flex; background: var(--surface); border-radius: 10px; padding: 3px; box-shadow: inset 0 0 0 1px var(--line); }
+    .seg button {
+      background: none; border: 0; padding: 7px 11px; border-radius: 8px; font-size: 13px; font-weight: 500;
+      color: var(--muted); cursor: pointer;
+    }
+    .seg button[aria-pressed="true"] { background: var(--surface-2); color: var(--fg); }
+    .pick {
+      background: var(--surface); border: 0; border-radius: 10px; padding: 9px 30px 9px 12px; font-size: 13px; font-weight: 500;
+      box-shadow: inset 0 0 0 1px var(--line); appearance: none; -webkit-appearance: none;
+      background-image: linear-gradient(45deg, transparent 50%, currentColor 50%), linear-gradient(135deg, currentColor 50%, transparent 50%);
+      background-position: right 14px center, right 9px center; background-size: 5px 5px; background-repeat: no-repeat;
+    }
+    .axis { position: relative; height: 14px; margin: 2px 15px 0; }
+    .axis span {
+      position: absolute; transform: translateX(-50%); font-size: 10.5px; color: var(--muted);
+      font-family: "JetBrains Mono", monospace;
+    }
+
+    /* list */
+    .group { margin-top: 22px; }
+    .group-head { display: flex; align-items: baseline; gap: 10px; margin: 0 2px 10px; }
+    .group-head h2 { font-family: "Instrument Serif", Georgia, serif; font-weight: 400; font-size: 26px; }
+    .group-head .dot { width: 9px; height: 9px; border-radius: 50%; align-self: center; }
+    .group-head .sub { color: var(--muted); font-size: 13px; }
+    .group-head .count { margin-left: auto; color: var(--muted); font-size: 13px; }
+
+    .songs { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+    .song {
+      background: var(--surface); border-radius: 14px; box-shadow: inset 0 0 0 1px var(--line);
+      overflow: hidden;
+    }
+    .song > button {
+      display: block; width: 100%; text-align: left; background: none; border: 0; padding: 13px 14px 12px; cursor: pointer;
+    }
+    .top { display: flex; align-items: flex-start; gap: 10px; }
+    .titles { flex: 1; min-width: 0; }
+    .name { font-weight: 600; font-size: 15.5px; line-height: 1.25; }
+    .artist { color: var(--muted); font-size: 13.5px; margin-top: 2px; }
+    .shift {
+      flex: none; text-align: right; display: flex; flex-direction: column; align-items: flex-end; gap: 2px;
+    }
+    .shift .val { font-family: "JetBrains Mono", monospace; font-weight: 500; font-size: 17px; line-height: 1.2; }
+    .shift .lbl { font-size: 11px; color: var(--muted); }
+    .shift.ok .val { color: var(--muted); font-size: 14px; font-family: Inter, sans-serif; font-weight: 500; }
+
+    .rbar { position: relative; height: 12px; margin: 12px 0 8px; }
+    .rbar .z { position: absolute; top: 0; bottom: 0; }
+    .rbar .z.outer { background: var(--zone-outer); border-radius: 3px; }
+    .rbar .z.work { background: var(--zone-work); border-radius: 3px; }
+    .rbar .z.ext { background: repeating-linear-gradient(135deg, var(--zone-ext) 0 4px, transparent 4px 8px); border-radius: 3px; }
+    .rbar .grid { position: absolute; top: -2px; bottom: -2px; width: 1px; background: var(--faint); }
+    .rbar .orig { position: absolute; top: 4px; height: 4px; border-radius: 2px; box-shadow: inset 0 0 0 1.5px var(--muted); opacity: .7; }
+    .rbar .best { position: absolute; top: 2px; height: 8px; border-radius: 4px; }
+
+    .ranges { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; font-size: 13px; color: var(--muted); }
+    .ranges .mono { color: var(--fg); font-size: 12.5px; }
+    .pill {
+      display: inline-flex; align-items: center; gap: 5px; font-size: 11.5px; font-weight: 600;
+      padding: 2px 8px 2px 7px; border-radius: 999px; background: var(--surface-2);
+    }
+    .pill i { width: 6px; height: 6px; border-radius: 50%; display: block; }
+    .has-note::after { content: "•"; margin-left: 4px; color: var(--l2); }
+
+    .detail { display: none; padding: 0 14px 14px; border-top: 1px solid var(--line); }
+    .song.open .detail { display: block; }
+    .note { font-size: 13.5px; line-height: 1.5; margin-top: 12px; color: var(--fg); }
+    .note b { font-weight: 600; }
+    .tx-title { font-size: 12px; color: var(--muted); margin: 14px 0 8px; text-transform: uppercase; letter-spacing: .08em; }
+    .tx { display: grid; grid-template-columns: repeat(auto-fill, minmax(92px, 1fr)); gap: 6px; }
+    .tx div {
+      background: var(--surface-2); border-radius: 10px; padding: 8px 9px; font-size: 12px; display: flex; flex-direction: column; gap: 3px;
+      border-left: 3px solid transparent;
+    }
+    .tx div.rec { box-shadow: inset 0 0 0 1.5px var(--fg); }
+    .tx .s { font-family: "JetBrains Mono", monospace; font-weight: 500; font-size: 13px; }
+    .tx .r { color: var(--muted); font-family: "JetBrains Mono", monospace; font-size: 11px; }
+
+    .empty { color: var(--muted); font-family: "Instrument Serif", serif; font-style: italic; font-size: 22px; margin-top: 30px; }
+
+    details.about { margin-top: 36px; background: var(--surface); border-radius: 14px; box-shadow: inset 0 0 0 1px var(--line); }
+    details.about summary { padding: 14px; cursor: pointer; font-weight: 500; list-style: none; }
+    details.about summary::-webkit-details-marker { display: none; }
+    details.about summary::after { content: "+"; float: right; color: var(--muted); }
+    details.about[open] summary::after { content: "–"; }
+    details.about .body { padding: 0 14px 14px; font-size: 13.5px; line-height: 1.55; color: var(--muted); }
+    details.about .body p + p, details.about .body ul { margin-top: 8px; }
+    details.about .body ul { padding-left: 18px; }
+    details.about b { color: var(--fg); font-weight: 600; }
+  </style>
+</head>
+<body>
+  <main>
+    <a class="back" href="../">← Apps</a>
+    <header>
+      <h1>Vocal range<em>.</em></h1>
+      <div class="voice">
+        <span id="voiceSummary"></span>
+        <button class="linkbtn" id="editBtn" aria-expanded="false">Edit my range</button>
+      </div>
+      <div class="settings" id="settings">
+        <div class="settings-grid" id="settingsGrid"></div>
+        <div class="row">
+          <label class="check"><input type="checkbox" id="useExt" /> Use upper extension</label>
+          <button class="linkbtn" id="resetBtn">Reset</button>
+        </div>
+      </div>
+    </header>
+  </main>
+
+  <div class="controls">
+    <div class="controls-inner">
+      <input class="search" id="q" type="search" placeholder="Search songs or artists" autocomplete="off" />
+      <div class="bar">
+        <div class="seg" role="group" aria-label="Key">
+          <button data-key="best" aria-pressed="true">Best key</button>
+          <button data-key="orig" aria-pressed="false">Original key</button>
+        </div>
+        <select class="pick" id="artist" aria-label="Artist"></select>
+        <select class="pick" id="sort" aria-label="Sort">
+          <option value="diff">By difficulty</option>
+          <option value="shift">By transpose</option>
+          <option value="name">A–Z</option>
+        </select>
+      </div>
+      <div class="axis" id="axis"></div>
+    </div>
+  </div>
+
+  <main>
+    <div id="list"></div>
+
+    <details class="about">
+      <summary>Reading the ranges</summary>
+      <div class="body">
+        <p>Ranges are <b>sounding pitch</b>, written in scientific pitch notation (middle C is C4). Sheet music writes male vocal parts an octave higher than they sound, so Musicnotes lists Iris as D4–A5 while this list says D3–A4.</p>
+        <p>Most ranges come from Singing Carrots' crowd-sourced data, so treat them as estimates and check important songs with a pitch monitor.</p>
+        <p><b>Bar key:</b> the light band is your full reach, the darker band is your working range, and the hatched part is your upper extension. The outlined line is the original key, and the solid bar is the key shown.</p>
+        <p><b>Best key</b> lowers the song until its peak is at your comfortable top, and raises songs that dip below your floor, while moving as little as possible.</p>
+      </div>
+    </details>
+    <details class="about">
+      <summary>Vocal health</summary>
+      <div class="body">
+        <p>If one song leaves you very tired, you're forcing the extreme notes. A song you can only finish once isn't really in your range.</p>
+        <p><b>Stop for the day if you notice:</b> hoarseness, a voice still tired the next morning, pain, high notes dropping out, constant throat-clearing, or creeping breathiness. See an ENT if hoarseness lasts more than two weeks.</p>
+        <ul>
+          <li>Warm up with straw phonation, lip trills, or humming on "ng" for 5–10 minutes.</li>
+          <li>Use less air pressure on high notes.</li>
+          <li>Narrow vowels as you go up ("ah" toward "uh", "ee" toward "ih").</li>
+          <li>Before starting a song, check the first note on a tuner that shows octave numbers.</li>
+        </ul>
+      </div>
+    </details>
+  </main>
+
+  <script>
+  (function () {
+    // ---------- Notes ----------
+    var NAMES = ["C", "C♯", "D", "D♯", "E", "F", "F♯", "G", "G♯", "A", "A♯", "B"];
+    var STEP = { C: 0, D: 2, E: 4, F: 5, G: 7, A: 9, B: 11 };
+    function midi(s) {
+      var m = /^([A-G])([#♯b♭]?)(\d)$/.exec(s.trim());
+      if (!m) throw new Error("Bad note " + s);
+      var acc = m[2] === "#" || m[2] === "♯" ? 1 : m[2] ? -1 : 0;
+      return (+m[3] + 1) * 12 + STEP[m[1]] + acc;
+    }
+    function nm(n) { return NAMES[((n % 12) + 12) % 12] + (Math.floor(n / 12) - 1); }
+    function signed(s) { return s > 0 ? "+" + s : s < 0 ? "−" + -s : "0"; }
+
+    // ---------- Songs (from my Vocal Range Song Guide) ----------
+    var RAW = [
+      ["Let Down", "Radiohead", "E3–D4"],
+      ["Knives Out", "Radiohead", "D♯3–D♯4"],
+      ["3x5", "John Mayer", "C3–D♯4"],
+      ["Politik", "Coldplay", "C3–D♯4"],
+      ["Colour Spectrum", "Coldplay", "F♯3–E4"],
+      ["Airbag", "Radiohead", "E3–E4"],
+      ["Lucky", "Radiohead", "E3–E4"],
+      ["Street Spirit", "Radiohead", "E3–E4"],
+      ["Galway Girl", "Ed Sheeran", "D3–E4"],
+      ["Subterranean Homesick Alien", "Radiohead", "D3–F4"],
+      ["Nina", "Ed Sheeran", "C♯3–F♯4"],
+      ["In My Place", "Coldplay", "C3–F♯4"],
+      ["Pyramid Song", "Radiohead", "F♯3–G4"],
+      ["Be Still My Beating Heart", "Sting", "E3–G4"],
+      ["Resistance", "Muse", "D3–G4"],
+      ["Undisclosed Desires", "Muse", "D3–G4"],
+      ["Every Teardrop Is a Waterfall", "Coldplay", "D3–G4"],
+      ["Lucky", "Jason Mraz & Colbie Caillat", "D3–G4", "C major. Mraz's part is D3–G4. Colbie sings about an octave above him (up to around G5). The Musicnotes figure of C4–B5 combines both singers and the backing vocals on one staff."],
+      ["Karma Police", "Radiohead", "C3–G4"],
+      ["Why Georgia", "John Mayer", "C3–G4"],
+      ["Say", "John Mayer", "C3–G4"],
+      ["New Light", "John Mayer", "C3–G4"],
+      ["Yellow", "Coldplay", "F♯3–G♯4"],
+      ["High & Dry", "Radiohead", "E3–G♯4"],
+      ["The Parting Glass", "Ed Sheeran", "E3–G♯4"],
+      ["Sugar", "Maroon 5", "C♯3–G♯4"],
+      ["Exogenesis: Symphony Part II", "Muse", "C3–G♯4"],
+      ["Somewhere Only We Know", "Keane", "A3–A4"],
+      ["Sunday Morning", "Maroon 5", "A3–A4"],
+      ["Thinking Out Loud", "Ed Sheeran", "A3–A4"],
+      ["The Tourist", "Radiohead", "G♯3–A4"],
+      ["Hysteria", "Muse", "G♯3–A4"],
+      ["Just", "Radiohead", "G3–A4"],
+      ["Sing for Absolution", "Muse", "G3–A4"],
+      ["Trouble", "Coldplay", "F♯3–A4"],
+      ["Lotus Flower", "Radiohead", "F3–A4"],
+      ["I Belong to You", "Muse", "F3–A4"],
+      ["Memories", "Maroon 5", "E3–A4"],
+      ["Tangled", "Maroon 5", "E3–A4"],
+      ["Heavy Cloud No Rain", "Sting", "E3–A4"],
+      ["They Dance Alone", "Sting", "E3–A4"],
+      ["The A Team", "Ed Sheeran", "E3–A4"],
+      ["In Repair", "John Mayer", "E3–A4"],
+      ["The Reason", "Hoobastank", "D♯3–A4"],
+      ["Iris", "Goo Goo Dolls", "D3–A4", "D major. The chorus is <b>not</b> an octave above the verse. It's a different, higher melody that peaks at A4 on \"don't\" in \"And I <i>don't</i> want the world to see me.\" The jump in effort is a register shift, not an octave. On a tired day, −2 (C major) gives C3–G4."],
+      ["How to Disappear Completely", "Radiohead", "C♯3–A4"],
+      ["The Hounds of Winter", "Sting", "C♯3–A4"],
+      ["All We Ever Do Is Say Goodbye", "John Mayer", "C♯3–A4"],
+      ["Birds", "Coldplay", "C3–A4"],
+      ["Such a Rush", "Coldplay", "C3–A4"],
+      ["Love Song for No One", "John Mayer", "C3–A4"],
+      ["Seven Days", "Sting", "G3–A♯4"],
+      ["Dead Inside", "Muse", "G3–A♯4"],
+      ["She Will Be Loved", "Maroon 5", "G3–A♯4"],
+      ["Russians", "Sting", "G3–A♯4"],
+      ["Sweetest Goodbye", "Maroon 5", "F♯3–A♯4"],
+      ["Burn the Witch", "Radiohead", "F♯3–A♯4"],
+      ["Charlie Brown", "Coldplay", "F3–A♯4"],
+      ["I'm a Mess", "Ed Sheeran", "D♯3–A♯4"],
+      ["Nothing 'Bout Me", "Sting", "D♯3–A♯4"],
+      ["Bloodstream", "Ed Sheeran", "C♯3–A♯4"],
+      ["Climbing Up the Walls", "Radiohead", "B3–B4"],
+      ["Lucky Strike", "Maroon 5", "A3–B4"],
+      ["Starlight", "Muse", "G♯3–B4"],
+      ["Must Get Out", "Maroon 5", "G3–B4"],
+      ["Reckoner", "Radiohead", "G3–B4"],
+      ["A Million Dreams", "The Greatest Showman", "G3–B4", "Range shown is the D major karaoke version for a male voice. The film version is in G major and is split between a child soprano, Hugh Jackman, and Michelle Williams."],
+      ["Nude", "Radiohead", "E3–B4"],
+      ["Sunburn", "Muse", "E3–B4"],
+      ["Brand New Day", "Sting", "E3–B4"],
+      ["Coming Back for You", "Maroon 5", "E3–B4"],
+      ["I Want It That Way", "Backstreet Boys", "E3–B4", "Fits, but the chorus sits on B4. Transposing down 2 semitones puts the top at A4."],
+      ["Rock Steady", "Sting", "D3–B4"],
+      ["Drunk", "Ed Sheeran", "D3–B4"],
+      ["You and Whose Army?", "Radiohead", "C♯3–B4"],
+      ["I Ran Away", "Coldplay", "C♯3–B4"],
+      ["This Love", "Maroon 5", "C3–B4"],
+      ["Myxomatosis", "Radiohead", "C3–B4"],
+      ["Stolen Car", "Sting", "C3–B4"],
+      ["Idioteque", "Radiohead", "A♯3–C5"],
+      ["Born in the '50s", "Sting", "A3–C5"],
+      ["Electioneering", "Radiohead", "F3–C5"],
+      ["House of Cards", "Radiohead", "F3–C5"],
+      ["Secret", "Maroon 5", "E3–C5"],
+      ["Misery", "Maroon 5", "E3–C5"],
+      ["Fun", "Coldplay", "E3–C5"],
+      ["Unintended", "Muse", "E3–C5"],
+      ["Map of the Problematique", "Muse", "D3–C5"],
+      ["Thought Contagion", "Muse", "D3–C5"],
+      ["Photograph", "Ed Sheeran", "C3–C5"],
+      ["Guiding Light", "Muse", "C3–C5"],
+      ["Tomorrow We'll See", "Sting", "C3–C5"],
+      ["Maps", "Maroon 5", "G♯3–C♯5"],
+      ["Harder to Breathe", "Maroon 5", "E3–C♯5"],
+      ["Orphans", "Coldplay", "E3–C♯5"],
+      ["My Funny Friend and Me", "Sting", "E3–C♯5"],
+      ["Shiver", "Maroon 5", "D3–C♯5"],
+      ["Supermarket Flowers", "Ed Sheeran", "C♯3–C♯5"],
+      ["Neon", "John Mayer", "C3–C♯5"],
+      ["Don't", "Ed Sheeran", "B2–E4"],
+      ["Who Says", "John Mayer", "E2–B3"],
+      ["Daughters", "John Mayer", "A2–E4"],
+      ["Edge of Desire", "John Mayer", "A2–F♯4"],
+      ["Clocks", "Coldplay", "A♯2–G♯4"],
+      ["Unnatural Selection", "Muse", "B2–A♯4"],
+      ["Fix You", "Coldplay", "A♯2–A♯4"],
+      ["Hymn for the Weekend", "Coldplay", "A♯2–A♯4"],
+      ["A Head Full of Dreams", "Coldplay", "B2–B4"],
+      ["Overpass Graffiti", "Ed Sheeran", "G4–A5", "Stays in the upper register the whole way through instead of climbing into it."],
+      ["Bad Habits", "Ed Sheeran", "G4–B5", "Stays in the upper register the whole way through instead of climbing into it."],
+      ["Shivers", "Ed Sheeran", "G4–B5", "Stays in the upper register the whole way through instead of climbing into it."],
+      ["Wake Up Call", "Maroon 5", "G4–B5", "Stays in the upper register the whole way through instead of climbing into it."],
+      ["Eyes Closed", "Ed Sheeran", "D4–A5"],
+      ["Lost", "Maroon 5", "D4–B♭5"],
+      ["ALL MY LOVE", "Coldplay", "B3–A5"],
+      ["Everglow", "Coldplay", "A2–B4"],
+      ["You Give Love a Bad Name", "Bon Jovi", "G2–A♯4", "The G2 may be a backing vocal or a single isolated note. Check the recording. If it's real, sing that note up an octave and the rest fits."],
+      ["Half of My Heart", "John Mayer", "F2–A4"],
+      ["No Surprises", "Radiohead", "A♯2–E5"],
+      ["Take on Me", "a-ha", "A2–E5", "Worth a try anyway. Transposing up 3 semitones to C major gives C3–G5, with the hook in the upper register the way Morten Harket sings it."],
+      ["This Cowboy Song", "Sting", "D3–A5"],
+      ["Paranoid Android", "Radiohead", "E2–C5"],
+      ["Great Indoors", "John Mayer", "C3–A5"],
+      ["Castle on the Hill", "Ed Sheeran", "A2–A5"]
+    ];
+    var SONGS = RAW.map(function (r, i) {
+      var p = r[2].split("–");
+      return { id: i, name: r[0], artist: r[1], lo: midi(p[0]), hi: midi(p[1]), note: r[3] || "" };
+    });
+
+    // ---------- Voice settings ----------
+    var DEFAULTS = { floor: "C3", workLow: "D3", comfy: "A4", workHigh: "B4", ceiling: "C5", extTop: "A5", useExt: false };
+    var FIELDS = [
+      ["floor", "Hard floor"],
+      ["workLow", "Working bottom"],
+      ["comfy", "Comfortable top"],
+      ["workHigh", "Working top"],
+      ["ceiling", "Ceiling"],
+      ["extTop", "Upper extension"]
+    ];
+    var STORE = "vocal-range:v1";
+    function load() {
+      try { var s = JSON.parse(localStorage.getItem(STORE) || "null"); if (s && s.voice) return s; } catch (e) {}
+      return null;
+    }
+    function save() {
+      try { localStorage.setItem(STORE, JSON.stringify({ voice: voice, key: state.key, sort: state.sort })); } catch (e) {}
+    }
+    var saved = load();
+    var voice = Object.assign({}, DEFAULTS, saved ? saved.voice : {});
+    var state = { key: (saved && saved.key) || "best", sort: (saved && saved.sort) || "diff", q: "", artist: "" };
+
+    function V() {
+      return {
+        floor: midi(voice.floor), workLow: midi(voice.workLow), comfy: midi(voice.comfy),
+        workHigh: midi(voice.workHigh), ceiling: midi(voice.ceiling), extTop: midi(voice.extTop), useExt: voice.useExt
+      };
+    }
+
+    // ---------- Difficulty model ----------
+    var LEVELS = [
+      { name: "Easy", sub: "peaks below your comfortable top" },
+      { name: "Comfortable", sub: "peaks at your comfortable top" },
+      { name: "Moderate", sub: "up to your working top" },
+      { name: "At the ceiling", sub: "into your chest/mix limit" },
+      { name: "Upper extension", sub: "needs notes above your ceiling" },
+      { name: "Won't fit", sub: "outside your range in this key" }
+    ];
+    function level(lo, hi, v) {
+      if (lo < v.floor) return 5;
+      if (hi < v.comfy) return 0;
+      if (hi <= v.comfy) return 1;
+      if (hi <= v.workHigh) return 2;
+      if (hi <= v.ceiling) return 3;
+      if (hi <= v.extTop) return 4;
+      return 5;
+    }
+    function feasible(lo, hi, v) {
+      return lo >= v.floor && hi <= (v.useExt ? v.extTop : v.ceiling);
+    }
+    function cost(lo, hi, s, v) {
+      return 3 * Math.max(0, hi - v.comfy) +
+             3 * Math.max(0, hi - v.workHigh) +
+             4 * Math.max(0, hi - v.ceiling) +
+             0.6 * Math.max(0, v.workLow - lo) +
+             0.75 * Math.abs(s);
+    }
+    function bestShift(song, v) {
+      var best = null, bc = Infinity;
+      for (var s = -12; s <= 12; s++) {
+        var lo = song.lo + s, hi = song.hi + s;
+        if (!feasible(lo, hi, v)) continue;
+        var c = cost(lo, hi, s, v);
+        if (c < bc - 1e-9 || (Math.abs(c - bc) < 1e-9 && Math.abs(s) < Math.abs(best))) { bc = c; best = s; }
+      }
+      return best; // null => no key fits
+    }
+
+    // ---------- Rendering ----------
+    var AX_LO = midi("E2") - 1, AX_HI = midi("C6") + 1;
+    function pct(n) { return ((n - AX_LO) / (AX_HI - AX_LO)) * 100; }
+    function span(a, b) { return "left:" + pct(a - 0.5) + "%;width:" + (pct(b + 0.5) - pct(a - 0.5)) + "%"; }
+    function esc(s) { return s.replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+
+    var listEl = document.getElementById("list");
+    var openIds = {};
+
+    function zones(v) {
+      var h = '<div class="z outer" style="' + span(v.floor, v.ceiling) + '"></div>' +
+              '<div class="z work" style="' + span(v.workLow, v.workHigh) + '"></div>';
+      if (v.extTop > v.ceiling) h += '<div class="z ext" style="' + span(v.ceiling + 1, v.extTop) + '"></div>';
+      ["C3", "C4", "C5"].forEach(function (c) { h += '<div class="grid" style="left:' + pct(midi(c)) + '%"></div>'; });
+      return h;
+    }
+
+    function compute(v) {
+      return SONGS.map(function (s) {
+        var b = bestShift(s, v);
+        var shown = state.key === "best" ? (b === null ? 0 : b) : 0;
+        var lo = s.lo + shown, hi = s.hi + shown;
+        return {
+          s: s, best: b, shown: shown, lo: lo, hi: hi,
+          lvl: state.key === "best" && b === null ? 5 : level(lo, hi, v),
+          origLvl: level(s.lo, s.hi, v)
+        };
+      });
+    }
+
+    function card(r, v, zoneHtml) {
+      var s = r.s, col = "var(--l" + r.lvl + ")";
+      var shiftHtml;
+      if (r.best === null) {
+        shiftHtml = '<div class="shift"><span class="val" style="color:var(--l5)">—</span><span class="lbl">no key fits</span></div>';
+      } else if (r.best === 0) {
+        shiftHtml = '<div class="shift ok"><span class="val">Original key</span><span class="lbl">no change</span></div>';
+      } else {
+        shiftHtml = '<div class="shift"><span class="val">' + signed(r.best) + '</span><span class="lbl">' +
+          (Math.abs(r.best) === 12 ? (r.best < 0 ? "down an octave" : "up an octave") : (r.best < 0 ? "down " : "up ") + Math.abs(r.best) + " semitone" + (Math.abs(r.best) === 1 ? "" : "s")) + "</span></div>";
+      }
+
+      var bar = '<div class="rbar">' + zoneHtml +
+        '<div class="orig" style="' + span(s.lo, s.hi) + '"></div>' +
+        '<div class="best" style="' + span(r.lo, r.hi) + ";background:" + col + '"></div></div>';
+
+      var rng = '<span class="mono">' + nm(s.lo) + "–" + nm(s.hi) + "</span>";
+      if (r.best !== null && r.best !== 0) {
+        rng += ' → <span class="mono">' + nm(s.lo + r.best) + "–" + nm(s.hi + r.best) + "</span>";
+      }
+      var pills = state.sort === "diff" ? "" : '<span class="pill"><i style="background:' + col + '"></i>' + LEVELS[r.lvl].name + "</span>";
+      if (state.key === "best" && r.best !== 0 && r.best !== null && r.origLvl !== r.lvl) {
+        pills += '<span class="pill" style="font-weight:500;color:var(--muted)">Original: ' + LEVELS[r.origLvl].name + "</span>";
+      }
+
+      // transposition table
+      var cells = "";
+      var center = r.best === null ? 0 : r.best;
+      var from = Math.min(-3, center - 3), to = Math.max(3, center + 3);
+      for (var t = from; t <= to; t++) {
+        var lo = s.lo + t, hi = s.hi + t, L = level(lo, hi, v);
+        cells += '<div class="' + (t === r.best ? "rec" : "") + '" style="border-left-color:var(--l' + L + ')">' +
+          '<span class="s">' + (t === 0 ? "Orig" : signed(t)) + "</span>" +
+          '<span class="r">' + nm(lo) + "–" + nm(hi) + "</span></div>";
+      }
+
+      return '<li class="song' + (openIds[s.id] ? " open" : "") + '" data-id="' + s.id + '">' +
+        '<button aria-expanded="' + !!openIds[s.id] + '">' +
+          '<div class="top"><div class="titles"><div class="name' + (s.note ? " has-note" : "") + '">' + esc(s.name) + "</div>" +
+          '<div class="artist">' + esc(s.artist) + "</div></div>" + shiftHtml + "</div>" +
+          bar +
+          '<div class="ranges">' + rng + pills + "</div>" +
+        "</button>" +
+        '<div class="detail">' +
+          (s.note ? '<p class="note">' + s.note + "</p>" : "") +
+          '<p class="tx-title">Every key</p><div class="tx">' + cells + "</div>" +
+        "</div></li>";
+    }
+
+    function render() {
+      var v = V();
+      var zoneHtml = zones(v);
+      var q = state.q.trim().toLowerCase();
+      var rows = compute(v).filter(function (r) {
+        if (state.artist && r.s.artist !== state.artist) return false;
+        if (q && (r.s.name + " " + r.s.artist).toLowerCase().indexOf(q) < 0) return false;
+        return true;
+      });
+
+      function byDiff(a, b) { return a.lvl - b.lvl || a.hi - b.hi || (a.hi - a.lo) - (b.hi - b.lo) || a.s.id - b.s.id; }
+      var html = "";
+      if (!rows.length) {
+        html = '<p class="empty">No songs match.</p>';
+      } else if (state.sort === "diff") {
+        rows.sort(byDiff);
+        var groups = {};
+        rows.forEach(function (r) { (groups[r.lvl] = groups[r.lvl] || []).push(r); });
+        Object.keys(groups).sort().forEach(function (k) {
+          var g = groups[k];
+          html += '<section class="group"><div class="group-head"><span class="dot" style="background:var(--l' + k + ')"></span>' +
+            "<h2>" + LEVELS[k].name + '</h2><span class="sub">' + LEVELS[k].sub + '</span><span class="count">' + g.length + "</span></div>" +
+            '<ul class="songs">' + g.map(function (r) { return card(r, v, zoneHtml); }).join("") + "</ul></section>";
+        });
+      } else {
+        rows.sort(state.sort === "name"
+          ? function (a, b) { return a.s.name.localeCompare(b.s.name); }
+          : function (a, b) {
+              var ax = a.best === null ? 99 : Math.abs(a.best), bx = b.best === null ? 99 : Math.abs(b.best);
+              return ax - bx || byDiff(a, b);
+            });
+        html = '<section class="group"><ul class="songs">' + rows.map(function (r) { return card(r, v, zoneHtml); }).join("") + "</ul></section>";
+      }
+      listEl.innerHTML = html;
+
+      var fits = compute(v).filter(function (r) { return r.best !== null; }).length;
+      document.getElementById("voiceSummary").innerHTML =
+        "Range <b>" + voice.floor + "–" + (voice.useExt ? voice.extTop : voice.ceiling) + "</b> · comfy to <b>" + voice.comfy +
+        "</b> · <b>" + fits + "</b> of " + SONGS.length + " songs fit";
+    }
+
+    // ---------- Controls ----------
+    document.getElementById("axis").innerHTML = ["C3", "C4", "C5"].map(function (c) {
+      return '<span style="left:' + pct(midi(c)) + '%">' + c + "</span>";
+    }).join("");
+
+    var artists = SONGS.map(function (s) { return s.artist; }).filter(function (a, i, arr) { return arr.indexOf(a) === i; }).sort();
+    var artistSel = document.getElementById("artist");
+    artistSel.innerHTML = '<option value="">All artists</option>' + artists.map(function (a) {
+      return '<option value="' + esc(a) + '">' + esc(a) + "</option>";
+    }).join("");
+    artistSel.addEventListener("change", function () { state.artist = artistSel.value; render(); });
+
+    var sortSel = document.getElementById("sort");
+    sortSel.value = state.sort;
+    sortSel.addEventListener("change", function () { state.sort = sortSel.value; save(); render(); });
+
+    var segBtns = document.querySelectorAll(".seg button");
+    function syncSeg() { segBtns.forEach(function (b) { b.setAttribute("aria-pressed", b.dataset.key === state.key); }); }
+    segBtns.forEach(function (b) {
+      b.addEventListener("click", function () { state.key = b.dataset.key; syncSeg(); save(); render(); });
+    });
+    syncSeg();
+
+    document.getElementById("q").addEventListener("input", function (e) { state.q = e.target.value; render(); });
+
+    listEl.addEventListener("click", function (e) {
+      var btn = e.target.closest(".song > button");
+      if (!btn) return;
+      var li = btn.parentNode, id = li.dataset.id;
+      openIds[id] = !openIds[id];
+      li.classList.toggle("open", openIds[id]);
+      btn.setAttribute("aria-expanded", openIds[id]);
+    });
+
+    // settings
+    var noteOpts = [];
+    for (var n = midi("E2"); n <= midi("C6"); n++) noteOpts.push(nm(n));
+    var grid = document.getElementById("settingsGrid");
+    function buildSettings() {
+      grid.innerHTML = FIELDS.map(function (f) {
+        return "<label>" + f[1] + '<select data-f="' + f[0] + '">' + noteOpts.map(function (o) {
+          return "<option" + (o === voice[f[0]] ? " selected" : "") + ">" + o + "</option>";
+        }).join("") + "</select></label>";
+      }).join("");
+      document.getElementById("useExt").checked = voice.useExt;
+    }
+    buildSettings();
+    grid.addEventListener("change", function (e) {
+      var f = e.target.dataset.f; if (!f) return;
+      voice[f] = e.target.value; save(); render();
+    });
+    document.getElementById("useExt").addEventListener("change", function (e) { voice.useExt = e.target.checked; save(); render(); });
+    document.getElementById("resetBtn").addEventListener("click", function () {
+      voice = Object.assign({}, DEFAULTS); buildSettings(); save(); render();
+    });
+    var editBtn = document.getElementById("editBtn"), settingsEl = document.getElementById("settings");
+    editBtn.addEventListener("click", function () {
+      var open = settingsEl.classList.toggle("open");
+      editBtn.setAttribute("aria-expanded", open);
+      editBtn.textContent = open ? "Done" : "Edit my range";
+    });
+
+    render();
+  })();
+  </script>
+</body>
+</html>

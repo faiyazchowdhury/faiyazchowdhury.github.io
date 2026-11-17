@@ -20,4 +20,11 @@ window.APPS = [
     blurb: "MIDI player & falling-notes visualizer",
     icon: "midee/icons/icon-192.png",
   },
+  {
+    slug: "vocal-range",
+    name: "Range",
+    blurb: "Songs that fit my voice, and how far to transpose them",
+    glyph: "♪",
+    hue: 300,
+  },
 ];
