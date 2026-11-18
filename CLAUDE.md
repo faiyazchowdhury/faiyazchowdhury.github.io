@@ -17,7 +17,7 @@ app must work on a phone browser first.
 2. Add `{ slug, name, blurb, ... }` to `apps.js`. Without an `icon`, the tile gets a tinted glyph automatically.
 3. Mobile basics: `<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">`, respect `env(safe-area-inset-*)`, use touch-friendly targets, and support light and dark mode.
 4. Optionally add a small "← Apps" link back to `/`.
-5. Commit and push to `master`.
+5. Commit and push directly to `master`. Don't leave changes on a feature branch or open a pull request unless asked: the site deploys only from `master`, and Faiyaz expects to see the change on his phone right away. This applies to cloud sessions too.
 
 ## Don'ts
 
