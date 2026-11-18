@@ -164,10 +164,21 @@
     .rbar .z.ext { background: repeating-linear-gradient(135deg, var(--zone-ext) 0 4px, transparent 4px 8px); border-radius: 3px; }
     .rbar .grid { position: absolute; top: -2px; bottom: -2px; width: 1px; background: var(--faint); }
     .rbar .orig { position: absolute; top: 4px; height: 4px; border-radius: 2px; box-shadow: inset 0 0 0 1.5px var(--muted); opacity: .7; }
-    .rbar .best { position: absolute; top: 2px; height: 8px; border-radius: 4px; }
+    .rbar .rng { position: absolute; top: 3px; height: 6px; border-radius: 3px; opacity: .38; }
+    .rbar .tess { position: absolute; top: 1px; height: 10px; border-radius: 5px; }
+    .rbar .rng.solo { opacity: 1; top: 2px; height: 8px; border-radius: 4px; }
 
     .ranges { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; font-size: 13px; color: var(--muted); }
     .ranges .mono { color: var(--fg); font-size: 12.5px; }
+    .ranges .k { font-size: 11px; text-transform: uppercase; letter-spacing: .06em; flex: none; width: 82px; }
+    .ranges .line { display: flex; align-items: baseline; gap: 6px; flex-wrap: wrap; width: 100%; }
+    .tog {
+      background: var(--surface); border: 0; border-radius: 10px; padding: 9px 12px; font-size: 13px; font-weight: 500;
+      box-shadow: inset 0 0 0 1px var(--line); color: var(--muted); cursor: pointer;
+    }
+    .tog[aria-pressed="true"] { background: var(--surface-2); color: var(--fg); }
+    .tx .t { color: var(--muted); font-family: "JetBrains Mono", monospace; font-size: 10.5px; opacity: .8; }
+    .src { font-size: 12px; color: var(--muted); margin-top: 10px; }
     .pill {
       display: inline-flex; align-items: center; gap: 5px; font-size: 11.5px; font-weight: 600;
       padding: 2px 8px 2px 7px; border-radius: 999px; background: var(--surface-2);
@@ -235,6 +246,7 @@
           <option value="shift">By transpose</option>
           <option value="name">A–Z</option>
         </select>
+        <button class="tog" id="measuredBtn" aria-pressed="true">Measured only</button>
       </div>
       <div class="axis" id="axis"></div>
     </div>
@@ -248,8 +260,9 @@
       <div class="body">
         <p>Ranges are <b>sounding pitch</b>, written in scientific pitch notation (middle C is C4). Sheet music writes male vocal parts an octave higher than they sound, so Musicnotes lists Iris as D4–A5 while this list says D3–A4.</p>
         <p>Most ranges come from Singing Carrots' crowd-sourced data, so treat them as estimates and check important songs with a pitch monitor.</p>
-        <p><b>Bar key:</b> the light band is your full reach, the darker band is your working range, and the hatched part is your upper extension. The outlined line is the original key, and the solid bar is the key shown.</p>
-        <p><b>Best key</b> lowers the song until its peak is at your comfortable top, and raises songs that dip below your floor, while moving as little as possible.</p>
+        <p><b>Bar key:</b> the light band is your full reach, the darker band is your working range, and the hatched part is your upper extension. The outlined line is the song's full range in the original key. In the key shown, the thin tinted bar is the full range and the thick bar is the <b>tessitura</b>: the middle 80% of singing time, where the song actually sits.</p>
+        <p><b>Tessitura</b> comes from the melody track of a MIDI file, weighting each note by how long it's held. It's only used when the file's melody matched the song's known range. <b>Measured only</b> hides songs without one.</p>
+        <p><b>Best key</b> mostly looks at the tessitura: it moves the song so the bulk of the singing sits between two semitones above your working bottom and two below your comfortable top. The lowest and highest notes must stay between your floor and ceiling, and brief peaks above your comfortable top count against a key only a little. It prefers the smallest change of key, and singing an octave down counts as the original key.</p>
       </div>
     </details>
     <details class="about">
@@ -408,9 +421,56 @@
       ["Great Indoors", "John Mayer", "C3–A5"],
       ["Castle on the Hill", "Ed Sheeran", "A2–A5"]
     ];
+    // Tessitura measured from the vocal/melody track of a MIDI file:
+    // [10th percentile, median, 90th percentile] of singing time (sounding pitch), and the source file.
+    // Notes are weighted by duration (capped at 2 s). Only files whose melody matched the song's
+    // known range within a couple of semitones were used.
+    var TESS = {
+      "Let Down|Radiohead": ["E3", "A3", "C♯4", "freemidi 5992"],
+      "Knives Out|Radiohead": ["G3", "C♯4", "D♯4", "freemidi 14600"],
+      "Lucky|Radiohead": ["F♯3", "B3", "C♯4", "freemidi 14606"],
+      "Street Spirit|Radiohead": ["E3", "B3", "E4", "freemidi 5978"],
+      "In My Place|Coldplay": ["F♯3", "C♯4", "E4", "freemidi 17700"],
+      "Pyramid Song|Radiohead": ["F♯3", "B3", "F♯4", "bitmidi 87580"],
+      "Be Still My Beating Heart|Sting": ["A3", "C4", "E4", "bitmidi 97230"],
+      "Karma Police|Radiohead": ["F♯3", "B3", "F♯4", "freemidi 14594"],
+      "Yellow|Coldplay": ["B3", "D♯4", "F♯4", "freemidi 17718"],
+      "High & Dry|Radiohead": ["G♯3", "B3", "G♯4", "bitmidi 87582"],
+      "Somewhere Only We Know|Keane": ["B3", "D4", "F♯4", "freemidi 9564"],
+      "Sunday Morning|Maroon 5": ["C4", "E4", "G4", "bitmidi 72460"],
+      "The Tourist|Radiohead": ["C4", "D♯4", "F♯4", "freemidi 5993"],
+      "Just|Radiohead": ["A3", "C4", "D♯4", "bitmidi 87564"],
+      "I Belong to You|Muse": ["C4", "D4", "F4", "freemidi 25988"],
+      "Memories|Maroon 5": ["G♯3", "C♯4", "E4", "freemidi 29665"],
+      "They Dance Alone|Sting": ["A3", "C♯4", "E4", "freemidi 6695"],
+      "The Reason|Hoobastank": ["G♯3", "D♯4", "G♯4", "freemidi 15203"],
+      "Iris|Goo Goo Dolls": ["D3", "D4", "G4", "freemidi 19726"],
+      "She Will Be Loved|Maroon 5": ["D4", "D♯4", "A♯4", "freemidi 4158"],
+      "Russians|Sting": ["C4", "F4", "G4", "bitmidi 78440"],
+      "Charlie Brown|Coldplay": ["A3", "C4", "F4", "bitmidi 24951"],
+      "Climbing Up the Walls|Radiohead": ["B3", "E4", "G4", "freemidi 29229"],
+      "Must Get Out|Maroon 5": ["A3", "D4", "G4", "freemidi 4161"],
+      "Sunburn|Muse": ["G3", "E4", "G4", "freemidi 16911"],
+      "Brand New Day|Sting": ["B3", "D♯4", "G♯4", "bitmidi 97231"],
+      "Stolen Car|Sting": ["G3", "A♯3", "F♯4", "freemidi 21032"],
+      "Idioteque|Radiohead": ["D4", "D♯4", "A♯4", "freemidi 14587"],
+      "Misery|Maroon 5": ["D4", "F♯4", "G4", "bitmidi 72469"],
+      "Unintended|Muse": ["G3", "D4", "B4", "freemidi 16918"],
+      "Daughters|John Mayer": ["D3", "F♯3", "B3", "freemidi 4823"],
+      "Clocks|Coldplay": ["F3", "C♯4", "G♯4", "freemidi 17684"],
+      "Fix You|Coldplay": ["G3", "D♯4", "G4", "freemidi 17690"],
+      "Everglow|Coldplay": ["B2", "G♯3", "E4", "freemidi 26096"]
+    };
     var SONGS = RAW.map(function (r, i) {
-      var p = r[2].split("–");
-      return { id: i, name: r[0], artist: r[1], lo: midi(p[0]), hi: midi(p[1]), note: r[3] || "" };
+      var p = r[2].split("–"), lo = midi(p[0]), hi = midi(p[1]), t = TESS[r[0] + "|" + r[1]], span = hi - lo;
+      return {
+        id: i, name: r[0], artist: r[1], lo: lo, hi: hi, note: r[3] || "",
+        measured: !!t, src: t ? t[3] : "",
+        // Without a measurement, assume the song sits in the upper-middle of its range.
+        t10: t ? midi(t[0]) : lo + Math.round(span * 0.3),
+        tmed: t ? midi(t[1]) : lo + Math.round(span * 0.6),
+        t90: t ? midi(t[2]) : hi - Math.round(span * 0.1)
+      };
     });
 
     // ---------- Voice settings ----------
@@ -429,11 +489,12 @@
       return null;
     }
     function save() {
-      try { localStorage.setItem(STORE, JSON.stringify({ voice: voice, key: state.key, sort: state.sort })); } catch (e) {}
+      try { localStorage.setItem(STORE, JSON.stringify({ voice: voice, key: state.key, sort: state.sort, measuredOnly: state.measuredOnly })); } catch (e) {}
     }
     var saved = load();
     var voice = Object.assign({}, DEFAULTS, saved ? saved.voice : {});
-    var state = { key: (saved && saved.key) || "best", sort: (saved && saved.sort) || "diff", q: "", artist: "" };
+    var state = { key: (saved && saved.key) || "best", sort: (saved && saved.sort) || "diff", q: "", artist: "",
+                  measuredOnly: !(saved && saved.measuredOnly === false) };
 
     function V() {
       return {
@@ -463,19 +524,31 @@
     function feasible(lo, hi, v) {
       return lo >= v.floor && hi <= (v.useExt ? v.extTop : v.ceiling);
     }
-    function cost(lo, hi, s, v) {
-      return 3 * Math.max(0, hi - v.comfy) +
-             3 * Math.max(0, hi - v.workHigh) +
-             4 * Math.max(0, hi - v.ceiling) +
-             0.6 * Math.max(0, v.workLow - lo) +
-             0.75 * Math.abs(s);
+    // Semitones between keys, ignoring octaves: -12 and +12 are the original key, and -10 is the same key as +2.
+    function keyDist(s) { var d = ((s % 12) + 12) % 12; return Math.min(d, 12 - d); }
+    // Where the bulk of the singing should sit: two semitones inside your working bottom and comfortable top.
+    function sweet(v) { return { lo: v.workLow + 2, hi: v.comfy - 2, mid: (v.workLow + v.comfy) / 2 }; }
+    function cost(song, s, v) {
+      var lo = song.lo + s, hi = song.hi + s, t10 = song.t10 + s, t90 = song.t90 + s, tm = song.tmed + s, z = sweet(v);
+      return (
+        // Where the song sits (tessitura) matters most: that's what tires the voice.
+        1.5 * Math.max(0, t90 - z.hi) +
+        1.0 * Math.max(0, z.lo - t10) +
+        0.15 * Math.abs(tm - z.mid) +
+        // Brief extremes cost less, but climbing past your working top still adds up.
+        0.3 * Math.max(0, hi - v.comfy) +
+        1.0 * Math.max(0, hi - v.workHigh) +
+        2.0 * Math.max(0, hi - v.ceiling) +
+        0.4 * Math.max(0, v.workLow - lo) +
+        // Prefer staying close to the original key. An octave shift is free, apart from a small tie-break.
+        0.4 * keyDist(s) + (Math.abs(s) > 6 ? 0.15 : 0)
+      );
     }
     function bestShift(song, v) {
       var best = null, bc = Infinity;
       for (var s = -12; s <= 12; s++) {
-        var lo = song.lo + s, hi = song.hi + s;
-        if (!feasible(lo, hi, v)) continue;
-        var c = cost(lo, hi, s, v);
+        if (!feasible(song.lo + s, song.hi + s, v)) continue;
+        var c = cost(song, s, v);
         if (c < bc - 1e-9 || (Math.abs(c - bc) < 1e-9 && Math.abs(s) < Math.abs(best))) { bc = c; best = s; }
       }
       return best; // null => no key fits
@@ -506,7 +579,7 @@
         var shown = state.key === "best" ? (b === null ? fallback : b) : 0;
         var lo = s.lo + shown, hi = s.hi + shown;
         return {
-          s: s, best: b, fallback: fallback, shown: shown, lo: lo, hi: hi,
+          s: s, best: b, fallback: fallback, shown: shown, lo: lo, hi: hi, t10: s.t10 + shown, t90: s.t90 + shown,
           lvl: state.key === "best" && b === null ? 5 : level(lo, hi, v),
           origLvl: level(s.lo, s.hi, v)
         };
@@ -529,13 +602,20 @@
 
       var bar = '<div class="rbar">' + zoneHtml +
         '<div class="orig" style="' + span(s.lo, s.hi) + '"></div>' +
-        '<div class="best" style="' + span(r.lo, r.hi) + ";background:" + col + '"></div></div>';
+        '<div class="rng' + (s.measured ? "" : " solo") + '" style="' + span(r.lo, r.hi) + ";background:" + col + '"></div>' +
+        (s.measured ? '<div class="tess" style="' + span(r.t10, r.t90) + ";background:" + col + '"></div>' : "") + "</div>";
 
-      var rng = '<span class="mono">' + nm(s.lo) + "–" + nm(s.hi) + "</span>";
-      if (rec !== 0) {
-        rng += ' → <span class="mono">' + nm(s.lo + rec) + "–" + nm(s.hi + rec) + "</span>";
+      function pair(a, b) {
+        var h = '<span class="mono">' + nm(a) + "–" + nm(b) + "</span>";
+        if (rec !== 0) h += ' → <span class="mono">' + nm(a + rec) + "–" + nm(b + rec) + "</span>";
+        return h;
       }
+      var rng = s.measured
+        ? '<span class="line"><span class="k">Range</span>' + pair(s.lo, s.hi) + "</span>" +
+          '<span class="line"><span class="k">Tessitura</span>' + pair(s.t10, s.t90) + "</span>"
+        : pair(s.lo, s.hi);
       var pills = state.sort === "diff" ? "" : '<span class="pill"><i style="background:' + col + '"></i>' + LEVELS[r.lvl].name + "</span>";
+      if (!s.measured) pills += '<span class="pill" style="font-weight:500;color:var(--muted)">Range only</span>';
       if (state.key === "best" && r.best !== 0 && r.best !== null && r.origLvl !== r.lvl) {
         pills += '<span class="pill" style="font-weight:500;color:var(--muted)">Original: ' + LEVELS[r.origLvl].name + "</span>";
       }
@@ -548,7 +628,8 @@
         var lo = s.lo + t, hi = s.hi + t, L = level(lo, hi, v);
         cells += '<div class="' + (t === rec ? "rec" : "") + '" style="border-left-color:var(--l' + L + ')">' +
           '<span class="s">' + (t === 0 ? "Orig" : signed(t)) + "</span>" +
-          '<span class="r">' + nm(lo) + "–" + nm(hi) + "</span></div>";
+          '<span class="r">' + nm(lo) + "–" + nm(hi) + "</span>" +
+          (s.measured ? '<span class="t">sits ' + nm(s.t10 + t) + "–" + nm(s.t90 + t) + "</span>" : "") + "</div>";
       }
 
       return '<li class="song' + (openIds[s.id] ? " open" : "") + '" data-id="' + s.id + '">' +
@@ -561,6 +642,8 @@
         '<div class="detail">' +
           (s.note ? '<p class="note">' + s.note + "</p>" : "") +
           '<p class="tx-title">Every key</p><div class="tx">' + cells + "</div>" +
+          (s.measured ? '<p class="src">Tessitura is the middle 80% of singing time, measured from a MIDI file (' + s.src + '). Median note: ' + nm(s.tmed + r.shown) + ".</p>"
+                      : '<p class="src">No MIDI measurement for this song, so its best key uses an estimated tessitura.</p>') +
         "</div></li>";
     }
 
@@ -569,6 +652,7 @@
       var zoneHtml = zones(v);
       var q = state.q.trim().toLowerCase();
       var rows = compute(v).filter(function (r) {
+        if (state.measuredOnly && !r.s.measured) return false;
         if (state.artist && r.s.artist !== state.artist) return false;
         if (q && (r.s.name + " " + r.s.artist).toLowerCase().indexOf(q) < 0) return false;
         return true;
@@ -592,17 +676,18 @@
         rows.sort(state.sort === "name"
           ? function (a, b) { return a.s.name.localeCompare(b.s.name); }
           : function (a, b) {
-              var ax = a.best === null ? 99 : Math.abs(a.best), bx = b.best === null ? 99 : Math.abs(b.best);
+              var ax = a.best === null ? 99 : keyDist(a.best), bx = b.best === null ? 99 : keyDist(b.best);
               return ax - bx || byDiff(a, b);
             });
         html = '<section class="group"><ul class="songs">' + rows.map(function (r) { return card(r, v, zoneHtml); }).join("") + "</ul></section>";
       }
       listEl.innerHTML = html;
 
-      var fits = compute(v).filter(function (r) { return r.best !== null; }).length;
+      var pool = compute(v).filter(function (r) { return !state.measuredOnly || r.s.measured; });
+      var fits = pool.filter(function (r) { return r.best !== null; }).length;
       document.getElementById("voiceSummary").innerHTML =
         "Range <b>" + voice.floor + "–" + (voice.useExt ? voice.extTop : voice.ceiling) + "</b> · comfy to <b>" + voice.comfy +
-        "</b> · <b>" + fits + "</b> of " + SONGS.length + " songs fit";
+        "</b> · <b>" + fits + "</b> of " + pool.length + " songs fit";
     }
 
     // ---------- Controls ----------
@@ -627,6 +712,12 @@
       b.addEventListener("click", function () { state.key = b.dataset.key; syncSeg(); save(); render(); });
     });
     syncSeg();
+
+    var measuredBtn = document.getElementById("measuredBtn");
+    measuredBtn.setAttribute("aria-pressed", state.measuredOnly);
+    measuredBtn.addEventListener("click", function () {
+      state.measuredOnly = !state.measuredOnly; measuredBtn.setAttribute("aria-pressed", state.measuredOnly); save(); render();
+    });
 
     document.getElementById("q").addEventListener("input", function (e) { state.q = e.target.value; render(); });
 
