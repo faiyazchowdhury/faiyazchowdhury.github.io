@@ -96,17 +96,33 @@
       ["Lift Birdie", []],
       ["Make Album", ["Write the songs", "Choose the tracklist", "Record demos", "Record final takes", "Mix and master", "Make the cover art", "Release it"]],
       ["West Coast Swing Intermediate", ["Take classes every week", "Go to a weekend event", "Compete in a Novice Jack & Jill", "Earn first Novice points", "Earn enough points to move up to Intermediate"]],
-      ["Buy House", ["Check credit score", "Set a budget", "Save the down payment", "Get pre-approved for a mortgage", "Find an agent", "Tour houses", "Make an offer", "Close"]]
+      ["Buy House", ["Check credit score", "Set a budget", "Save the down payment", "Get pre-approved for a mortgage", "Find an agent", "Tour houses", "Make an offer", "Close"]],
+      ["Read Software Architecture Books", [
+        "A Philosophy of Software Design (Ousterhout)",
+        "Fundamentals of Software Architecture (Richards & Ford)",
+        "Clean Architecture (Robert C. Martin)",
+        "Designing Data-Intensive Applications (Kleppmann)",
+        "Software Architecture: The Hard Parts (Ford et al.)",
+        "Building Microservices (Newman)",
+        "Domain-Driven Design (Evans)",
+        "Patterns of Enterprise Application Architecture (Fowler)"
+      ]]
     ];
+    function makeGoal(g) {
+      return { id: uid(), title: g[0], why: "", year: "", manual: 0, done: false, notes: [],
+               steps: g[1].map(function (s) { return { id: uid(), text: s, done: false }; }) };
+    }
     var store = new Kit.Store("journey:v1", null);
-    var data = store.load() || {
-      view: "active",
-      goals: SEED.map(function (g) {
-        return { id: uid(), title: g[0], why: "", year: "", manual: 0, done: false, notes: [],
-                 steps: g[1].map(function (s) { return { id: uid(), text: s, done: false }; }) };
-      })
-    };
+    var SEED_VERSION = 2;
+    var data = store.load() || { view: "active", goals: SEED.map(makeGoal), seedVer: SEED_VERSION };
     function save() { store.save(data); }
+    // Version 2: add the software architecture reading goal to saved lists.
+    if ((data.seedVer || 1) < 2) {
+      var sa = SEED[SEED.length - 1];
+      if (!data.goals.some(function (g) { return g.title === sa[0]; })) data.goals.push(makeGoal(sa));
+      data.seedVer = 2;
+      save();
+    }
     var open = {};
 
     function progress(g) {
