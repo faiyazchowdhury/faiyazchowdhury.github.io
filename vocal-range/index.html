@@ -246,7 +246,7 @@
           <option value="shift">By transpose</option>
           <option value="name">A–Z</option>
         </select>
-        <button class="tog" id="measuredBtn" aria-pressed="true">Measured only</button>
+        <button class="tog" id="measuredBtn" aria-pressed="false">Measured only</button>
       </div>
       <div class="axis" id="axis"></div>
     </div>
@@ -261,7 +261,7 @@
         <p>Ranges are <b>sounding pitch</b>, written in scientific pitch notation (middle C is C4). Sheet music writes male vocal parts an octave higher than they sound, so Musicnotes lists Iris as D4–A5 while this list says D3–A4.</p>
         <p>Most ranges come from Singing Carrots' crowd-sourced data, so treat them as estimates and check important songs with a pitch monitor.</p>
         <p><b>Bar key:</b> the light band is your full reach, the darker band is your working range, and the hatched part is your upper extension. The outlined line is the song's full range in the original key. In the key shown, the thin tinted bar is the full range and the thick bar is the <b>tessitura</b>: the middle 80% of singing time, where the song actually sits.</p>
-        <p><b>Tessitura</b> comes from the melody track of a MIDI file, weighting each note by how long it's held. It's only used when the file's melody matched the song's known range. <b>Measured only</b> hides songs without one.</p>
+        <p><b>Tessitura</b> comes from the melody track of a MIDI file, weighting each note by how long it's held. It's only used when the file's melody matched the song's known range. Songs without one use the middle of their range instead, and the best key centres that note in your sweet spot. <b>Measured only</b> hides them.</p>
         <p><b>Best key</b> mostly looks at the tessitura: it moves the song so the bulk of the singing sits between two semitones above your working bottom and two below your comfortable top. The lowest and highest notes must stay between your floor and ceiling, and brief peaks above your comfortable top count against a key only a little. It prefers the smallest change of key, and singing an octave down counts as the original key.</p>
       </div>
     </details>
@@ -466,10 +466,10 @@
       return {
         id: i, name: r[0], artist: r[1], lo: lo, hi: hi, note: r[3] || "",
         measured: !!t, src: t ? t[3] : "",
-        // Without a measurement, assume the song sits in the upper-middle of its range.
-        t10: t ? midi(t[0]) : lo + Math.round(span * 0.3),
-        tmed: t ? midi(t[1]) : lo + Math.round(span * 0.6),
-        t90: t ? midi(t[2]) : hi - Math.round(span * 0.1)
+        // Without a measurement, use the middle of the range: the fit centres it in your sweet spot.
+        t10: t ? midi(t[0]) : lo + Math.round(span / 2),
+        tmed: t ? midi(t[1]) : lo + Math.round(span / 2),
+        t90: t ? midi(t[2]) : lo + Math.round(span / 2)
       };
     });
 
@@ -489,12 +489,12 @@
       return null;
     }
     function save() {
-      try { localStorage.setItem(STORE, JSON.stringify({ voice: voice, key: state.key, sort: state.sort, measuredOnly: state.measuredOnly })); } catch (e) {}
+      try { localStorage.setItem(STORE, JSON.stringify({ voice: voice, key: state.key, sort: state.sort, onlyMeasured: state.measuredOnly })); } catch (e) {}
     }
     var saved = load();
     var voice = Object.assign({}, DEFAULTS, saved ? saved.voice : {});
     var state = { key: (saved && saved.key) || "best", sort: (saved && saved.sort) || "diff", q: "", artist: "",
-                  measuredOnly: !(saved && saved.measuredOnly === false) };
+                  measuredOnly: !!(saved && saved.onlyMeasured) };
 
     function V() {
       return {
@@ -643,7 +643,7 @@
           (s.note ? '<p class="note">' + s.note + "</p>" : "") +
           '<p class="tx-title">Every key</p><div class="tx">' + cells + "</div>" +
           (s.measured ? '<p class="src">Tessitura is the middle 80% of singing time, measured from a MIDI file (' + s.src + '). Median note: ' + nm(s.tmed + r.shown) + ".</p>"
-                      : '<p class="src">No MIDI measurement for this song, so its best key uses an estimated tessitura.</p>') +
+                      : '<p class="src">No MIDI measurement for this song, so its best key centres the middle of its range (' + nm(s.tmed + r.shown) + ').</p>') +
         "</div></li>";
     }
 
