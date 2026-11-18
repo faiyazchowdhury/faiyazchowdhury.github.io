@@ -110,17 +110,28 @@
   (function () {
     var esc = Kit.esc;
     var DEFAULT_ACTS = [
-      ["Read", 3], ["Walk", 6], ["Drink water", 10], ["Study", 5], ["Meditate", 3], ["Yoga", 3],
-      ["Test prior knowledge", 2], ["Call a loved one", 4], ["Play guitar", 5], ["Play piano", 4],
-      ["Sing", 3], ["Play Rocksmith", 2], ["Make a song", 3], ["Learn a new song", 4], ["Listen to music", 3],
-      ["Cook", 2], ["Calisthenics", 3], ["Watch TV", 1], ["Play a video game", 1], ["Clean up", 3],
-      ["Contemplate lifestyle", 1]
+      ["Read", 3], ["Walk", 6], ["Drink water", 4], ["Study", 5], ["Meditate", 3], ["Yoga", 3],
+      ["Test prior knowledge", 4], ["Call a loved one", 4], ["Play guitar", 5], ["Play piano", 4],
+      ["Sing", 4], ["Play Rocksmith", 2], ["Make a song", 3], ["Learn a new song", 4], ["Listen to music", 3],
+      ["Cook", 3], ["Calisthenics", 3], ["Watch TV", 1], ["Play a video game", 1], ["Clean up", 3],
+      ["Contemplate lifestyle", 4], ["Diary", 2], ["Write book", 2]
     ];
+    var SEED_VERSION = 2;
     var store = new Kit.Store("rollplay:v1", {
       acts: DEFAULT_ACTS.map(function (a) { return { id: Kit.uid(), name: a[0], w: a[1] }; }),
-      log: [], win: 7
+      log: [], win: 7, seedVer: SEED_VERSION
     });
     var data = store.load();
+    // Version 2 weights: update activities still on their old default weight, and add new ones.
+    if ((data.seedVer || 1) < 2) {
+      var CHANGES = { "Drink water": [10, 4], "Test prior knowledge": [2, 4], "Cook": [2, 3], "Sing": [3, 4], "Contemplate lifestyle": [1, 4] };
+      data.acts.forEach(function (a) { var c = CHANGES[a.name]; if (c && a.w === c[0]) a.w = c[1]; });
+      [["Diary", 2], ["Write book", 2]].forEach(function (n) {
+        if (!data.acts.some(function (a) { return a.name === n[0]; })) data.acts.push({ id: Kit.uid(), name: n[0], w: n[1] });
+      });
+      data.seedVer = 2;
+      store.save(data);
+    }
     function save() { store.save(data); }
 
     var DAY = 864e5;
