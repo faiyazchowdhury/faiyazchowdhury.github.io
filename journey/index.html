@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Journey</title>
+  <meta name="description" content="Long-term goals, broken into steps, with notes along the way." />
+  <meta name="theme-color" content="#0b0b10" media="(prefers-color-scheme: dark)" />
+  <meta name="theme-color" content="#f4f1ea" media="(prefers-color-scheme: light)" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Journey" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../shared/base.css" />
+  <style>
+    .goals { list-style: none; display: flex; flex-direction: column; gap: 10px; margin-top: 12px; }
+    .goal { overflow: hidden; }
+    .goal > button.head { width: 100%; display: flex; align-items: center; gap: 14px; padding: 14px; background: none; border: 0; text-align: left; }
+    .ring { width: 52px; height: 52px; flex: none; position: relative; }
+    .ring svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+    .ring .pct { position: absolute; inset: 0; display: grid; place-items: center; font-family: "JetBrains Mono", monospace; font-size: 12.5px; }
+    .goal .titles { flex: 1; min-width: 0; }
+    .goal .t { font-weight: 600; font-size: 16.5px; line-height: 1.25; }
+    .goal .next { color: var(--muted); font-size: 13px; margin-top: 3px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .goal .next b { color: var(--fg); font-weight: 500; }
+    .goal .when { flex: none; font-size: 12px; color: var(--muted); font-family: "JetBrains Mono", monospace; }
+    .goal.done .t { color: var(--muted); text-decoration: line-through; text-decoration-color: var(--faint); }
+    .gbody { display: none; border-top: 1px solid var(--line); padding: 4px 14px 14px; }
+    .goal.open .gbody { display: block; }
+    .why { font-family: "Instrument Serif", Georgia, serif; font-style: italic; font-size: 19px; line-height: 1.3; margin: 12px 0 2px; }
+    .lbl { font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin: 16px 0 6px; }
+    .steps { list-style: none; }
+    .step { display: flex; align-items: center; gap: 10px; padding: 4px 0; }
+    .step input { width: 22px; height: 22px; accent-color: var(--accent); flex: none; }
+    .step label { flex: 1; font-size: 14.5px; padding: 6px 0; }
+    .step.checked label { color: var(--muted); text-decoration: line-through; text-decoration-color: var(--faint); }
+    .step .x { background: none; border: 0; color: var(--muted); font-size: 18px; width: 32px; height: 32px; flex: none; }
+    .addstep { display: flex; gap: 8px; margin-top: 6px; }
+    .addstep .field { flex: 1; min-width: 0; font-size: 15px; padding: 9px 12px; }
+    .notes { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+    .note { font-size: 14px; line-height: 1.45; display: flex; gap: 10px; }
+    .note time { flex: none; font-family: "JetBrains Mono", monospace; font-size: 11.5px; color: var(--muted); padding-top: 2px; width: 72px; }
+    .note span { flex: 1; white-space: pre-wrap; }
+    textarea.field { min-height: 64px; resize: vertical; font-size: 15px; }
+    .goal-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px; }
+    input[type="range"] { width: 100%; accent-color: var(--accent); height: 28px; }
+  </style>
+</head>
+<body>
+  <main>
+    <a class="back" href="../">← Apps</a>
+    <header class="app-head">
+      <h1>Journey<em>.</em></h1>
+      <p class="sub" id="summary"></p>
+    </header>
+  </main>
+
+  <div class="sticky">
+    <div class="seg" role="group" aria-label="Show" id="tabs">
+      <button data-v="active">In progress</button>
+      <button data-v="done">Reached</button>
+      <button data-v="all">All</button>
+    </div>
+  </div>
+
+  <main>
+    <ul class="goals" id="list"></ul>
+    <div style="margin-top:12px"><button class="btn ghost small" id="addBtn">+ Add a goal</button></div>
+
+    <details class="about card">
+      <summary>How it works</summary>
+      <div class="body">
+        <p>Each goal breaks into <b>steps</b>, and its ring fills as you tick them off. The first unticked step shows on the card as <b>Next</b>, so you always know what to do. A goal with no steps uses a progress slider instead.</p>
+        <p>Add <b>notes</b> along the way, such as what you tried, what you learned or how it felt, and they're dated automatically. Tap <b>Edit</b> to change a goal's title, its reason or its target year.</p>
+        <p>The starting steps are suggestions. Rename, delete or add your own.</p>
+        <p>Your data stays in this browser. Back it up now and then:</p>
+        <div class="backup">
+          <button class="btn small" id="backupBtn">Download backup</button>
+          <button class="btn small" id="restoreBtn">Restore</button>
+        </div>
+      </div>
+    </details>
+  </main>
+
+  <script src="../shared/store.js"></script>
+  <script>
+  (function () {
+    var esc = Kit.esc, uid = Kit.uid;
+    // [title, starter steps]
+    var SEED = [
+      ["Teach Dancing", ["Get solid on fundamentals", "Assist in someone else's class", "Plan a beginner lesson", "Teach a first class", "Teach a regular series"]],
+      ["OMP Band", []],
+      ["Make App", ["Pick the idea", "Sketch the main screens", "Build a working prototype", "Get five people to try it", "Launch it"]],
+      ["Lift Birdie", []],
+      ["Make Album", ["Write the songs", "Choose the tracklist", "Record demos", "Record final takes", "Mix and master", "Make the cover art", "Release it"]],
+      ["West Coast Swing Intermediate", ["Take classes every week", "Go to a weekend event", "Compete in a Novice Jack & Jill", "Earn first Novice points", "Earn enough points to move up to Intermediate"]],
+      ["Buy House", ["Check credit score", "Set a budget", "Save the down payment", "Get pre-approved for a mortgage", "Find an agent", "Tour houses", "Make an offer", "Close"]]
+    ];
+    var store = new Kit.Store("journey:v1", null);
+    var data = store.load() || {
+      view: "active",
+      goals: SEED.map(function (g) {
+        return { id: uid(), title: g[0], why: "", year: "", manual: 0, done: false, notes: [],
+                 steps: g[1].map(function (s) { return { id: uid(), text: s, done: false }; }) };
+      })
+    };
+    function save() { store.save(data); }
+    var open = {};
+
+    function progress(g) {
+      if (g.done) return 1;
+      if (!g.steps.length) return g.manual / 100;
+      return g.steps.filter(function (s) { return s.done; }).length / g.steps.length;
+    }
+    function ring(p, done) {
+      var r = 22, c = 2 * Math.PI * r;
+      return '<div class="ring"><svg viewBox="0 0 52 52" aria-hidden="true"><circle cx="26" cy="26" r="' + r + '" fill="none" stroke="var(--surface-2)" stroke-width="5"/>' +
+        '<circle cx="26" cy="26" r="' + r + '" fill="none" stroke="' + (done || p >= 1 ? "var(--good)" : "var(--accent)") + '" stroke-width="5" stroke-linecap="round"' + (p > 0 ? "" : ' stroke-opacity="0"') + ' stroke-dasharray="' +
+        (c * p).toFixed(1) + " " + c.toFixed(1) + '"/></svg><span class="pct">' + Math.round(p * 100) + "%</span></div>";
+    }
+    function fmtDate(t) {
+      var d = new Date(t), same = d.getFullYear() === new Date().getFullYear();
+      return d.toLocaleDateString(undefined, same ? { month: "short", day: "numeric" } : { month: "short", year: "numeric" });
+    }
+
+    var listEl = document.getElementById("list"), tabsEl = document.getElementById("tabs");
+    function render() {
+      tabsEl.querySelectorAll("button").forEach(function (b) { b.setAttribute("aria-pressed", b.dataset.v === data.view); });
+      var rows = data.goals.filter(function (g) { return data.view === "all" || (data.view === "done") === g.done; });
+      listEl.innerHTML = rows.map(function (g) {
+        var p = progress(g), next = g.steps.find(function (s) { return !s.done; });
+        var nextHtml = g.done ? "Reached" : next ? "Next: <b>" + esc(next.text) + "</b>" : g.steps.length ? "All steps done. Mark it reached?" : "No steps yet";
+        var steps = g.steps.map(function (s) {
+          return '<li class="step' + (s.done ? " checked" : "") + '"><input type="checkbox" id="s-' + s.id + '" data-step="' + s.id + '" data-g="' + g.id + '"' + (s.done ? " checked" : "") + ' />' +
+            '<label for="s-' + s.id + '">' + esc(s.text) + '</label><button class="x" data-delstep="' + s.id + '" data-g="' + g.id + '" aria-label="Remove step">×</button></li>';
+        }).join("");
+        var notes = g.notes.slice().reverse().map(function (n) {
+          return '<li class="note"><time>' + fmtDate(n.t) + "</time><span>" + esc(n.text) + "</span></li>";
+        }).join("");
+        return '<li class="card goal' + (open[g.id] ? " open" : "") + (g.done ? " done" : "") + '">' +
+          '<button class="head" data-toggle="' + g.id + '" aria-expanded="' + !!open[g.id] + '">' + ring(p, g.done) +
+          '<div class="titles"><div class="t">' + esc(g.title) + '</div><div class="next">' + nextHtml + "</div></div>" +
+          (g.year ? '<span class="when">' + esc(g.year) + "</span>" : "") + "</button>" +
+          '<div class="gbody">' + (g.why ? '<p class="why">' + esc(g.why) + "</p>" : "") +
+          '<p class="lbl">Steps</p>' + (g.steps.length ? '<ul class="steps">' + steps + "</ul>" :
+            '<input type="range" min="0" max="100" step="5" value="' + g.manual + '" data-manual="' + g.id + '" aria-label="Progress, percent" />') +
+          '<div class="addstep"><input class="field" placeholder="Add a step" data-newstep="' + g.id + '" /><button class="btn small" data-addstep="' + g.id + '">Add</button></div>' +
+          '<p class="lbl">Notes</p>' + (notes ? '<ul class="notes">' + notes + "</ul>" : "") +
+          '<div class="addstep" style="margin-top:8px"><textarea class="field" placeholder="How\'s it going?" data-newnote="' + g.id + '"></textarea></div>' +
+          '<div style="margin-top:6px"><button class="btn small" data-addnote="' + g.id + '">Add note</button></div>' +
+          '<div class="goal-actions"><button class="btn small ' + (g.done ? "" : "primary") + '" data-done="' + g.id + '">' + (g.done ? "Not reached yet" : "Mark reached") + "</button>" +
+          '<button class="btn small ghost" data-edit="' + g.id + '">Edit</button></div></div></li>';
+      }).join("") || '<li class="empty">' + (data.view === "done" ? "Nothing reached yet. It's coming." : "No goals here.") + "</li>";
+
+      var active = data.goals.filter(function (g) { return !g.done; }).length;
+      var reached = data.goals.length - active;
+      document.getElementById("summary").textContent = active + " in progress · " + reached + " reached";
+    }
+    function goal(id) { return data.goals.find(function (g) { return g.id === id; }); }
+
+    tabsEl.onclick = function (e) { var b = e.target.closest("button"); if (!b) return; data.view = b.dataset.v; save(); render(); };
+    listEl.addEventListener("change", function (e) {
+      var t = e.target;
+      if (t.dataset.step) {
+        var s = goal(t.dataset.g).steps.find(function (x) { return x.id === t.dataset.step; });
+        s.done = t.checked; save(); render();
+      }
+      if (t.dataset.manual) { goal(t.dataset.manual).manual = +t.value; save(); render(); }
+    });
+    listEl.addEventListener("keydown", function (e) {
+      if (e.key === "Enter" && e.target.dataset.newstep) { addStep(e.target.dataset.newstep); }
+    });
+    function addStep(gid) {
+      var input = listEl.querySelector('[data-newstep="' + gid + '"]'), v = input.value.trim();
+      if (!v) return;
+      goal(gid).steps.push({ id: uid(), text: v, done: false }); save(); render();
+      var again = listEl.querySelector('[data-newstep="' + gid + '"]'); if (again) again.focus();
+    }
+    listEl.addEventListener("click", function (e) {
+      var b = e.target.closest("button"); if (!b) return;
+      var d = b.dataset;
+      if (d.toggle) { open[d.toggle] = !open[d.toggle]; render(); }
+      else if (d.addstep) addStep(d.addstep);
+      else if (d.delstep) {
+        var g = goal(d.g), s = g.steps.find(function (x) { return x.id === d.delstep; }), i = g.steps.indexOf(s);
+        g.steps.splice(i, 1); save(); render();
+        Kit.toast("Step removed", "Undo", function () { g.steps.splice(i, 0, s); save(); render(); });
+      }
+      else if (d.addnote) {
+        var ta = listEl.querySelector('[data-newnote="' + d.addnote + '"]'), v = ta.value.trim();
+        if (!v) return;
+        goal(d.addnote).notes.push({ t: Date.now(), text: v }); save(); render();
+      }
+      else if (d.done) {
+        var gg = goal(d.done); gg.done = !gg.done; save(); render();
+        if (gg.done) Kit.toast("🎉 " + gg.title + " reached", "Undo", function () { gg.done = false; save(); render(); });
+      }
+      else if (d.edit) edit(goal(d.edit));
+    });
+
+    function edit(g) {
+      Kit.sheet(function (el, close) {
+        el.innerHTML = "<div><h2>" + (g ? "Edit goal" : "New goal") + "</h2>" +
+          '<label for="fT">Goal</label><input class="field" id="fT" value="' + esc(g ? g.title : "") + '" />' +
+          '<label for="fW">Why it matters (optional)</label><textarea class="field" id="fW">' + esc(g ? g.why : "") + "</textarea>" +
+          '<label for="fY">Target year (optional)</label><input class="field" id="fY" inputmode="numeric" placeholder="' + (new Date().getFullYear() + 2) + '" value="' + esc(g ? g.year : "") + '" />' +
+          '<div class="actions">' + (g ? '<button class="btn" id="fDel" style="color:var(--bad)">Delete</button>' : "") +
+          '<button class="btn" id="fCancel">Cancel</button><button class="btn primary" id="fSave">Save</button></div></div>';
+        el.querySelector("#fCancel").onclick = close;
+        el.querySelector("#fSave").onclick = function () {
+          var t = el.querySelector("#fT").value.trim(); if (!t) return;
+          var o = g || { id: uid(), manual: 0, done: false, notes: [], steps: [] };
+          o.title = t; o.why = el.querySelector("#fW").value.trim(); o.year = el.querySelector("#fY").value.trim();
+          if (!g) { data.goals.push(o); open[o.id] = true; if (data.view === "done") data.view = "active"; }
+          save(); render(); close();
+        };
+        if (g) el.querySelector("#fDel").onclick = function () {
+          if (!confirm("Delete " + g.title + " and its notes?")) return;
+          data.goals = data.goals.filter(function (x) { return x !== g; }); save(); render(); close();
+        };
+      });
+    }
+    document.getElementById("addBtn").onclick = function () { edit(null); };
+    document.getElementById("backupBtn").onclick = function () { store.backup(data, "journey"); };
+    document.getElementById("restoreBtn").onclick = function () {
+      store.restore(function (d) {
+        if (!d || !Array.isArray(d.goals)) { alert("That isn't a Journey backup."); return; }
+        data = d; save(); render(); Kit.toast("Restored");
+      });
+    };
+    render();
+  })();
+  </script>
+</body>
+</html>

@@ -114,9 +114,10 @@
       ["Test prior knowledge", 4], ["Call a loved one", 4], ["Play guitar", 5], ["Play piano", 4],
       ["Sing", 4], ["Play Rocksmith", 2], ["Make a song", 3], ["Learn a new song", 4], ["Listen to music", 3],
       ["Cook", 3], ["Calisthenics", 3], ["Watch TV", 1], ["Play a video game", 1], ["Clean up", 3],
-      ["Contemplate lifestyle", 4], ["Diary", 2], ["Write book", 2]
+      ["Contemplate lifestyle", 4], ["Diary", 2], ["Write book", 2],
+      ["Try a new dance or sport", 2]
     ];
-    var SEED_VERSION = 3;
+    var SEED_VERSION = 4;
     var store = new Kit.Store("rollplay:v1", {
       acts: DEFAULT_ACTS.map(function (a) { return { id: Kit.uid(), name: a[0], w: a[1] }; }),
       log: [], win: 7, seedVer: SEED_VERSION
@@ -136,6 +137,13 @@
     if (data.seedVer < 3) {
       data.acts.forEach(function (a) { if (a.name === "Drink water" && a.w === 4) a.w = 10; });
       data.seedVer = 3;
+      store.save(data);
+    }
+    // Version 4: add "Try a new dance or sport".
+    if (data.seedVer < 4) {
+      if (!data.acts.some(function (a) { return a.name === "Try a new dance or sport"; }))
+        data.acts.push({ id: Kit.uid(), name: "Try a new dance or sport", w: 2 });
+      data.seedVer = 4;
       store.save(data);
     }
     function save() { store.save(data); }

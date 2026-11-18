@@ -24,6 +24,14 @@ window.APPS = [
     section: "Lifestyle",
   },
   {
+    slug: "journey",
+    name: "Journey",
+    blurb: "Long-term goals, step by step",
+    glyph: "⛰",
+    hue: 95,
+    section: "Lifestyle",
+  },
+  {
     slug: "learn",
     name: "Learn",
     blurb: "Cognitive science topics, with a confidence rating for each",
