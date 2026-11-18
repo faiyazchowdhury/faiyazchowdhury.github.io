@@ -12,13 +12,40 @@
 //   glyph  (optional) 1–2 characters or an emoji for the glyph tile (default: first letter of name)
 //   hue    (optional) 0–360, tints the glyph tile (default: derived from slug)
 //   href   (optional) override the link entirely (e.g. an external URL)
+//   section (optional) heading the tile is grouped under; sections appear in the order first used
 
 window.APPS = [
   {
-    slug: "midee",
-    name: "midee",
-    blurb: "MIDI player & falling-notes visualizer",
-    icon: "midee/icons/icon-192.png",
+    slug: "rollplay",
+    name: "RollPlay",
+    blurb: "Roll a weighted die for what to do next",
+    glyph: "⚄",
+    hue: 255,
+    section: "Lifestyle",
+  },
+  {
+    slug: "learn",
+    name: "Learn",
+    blurb: "Cognitive science topics, with a confidence rating for each",
+    glyph: "✦",
+    hue: 200,
+    section: "Learning",
+  },
+  {
+    slug: "repertoire",
+    name: "Repertoire",
+    blurb: "Guitar and piano pieces to learn and perform",
+    glyph: "𝄞",
+    hue: 30,
+    section: "Music",
+  },
+  {
+    slug: "chords",
+    name: "Chords",
+    blurb: "Chord progressions by degree, and the songs that use them",
+    glyph: "IV",
+    hue: 150,
+    section: "Music",
   },
   {
     slug: "vocal-range",
@@ -26,5 +53,13 @@ window.APPS = [
     blurb: "Songs that fit my voice, and how far to transpose them",
     glyph: "♪",
     hue: 300,
+    section: "Music",
+  },
+  {
+    slug: "midee",
+    name: "midee",
+    blurb: "MIDI player & falling-notes visualizer",
+    icon: "midee/icons/icon-192.png",
+    section: "Music",
   },
 ];

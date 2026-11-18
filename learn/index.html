@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Cogsci Learning</title>
+  <meta name="description" content="Topics to learn across the pillars of cognitive science, with a confidence rating for each." />
+  <meta name="theme-color" content="#0b0b10" media="(prefers-color-scheme: dark)" />
+  <meta name="theme-color" content="#f4f1ea" media="(prefers-color-scheme: light)" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Learn" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../shared/base.css" />
+  <style>
+    :root { --c0: var(--surface-3); --c1: #e0607a; --c2: #e8c55a; --c3: #4fc3d6; --c4: #5fd49a; }
+    @media (prefers-color-scheme: light) { :root { --c1: #c4304f; --c2: #b58a10; --c3: #138aa0; --c4: #1e9a62; } }
+
+    .pillars { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .pillar {
+      text-align: left; border: 0; padding: 14px; display: flex; flex-direction: column; gap: 8px; min-height: 104px;
+      background: var(--surface); border-radius: 16px; box-shadow: inset 0 0 0 1px var(--line);
+    }
+    .pillar[aria-pressed="true"] { box-shadow: inset 0 0 0 1.5px var(--fg); }
+    .pillar .pn { font-weight: 600; font-size: 15px; line-height: 1.2; }
+    .pillar .ps { color: var(--muted); font-size: 12px; margin-top: auto; }
+    .meter { display: flex; height: 6px; border-radius: 3px; overflow: hidden; background: var(--c0); }
+    .meter i { display: block; height: 100%; }
+
+    .subject { margin-top: 10px; overflow: hidden; }
+    .subject > button.head {
+      width: 100%; display: flex; align-items: center; gap: 10px; padding: 14px; background: none; border: 0; text-align: left;
+    }
+    .subject .sn { font-weight: 600; font-size: 15.5px; flex: 1; }
+    .subject .pct { font-family: "JetBrains Mono", monospace; font-size: 13px; color: var(--muted); }
+    .subject .chev { color: var(--muted); transition: transform .2s; }
+    .subject.open .chev { transform: rotate(90deg); }
+    .subject .meter { margin: 0 14px 12px; }
+    .topics { display: none; list-style: none; border-top: 1px solid var(--line); }
+    .subject.open .topics { display: block; }
+    .topic { display: flex; align-items: center; gap: 10px; padding: 9px 10px 9px 14px; border-bottom: 1px solid var(--line); }
+    .topic .tn { flex: 1; min-width: 0; background: none; border: 0; text-align: left; padding: 4px 0; font-size: 14.5px; }
+    .conf { display: flex; gap: 3px; flex: none; }
+    .conf button {
+      width: 30px; height: 30px; border: 0; border-radius: 8px; background: var(--surface-2);
+      font-family: "JetBrains Mono", monospace; font-size: 12px; color: var(--muted);
+    }
+    .conf button.on { color: #fff; }
+    .conf button.on[data-v="1"] { background: var(--c1); }
+    .conf button.on[data-v="2"] { background: var(--c2); }
+    .conf button.on[data-v="3"] { background: var(--c3); }
+    .conf button.on[data-v="4"] { background: var(--c4); }
+    .topics .addrow { display: flex; gap: 8px; padding: 10px 14px 12px; flex-wrap: wrap; }
+    .legend { display: flex; flex-wrap: wrap; gap: 6px 12px; font-size: 12px; color: var(--muted); margin: 10px 2px 0; }
+    .legend span { display: inline-flex; align-items: center; gap: 5px; }
+    .legend i { width: 9px; height: 9px; border-radius: 3px; display: block; }
+    .phead { display: flex; align-items: baseline; gap: 10px; margin: 26px 2px 4px; }
+    .phead h2 { font-family: "Instrument Serif", Georgia, serif; font-weight: 400; font-size: 30px; flex: 1; }
+  </style>
+</head>
+<body>
+  <main>
+    <a class="back" href="../">← Apps</a>
+    <header class="app-head">
+      <h1>Learn<em>.</em></h1>
+      <p class="sub" id="summary"></p>
+    </header>
+
+    <div class="pillars" id="pillars"></div>
+    <div class="legend" id="legend"></div>
+
+    <div class="phead"><h2 id="pTitle"></h2><button class="linkbtn" id="renamePillar">Rename</button></div>
+    <p class="hint" id="pBlurb"></p>
+    <div id="subjects"></div>
+    <div style="display:flex; gap:8px; margin-top:12px; flex-wrap:wrap">
+      <button class="btn ghost small" id="addSubject">+ Add subject</button>
+      <button class="btn ghost small" id="addPillar">+ Add pillar</button>
+    </div>
+
+    <details class="about card">
+      <summary>About this list</summary>
+      <div class="body">
+        <p>Cognitive science is usually drawn as six fields: philosophy, psychology, linguistics, neuroscience, artificial intelligence and anthropology. Here, AI is split into <b>Machine Learning</b> and <b>Robotics</b>, and anthropology is left out. Add it back with <b>+ Add pillar</b> if you want it.</p>
+        <p>Rate each topic from 0 to 4: <b>0</b> not started, <b>1</b> heard of it, <b>2</b> know the basics, <b>3</b> comfortable using it, <b>4</b> could teach it. Each subject's percentage is its average rating out of 4. Tap a topic's name to rename or delete it.</p>
+        <p>Your data stays in this browser. Back it up now and then:</p>
+        <div class="backup">
+          <button class="btn small" id="backupBtn">Download backup</button>
+          <button class="btn small" id="restoreBtn">Restore</button>
+        </div>
+      </div>
+    </details>
+  </main>
+
+  <script src="../shared/store.js"></script>
+  <script>
+  (function () {
+    var esc = Kit.esc, uid = Kit.uid;
+    var LEVELS = ["Not started", "Heard of it", "Basics", "Comfortable", "Could teach it"];
+
+    // Pillar → subject → topics. "|" separates topics.
+    var SEED = [
+      ["Machine Learning", "Learning from data, from the maths up to modern deep learning.", [
+        ["Linear Algebra", "Vectors and matrices|Linear maps and change of basis|Eigenvalues and eigenvectors|SVD|Least squares and projections|Matrix calculus"],
+        ["Probability & Statistics", "Bayes' rule|Common distributions|Expectation and variance|Maximum likelihood and MAP|Hypothesis testing|Entropy and KL divergence"],
+        ["Optimization", "Gradient descent|SGD, momentum and Adam|Convexity|Lagrange multipliers|Backpropagation|Regularization"],
+        ["Classical ML", "Linear and logistic regression|Bias–variance trade-off|Cross-validation|SVMs and kernels|Decision trees and ensembles|k-means and Gaussian mixtures|PCA"],
+        ["Deep Learning", "Multilayer perceptrons|Convolutional networks|RNNs and LSTMs|Attention and transformers|Normalization and dropout|Embeddings|VAEs, GANs and diffusion|Large language models"],
+        ["Reinforcement Learning", "Markov decision processes|Bellman equations|Dynamic programming|Q-learning|Policy gradients|Actor–critic|Exploration vs exploitation"]
+      ]],
+      ["Robotics", "Getting machines to sense, decide and move.", [
+        ["Differential Equations", "First-order ODEs|Second-order linear ODEs|Systems of ODEs and eigenvalues|Laplace transform|Phase portraits and stability|Numerical methods (Euler, RK4)"],
+        ["Control Systems", "Transfer functions|Block diagrams and feedback|PID control|Root locus|Bode and Nyquist plots|State-space models|Controllability and observability|LQR|Model predictive control|Adaptive control"],
+        ["Kinematics & Dynamics", "Rotations and quaternions|Homogeneous transforms|Forward kinematics (DH)|Inverse kinematics|Jacobians and singularities|Lagrangian dynamics"],
+        ["Estimation & Perception", "Kalman filter|EKF and UKF|Particle filters|SLAM|Camera models and calibration|Optical flow"],
+        ["Planning", "Graph search and A*|Sampling planners (RRT, PRM)|Trajectory optimization|Motion primitives|Collision checking"]
+      ]],
+      ["Psychology", "How minds behave, measured.", [
+        ["Cognitive Psychology", "Perception|Attention|Working memory|Long-term memory|Decision-making and heuristics|Problem solving|Mental imagery"],
+        ["Learning & Behavior", "Classical conditioning|Operant conditioning|Reinforcement schedules|Habit formation|Observational learning"],
+        ["Developmental", "Piaget's stages|Vygotsky and the ZPD|Attachment|Theory of mind|Language development"],
+        ["Social", "Attribution|Cognitive dissonance|Conformity and obedience|Persuasion|Group dynamics"],
+        ["Emotion & Motivation", "Theories of emotion|Self-determination theory|Stress and coping|Flow"],
+        ["Research Methods", "Experimental design|Effect sizes and power|The replication crisis|Psychometrics"]
+      ]],
+      ["Philosophy", "The questions underneath the science.", [
+        ["Philosophy of Mind", "The mind–body problem|Functionalism|Consciousness and qualia|The Chinese Room|Intentionality|The extended mind"],
+        ["Epistemology", "Knowledge and the Gettier problem|Skepticism|Rationalism vs empiricism|Bayesian epistemology"],
+        ["Logic", "Propositional logic|First-order logic|Modal logic|Gödel's incompleteness|Informal fallacies"],
+        ["Ethics", "Consequentialism|Deontology|Virtue ethics|AI ethics and alignment"],
+        ["Philosophy of Science", "Falsifiability|Kuhn and paradigm shifts|Explanation and causation|Reductionism and emergence"]
+      ]],
+      ["Neuroscience", "The brain as the hardware.", [
+        ["Cellular Neuroscience", "Neuron structure|Action potentials|Synaptic transmission|Neurotransmitters|Plasticity (LTP and LTD)"],
+        ["Systems Neuroscience", "Visual system|Motor system and cerebellum|Basal ganglia|Hippocampus and memory|Prefrontal cortex"],
+        ["Computational Neuroscience", "Hodgkin–Huxley model|Integrate-and-fire neurons|Hebbian learning|Predictive coding|Dopamine and reward prediction error"],
+        ["Methods", "EEG|fMRI|Single-unit recording|Lesion studies|Optogenetics"]
+      ]],
+      ["Linguistics", "The structure of language and how minds handle it.", [
+        ["Phonetics & Phonology", "The IPA|Articulation|Phonemes and allophones|Prosody"],
+        ["Morphology & Syntax", "Morphemes|Phrase structure|Generative grammar|Dependency grammar"],
+        ["Semantics & Pragmatics", "Compositionality|Reference and meaning|Speech acts|Implicature"],
+        ["Psycholinguistics", "Language acquisition|Sentence processing|Lexical access|Bilingualism"],
+        ["Computational Linguistics", "n-gram models|Word embeddings|Parsing|Language models"]
+      ]]
+    ];
+    function seed() {
+      return {
+        sel: 0,
+        pillars: SEED.map(function (p) {
+          return { id: uid(), name: p[0], blurb: p[1], subjects: p[2].map(function (s) {
+            return { id: uid(), name: s[0], topics: s[1].split("|").map(function (t) { return { id: uid(), name: t, c: 0 }; }) };
+          }) };
+        })
+      };
+    }
+    var store = new Kit.Store("learn:v1", null);
+    var data = store.load() || seed();
+    function save() { store.save(data); }
+    var open = {};
+
+    function stats(topics) {
+      var n = [0, 0, 0, 0, 0], sum = 0;
+      topics.forEach(function (t) { n[t.c]++; sum += t.c; });
+      return { n: n, total: topics.length, pct: topics.length ? Math.round(sum / (topics.length * 4) * 100) : 0 };
+    }
+    function meter(st) {
+      if (!st.total) return '<div class="meter"></div>';
+      var h = "";
+      for (var v = 4; v >= 1; v--) if (st.n[v]) h += '<i style="width:' + (st.n[v] / st.total * 100) + "%;background:var(--c" + v + ')"></i>';
+      return '<div class="meter">' + h + "</div>";
+    }
+    function allTopics(p) { return p.subjects.reduce(function (a, s) { return a.concat(s.topics); }, []); }
+
+    document.getElementById("legend").innerHTML = LEVELS.map(function (l, i) {
+      return '<span><i style="background:var(--c' + i + ')"></i>' + i + " " + l + "</span>";
+    }).join("");
+
+    function render() {
+      if (data.sel >= data.pillars.length) data.sel = 0;
+      var every = [];
+      document.getElementById("pillars").innerHTML = data.pillars.map(function (p, i) {
+        var ts = allTopics(p), st = stats(ts); every = every.concat(ts);
+        return '<button class="pillar" data-i="' + i + '" aria-pressed="' + (i === data.sel) + '"><span class="pn">' + esc(p.name) + "</span>" +
+          meter(st) + '<span class="ps">' + st.pct + "% · " + p.subjects.length + " subjects · " + st.total + " topics</span></button>";
+      }).join("");
+      var all = stats(every);
+      document.getElementById("summary").textContent = all.pct + "% overall · " + (all.total - all.n[0]) + " of " + all.total + " topics started";
+
+      var p = data.pillars[data.sel];
+      document.getElementById("pTitle").textContent = p ? p.name : "";
+      document.getElementById("pBlurb").textContent = p ? p.blurb || "" : "";
+      document.getElementById("subjects").innerHTML = !p ? "" : p.subjects.map(function (s) {
+        var st = stats(s.topics);
+        return '<section class="card subject' + (open[s.id] ? " open" : "") + '" data-s="' + s.id + '">' +
+          '<button class="head" data-toggle="' + s.id + '" aria-expanded="' + !!open[s.id] + '"><span class="sn">' + esc(s.name) + "</span>" +
+          '<span class="pct">' + st.pct + '%</span><span class="chev">›</span></button>' + meter(st) +
+          '<ul class="topics">' + s.topics.map(function (t) {
+            var b = "";
+            for (var v = 0; v <= 4; v++) b += '<button data-v="' + v + '" data-t="' + t.id + '" class="' + (t.c === v && v > 0 ? "on" : "") + '" aria-label="' + LEVELS[v] + '" aria-pressed="' + (t.c === v) + '">' + v + "</button>";
+            return '<li class="topic"><button class="tn" data-et="' + t.id + '" data-s="' + s.id + '">' + esc(t.name) + '</button><div class="conf">' + b + "</div></li>";
+          }).join("") +
+          '<li class="addrow"><button class="btn small" data-addt="' + s.id + '">+ Topic</button><button class="btn ghost small" data-es="' + s.id + '">Edit subject</button></li></ul></section>';
+      }).join("");
+    }
+
+    function findSubject(id) { return data.pillars[data.sel].subjects.find(function (s) { return s.id === id; }); }
+
+    document.getElementById("pillars").addEventListener("click", function (e) {
+      var b = e.target.closest(".pillar"); if (!b) return;
+      data.sel = +b.dataset.i; save(); render();
+    });
+    document.getElementById("subjects").addEventListener("click", function (e) {
+      var b = e.target.closest("button"); if (!b) return;
+      if (b.dataset.toggle) { open[b.dataset.toggle] = !open[b.dataset.toggle]; render(); return; }
+      if (b.dataset.v != null && b.dataset.t) {
+        data.pillars[data.sel].subjects.forEach(function (s) { s.topics.forEach(function (t) { if (t.id === b.dataset.t) t.c = +b.dataset.v; }); });
+        save(); render(); return;
+      }
+      if (b.dataset.addt) { nameSheet("New topic", "", function (n) { findSubject(b.dataset.addt).topics.push({ id: uid(), name: n, c: 0 }); }); return; }
+      if (b.dataset.et) {
+        var s = findSubject(b.dataset.s), t = s.topics.find(function (x) { return x.id === b.dataset.et; });
+        nameSheet("Edit topic", t.name, function (n) { t.name = n; }, function () { s.topics = s.topics.filter(function (x) { return x !== t; }); });
+        return;
+      }
+      if (b.dataset.es) {
+        var p = data.pillars[data.sel], sj = findSubject(b.dataset.es);
+        nameSheet("Edit subject", sj.name, function (n) { sj.name = n; }, function () { p.subjects = p.subjects.filter(function (x) { return x !== sj; }); });
+      }
+    });
+    document.getElementById("addSubject").onclick = function () {
+      nameSheet("New subject", "", function (n) { var s = { id: uid(), name: n, topics: [] }; data.pillars[data.sel].subjects.push(s); open[s.id] = true; });
+    };
+    document.getElementById("addPillar").onclick = function () {
+      nameSheet("New pillar", "", function (n) { data.pillars.push({ id: uid(), name: n, blurb: "", subjects: [] }); data.sel = data.pillars.length - 1; });
+    };
+    document.getElementById("renamePillar").onclick = function () {
+      var p = data.pillars[data.sel];
+      nameSheet("Edit pillar", p.name, function (n) { p.name = n; }, data.pillars.length > 1 ? function () { data.pillars.splice(data.sel, 1); data.sel = 0; } : null);
+    };
+
+    function nameSheet(title, value, onSave, onDelete) {
+      Kit.sheet(function (el, close) {
+        el.innerHTML = "<div><h2>" + esc(title) + '</h2><label for="fName">Name</label><input class="field" id="fName" value="' + esc(value) + '" />' +
+          '<div class="actions">' + (onDelete ? '<button class="btn" id="fDel" style="color:var(--bad)">Delete</button>' : "") +
+          '<button class="btn" id="fCancel">Cancel</button><button class="btn primary" id="fSave">Save</button></div></div>';
+        var input = el.querySelector("#fName");
+        function ok() { var n = input.value.trim(); if (!n) return; onSave(n); save(); render(); close(); }
+        input.onkeydown = function (e) { if (e.key === "Enter") ok(); };
+        el.querySelector("#fSave").onclick = ok;
+        el.querySelector("#fCancel").onclick = close;
+        if (onDelete) el.querySelector("#fDel").onclick = function () {
+          if (!confirm("Delete " + value + "?")) return;
+          onDelete(); save(); render(); close();
+        };
+      });
+    }
+
+    document.getElementById("backupBtn").onclick = function () { store.backup(data, "learn"); };
+    document.getElementById("restoreBtn").onclick = function () {
+      store.restore(function (d) {
+        if (!d || !Array.isArray(d.pillars)) { alert("That isn't a Learn backup."); return; }
+        data = d; save(); render(); Kit.toast("Restored");
+      });
+    };
+    render();
+  })();
+  </script>
+</body>
+</html>

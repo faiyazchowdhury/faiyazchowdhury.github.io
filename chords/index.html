@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Chords</title>
+  <meta name="description" content="Chord progressions by scale degree, the songs that use them, and what to explore next." />
+  <meta name="theme-color" content="#0b0b10" media="(prefers-color-scheme: dark)" />
+  <meta name="theme-color" content="#f4f1ea" media="(prefers-color-scheme: light)" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Chords" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../shared/base.css" />
+  <style>
+    .list { list-style: none; display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }
+    .item { padding: 13px 14px; }
+    .item .top { display: flex; gap: 10px; align-items: flex-start; }
+    .item .main { flex: 1; min-width: 0; background: none; border: 0; text-align: left; padding: 0; }
+    .deg { font-family: "JetBrains Mono", monospace; font-size: 17px; letter-spacing: .02em; line-height: 1.35; }
+    .deg .sep { color: var(--muted); margin: 0 4px; }
+    .nm { color: var(--muted); font-size: 13px; margin-top: 3px; }
+    .t { font-weight: 600; font-size: 15.5px; }
+    .pts { flex: none; text-align: right; }
+    .pts .n { font-family: "JetBrains Mono", monospace; font-size: 22px; line-height: 1; }
+    .pts .l { font-size: 11px; color: var(--muted); }
+    .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+    .chip {
+      font-size: 12.5px; padding: 5px 10px; border-radius: 999px; background: var(--surface-2); color: var(--muted); border: 0;
+    }
+    .chip.known { color: var(--fg); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--good) 60%, transparent); }
+    .chip.mono { font-family: "JetBrains Mono", monospace; font-size: 12px; }
+    .flags { display: flex; gap: 6px; margin-top: 12px; }
+    .flag {
+      display: inline-flex; align-items: center; gap: 6px; min-height: 36px; padding: 0 12px; border-radius: 10px; border: 0;
+      background: var(--surface-2); color: var(--muted); font-size: 13px; font-weight: 500;
+    }
+    .flag[aria-pressed="true"].k { background: color-mix(in srgb, var(--good) 22%, var(--surface-2)); color: var(--fg); }
+    .flag[aria-pressed="true"].e { background: color-mix(in srgb, var(--warn) 24%, var(--surface-2)); color: var(--fg); }
+    .head-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; justify-content: space-between; }
+    .filters { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+    .filters .chip[aria-pressed="true"] { background: var(--fg); color: var(--bg); }
+    .checks { display: flex; flex-direction: column; gap: 2px; max-height: 40dvh; overflow-y: auto; background: var(--surface-2); border-radius: 10px; padding: 6px; }
+    .checks label { display: flex !important; align-items: center; gap: 10px; margin: 0 !important; padding: 8px; color: var(--fg) !important; font-size: 14px !important; }
+    .checks input { width: 18px; height: 18px; accent-color: var(--accent); flex: none; }
+    .checks .mono { font-size: 13px; }
+  </style>
+</head>
+<body>
+  <main>
+    <a class="back" href="../">← Apps</a>
+    <header class="app-head">
+      <h1>Chords<em>.</em></h1>
+      <p class="sub" id="summary"></p>
+    </header>
+  </main>
+
+  <div class="sticky">
+    <div class="head-row">
+      <div class="seg" role="group" aria-label="View" id="tabs">
+        <button data-tab="prog">Progressions</button>
+        <button data-tab="songs">Songs</button>
+        <button data-tab="scales">Scales</button>
+        <button data-tab="explore">Explore</button>
+      </div>
+    </div>
+    <div class="filters" id="filters"></div>
+  </div>
+
+  <main>
+    <ul class="list" id="list"></ul>
+    <div style="margin-top:12px" id="addWrap"></div>
+
+    <details class="about card">
+      <summary>How points work</summary>
+      <div class="body">
+        <p>Progressions are written as <b>scale degrees</b>, so they hold in any key: upper case is a major chord, lower case is minor, and <span class="mono">b</span> lowers the root a semitone. For example, <span class="mono">I V vi IV</span> is C G Am F in C, or G D Em C in G.</p>
+        <p>A progression's <b>points</b> are the number of songs you know that use it. The more songs you can play over a progression, the deeper it's in your hands.</p>
+        <p>Mark things you want to dig into with <b>Eager</b>. They all collect on the <b>Explore</b> tab. Tap any title to edit or delete it.</p>
+        <p>Your data stays in this browser. Back it up now and then:</p>
+        <div class="backup">
+          <button class="btn small" id="backupBtn">Download backup</button>
+          <button class="btn small" id="restoreBtn">Restore</button>
+        </div>
+      </div>
+    </details>
+  </main>
+
+  <script src="../shared/store.js"></script>
+  <script>
+  (function () {
+    var esc = Kit.esc, uid = Kit.uid;
+
+    // [degrees, name]
+    var PROGS = [
+      ["I V vi IV", "Axis progression"],
+      ["I vi IV V", "'50s progression"],
+      ["vi IV I V", "Axis, starting on the minor"],
+      ["I IV V", "Three-chord"],
+      ["I V IV", "Three-chord, descending"],
+      ["ii V I", "Two-five-one"],
+      ["I I I I IV IV I I V IV I V", "12-bar blues"],
+      ["i VII VI V", "Andalusian cadence"],
+      ["I V vi iii IV I IV V", "Pachelbel's Canon"],
+      ["I bVII IV", "Mixolydian vamp"],
+      ["I III IV iv", "Major III and borrowed iv"],
+      ["I iii vi V", ""],
+      ["I v ii", ""],
+      ["IV V I vi", ""],
+      ["i iv VI VII", ""],
+      ["I I/3 IV V", "Walking bass"],
+      ["i V VII IV VI III iv V", "Hotel California"]
+    ];
+    // [title, artist, degrees used]
+    var SONGS = [
+      ["Let It Be", "The Beatles", ["I V vi IV"]],
+      ["With or Without You", "U2", ["I V vi IV"]],
+      ["Don't Stop Believin'", "Journey", ["I V vi IV"]],
+      ["Someone Like You", "Adele", ["I V vi IV"]],
+      ["Hey, Soul Sister", "Train", ["I V vi IV"]],
+      ["Stand by Me", "Ben E. King", ["I vi IV V"]],
+      ["Every Breath You Take", "The Police", ["I vi IV V"]],
+      ["Perfect", "Ed Sheeran", ["I vi IV V"]],
+      ["Zombie", "The Cranberries", ["vi IV I V"]],
+      ["Despacito", "Luis Fonsi", ["vi IV I V"]],
+      ["Twist and Shout", "The Isley Brothers", ["I IV V"]],
+      ["Yellow", "Coldplay", ["I V IV"]],
+      ["Autumn Leaves", "Joseph Kosma", ["ii V I"]],
+      ["Fly Me to the Moon", "Bart Howard", ["ii V I"]],
+      ["Johnny B. Goode", "Chuck Berry", ["I I I I IV IV I I V IV I V"]],
+      ["Hit the Road Jack", "Ray Charles", ["i VII VI V"]],
+      ["Canon in D", "Johann Pachelbel", ["I V vi iii IV I IV V"]],
+      ["Sweet Home Alabama", "Lynyrd Skynyrd", ["I bVII IV"]],
+      ["Creep", "Radiohead", ["I III IV iv"]],
+      ["Fix You", "Coldplay", ["I iii vi V"]],
+      ["Clocks", "Coldplay", ["I v ii"]],
+      ["Viva la Vida", "Coldplay", ["IV V I vi"]],
+      ["Shape of You", "Ed Sheeran", ["i iv VI VII"]],
+      ["Thinking Out Loud", "Ed Sheeran", ["I I/3 IV V"]],
+      ["Hotel California", "Eagles", ["i V VII IV VI III iv V"]]
+    ];
+    var SCALES = ["Major (Ionian)", "Natural minor (Aeolian)", "Dorian", "Phrygian", "Lydian", "Mixolydian", "Locrian",
+      "Harmonic minor", "Melodic minor", "Major pentatonic", "Minor pentatonic", "Blues", "Whole tone", "Diminished (octatonic)"];
+
+    function seed() {
+      var progs = PROGS.map(function (p) { return { id: uid(), deg: p[0], name: p[1], known: false, eager: false }; });
+      var byDeg = {}; progs.forEach(function (p) { byDeg[p.deg] = p.id; });
+      return {
+        tab: "prog", filter: "all", progs: progs,
+        songs: SONGS.map(function (s) { return { id: uid(), title: s[0], artist: s[1], progs: s[2].map(function (d) { return byDeg[d]; }), known: false, eager: false }; }),
+        scales: SCALES.map(function (n) { return { id: uid(), name: n, known: false, eager: false }; })
+      };
+    }
+    var store = new Kit.Store("chords:v1", null);
+    var data = store.load() || seed();
+    function save() { store.save(data); }
+
+    function normDeg(s) { return s.replace(/[–—,\-]+/g, " ").replace(/\s+/g, " ").trim(); }
+    function degHtml(d) { return d.split(" ").map(esc).join('<span class="sep">·</span><wbr>'); }
+    function prog(id) { return data.progs.find(function (p) { return p.id === id; }); }
+    function points(p) { return data.songs.filter(function (s) { return s.known && s.progs.indexOf(p.id) >= 0; }).length; }
+    function songsOf(p) { return data.songs.filter(function (s) { return s.progs.indexOf(p.id) >= 0; }); }
+
+    var FILTERS = { all: "All", known: "Known", unknown: "Not yet", eager: "Eager" };
+    var tabsEl = document.getElementById("tabs"), filtersEl = document.getElementById("filters"), listEl = document.getElementById("list");
+
+    function flags(kind, o) {
+      return '<div class="flags"><button class="flag k" data-flag="known" data-kind="' + kind + '" data-id="' + o.id + '" aria-pressed="' + o.known + '">' +
+        (o.known ? "✓ Known" : "Known?") + '</button><button class="flag e" data-flag="eager" data-kind="' + kind + '" data-id="' + o.id + '" aria-pressed="' + o.eager + '">' +
+        (o.eager ? "★ Eager" : "☆ Eager") + "</button></div>";
+    }
+    function pass(o) {
+      return data.filter === "all" || (data.filter === "known" && o.known) || (data.filter === "unknown" && !o.known) || (data.filter === "eager" && o.eager);
+    }
+    function progCard(p) {
+      var ss = songsOf(p), pts = points(p);
+      return '<li class="card item"><div class="top"><button class="main" data-edit="prog" data-id="' + p.id + '"><div class="deg">' + degHtml(p.deg) + "</div>" +
+        (p.name ? '<div class="nm">' + esc(p.name) + "</div>" : "") + "</button>" +
+        '<div class="pts"><div class="n">' + pts + '</div><div class="l">point' + (pts === 1 ? "" : "s") + "</div></div></div>" +
+        (ss.length ? '<div class="chips">' + ss.map(function (s) { return '<span class="chip' + (s.known ? " known" : "") + '">' + esc(s.title) + "</span>"; }).join("") + "</div>" : "") +
+        flags("progs", p) + "</li>";
+    }
+    function songCard(s) {
+      return '<li class="card item"><div class="top"><button class="main" data-edit="song" data-id="' + s.id + '"><div class="t">' + esc(s.title) + '</div><div class="nm">' + esc(s.artist) + "</div></button></div>" +
+        '<div class="chips">' + s.progs.map(prog).filter(Boolean).map(function (p) { return '<span class="chip mono' + (p.known ? " known" : "") + '">' + esc(p.deg) + "</span>"; }).join("") + "</div>" +
+        flags("songs", s) + "</li>";
+    }
+    function scaleCard(c) {
+      return '<li class="card item"><div class="top"><button class="main" data-edit="scale" data-id="' + c.id + '"><div class="t">' + esc(c.name) + "</div></button></div>" + flags("scales", c) + "</li>";
+    }
+
+    function render() {
+      tabsEl.querySelectorAll("button").forEach(function (b) { b.setAttribute("aria-pressed", b.dataset.tab === data.tab); });
+      var explore = data.tab === "explore";
+      filtersEl.style.display = explore ? "none" : "";
+      filtersEl.innerHTML = Object.keys(FILTERS).map(function (k) { return '<button class="chip" data-f="' + k + '" aria-pressed="' + (data.filter === k) + '">' + FILTERS[k] + "</button>"; }).join("");
+
+      var html = "";
+      if (data.tab === "prog") {
+        html = data.progs.filter(pass).slice().sort(function (a, b) { return points(b) - points(a) || (b.known - a.known) || songsOf(b).length - songsOf(a).length; }).map(progCard).join("");
+      } else if (data.tab === "songs") {
+        html = data.songs.filter(pass).slice().sort(function (a, b) { return a.title.localeCompare(b.title); }).map(songCard).join("");
+      } else if (data.tab === "scales") {
+        html = data.scales.filter(pass).map(scaleCard).join("");
+      } else {
+        var ep = data.progs.filter(function (p) { return p.eager; }), es = data.songs.filter(function (s) { return s.eager; }), ec = data.scales.filter(function (c) { return c.eager; });
+        function grp(title, items, fn) { return items.length ? '<li><h2 class="section-title">' + title + '<span class="count">' + items.length + "</span></h2></li>" + items.map(fn).join("") : ""; }
+        html = grp("Progressions", ep, progCard) + grp("Scales", ec, scaleCard) + grp("Songs", es, songCard);
+        if (!html) html = '<li class="empty">Nothing yet. Mark progressions, songs or scales as ☆ Eager and they’ll collect here.</li>';
+      }
+      listEl.innerHTML = html || '<li class="empty">Nothing matches.</li>';
+
+      var add = { prog: ["prog", "+ Add progression"], songs: ["song", "+ Add song"], scales: ["scale", "+ Add scale"] }[data.tab];
+      document.getElementById("addWrap").innerHTML = add ? '<button class="btn ghost small" data-add="' + add[0] + '">' + add[1] + "</button>" : "";
+
+      var kp = data.progs.filter(function (p) { return p.known; }).length, ks = data.songs.filter(function (s) { return s.known; }).length;
+      document.getElementById("summary").textContent = kp + " of " + data.progs.length + " progressions known · " + ks + " of " + data.songs.length + " songs known";
+    }
+
+    tabsEl.onclick = function (e) { var b = e.target.closest("button"); if (!b) return; data.tab = b.dataset.tab; save(); render(); scrollTo(0, 0); };
+    filtersEl.onclick = function (e) { var b = e.target.closest("button"); if (!b) return; data.filter = b.dataset.f; save(); render(); };
+    document.body.addEventListener("click", function (e) {
+      var b = e.target.closest("button"); if (!b) return;
+      if (b.dataset.flag) {
+        var o = data[b.dataset.kind].find(function (x) { return x.id === b.dataset.id; });
+        o[b.dataset.flag] = !o[b.dataset.flag]; save(); render(); return;
+      }
+      if (b.dataset.edit === "prog") editProg(prog(b.dataset.id));
+      else if (b.dataset.edit === "song") editSong(data.songs.find(function (s) { return s.id === b.dataset.id; }));
+      else if (b.dataset.edit === "scale") editScale(data.scales.find(function (s) { return s.id === b.dataset.id; }));
+      else if (b.dataset.add === "prog") editProg(null);
+      else if (b.dataset.add === "song") editSong(null);
+      else if (b.dataset.add === "scale") editScale(null);
+    });
+
+    function form(title, fields, onSave, onDelete) {
+      Kit.sheet(function (el, close) {
+        el.innerHTML = "<div><h2>" + esc(title) + "</h2>" + fields + '<div class="actions">' + (onDelete ? '<button class="btn" id="fDel" style="color:var(--bad)">Delete</button>' : "") +
+          '<button class="btn" id="fCancel">Cancel</button><button class="btn primary" id="fSave">Save</button></div></div>';
+        el.querySelector("#fCancel").onclick = close;
+        el.querySelector("#fSave").onclick = function () { if (onSave(el) !== false) { save(); render(); close(); } };
+        if (onDelete) el.querySelector("#fDel").onclick = function () { if (confirm("Delete this?")) { onDelete(); save(); render(); close(); } };
+      });
+    }
+    function editProg(p) {
+      form(p ? "Edit progression" : "New progression",
+        '<label for="fD">Degrees, separated by spaces</label><input class="field mono" id="fD" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="I V vi IV" value="' + esc(p ? p.deg : "") + '" />' +
+        '<label for="fN">Name (optional)</label><input class="field" id="fN" value="' + esc(p ? p.name : "") + '" />',
+        function (el) {
+          var d = normDeg(el.querySelector("#fD").value); if (!d) return false;
+          var o = p || { id: uid(), known: false, eager: false };
+          o.deg = d; o.name = el.querySelector("#fN").value.trim();
+          if (!p) data.progs.push(o);
+        },
+        p && function () { data.progs = data.progs.filter(function (x) { return x !== p; }); data.songs.forEach(function (s) { s.progs = s.progs.filter(function (id) { return id !== p.id; }); }); });
+    }
+    function editSong(s) {
+      var checks = data.progs.map(function (p) {
+        return '<label><input type="checkbox" value="' + p.id + '"' + (s && s.progs.indexOf(p.id) >= 0 ? " checked" : "") + ' /><span class="mono">' + esc(p.deg) + "</span>" +
+          (p.name ? '<span style="color:var(--muted);font-size:12.5px">' + esc(p.name) + "</span>" : "") + "</label>";
+      }).join("");
+      form(s ? "Edit song" : "New song",
+        '<label for="fT">Title</label><input class="field" id="fT" value="' + esc(s ? s.title : "") + '" />' +
+        '<label for="fA">Artist</label><input class="field" id="fA" value="' + esc(s ? s.artist : "") + '" />' +
+        "<label>Progressions it uses</label><div class=\"checks\">" + checks + "</div>" +
+        '<label for="fNew">Or add a new one</label><input class="field mono" id="fNew" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="e.g. I IV vi V" />',
+        function (el) {
+          var t = el.querySelector("#fT").value.trim(); if (!t) return false;
+          var ids = Array.prototype.map.call(el.querySelectorAll(".checks input:checked"), function (i) { return i.value; });
+          var nd = normDeg(el.querySelector("#fNew").value);
+          if (nd) {
+            var ex = data.progs.find(function (p) { return p.deg === nd; });
+            if (!ex) { ex = { id: uid(), deg: nd, name: "", known: false, eager: false }; data.progs.push(ex); }
+            if (ids.indexOf(ex.id) < 0) ids.push(ex.id);
+          }
+          var o = s || { id: uid(), known: false, eager: false };
+          o.title = t; o.artist = el.querySelector("#fA").value.trim(); o.progs = ids;
+          if (!s) data.songs.push(o);
+        },
+        s && function () { data.songs = data.songs.filter(function (x) { return x !== s; }); });
+    }
+    function editScale(c) {
+      form(c ? "Edit scale" : "New scale", '<label for="fN">Name</label><input class="field" id="fN" value="' + esc(c ? c.name : "") + '" />',
+        function (el) {
+          var n = el.querySelector("#fN").value.trim(); if (!n) return false;
+          if (c) c.name = n; else data.scales.push({ id: uid(), name: n, known: false, eager: false });
+        },
+        c && function () { data.scales = data.scales.filter(function (x) { return x !== c; }); });
+    }
+
+    document.getElementById("backupBtn").onclick = function () { store.backup(data, "chords"); };
+    document.getElementById("restoreBtn").onclick = function () {
+      store.restore(function (d) {
+        if (!d || !Array.isArray(d.progs) || !Array.isArray(d.songs)) { alert("That isn't a Chords backup."); return; }
+        data = d; save(); render(); Kit.toast("Restored");
+      });
+    };
+    render();
+  })();
+  </script>
+</body>
+</html>

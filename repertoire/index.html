@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Repertoire</title>
+  <meta name="description" content="Pieces to learn on guitar and piano, with how far along each one is and how often it's been performed." />
+  <meta name="theme-color" content="#0b0b10" media="(prefers-color-scheme: dark)" />
+  <meta name="theme-color" content="#f4f1ea" media="(prefers-color-scheme: light)" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Repertoire" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../shared/base.css" />
+  <style>
+    .bar { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+    .pick {
+      background: var(--surface); border: 0; border-radius: 12px; padding: 9px 30px 9px 12px; font-size: 13.5px; font-weight: 500;
+      box-shadow: inset 0 0 0 1px var(--line); appearance: none; -webkit-appearance: none;
+      background-image: linear-gradient(45deg, transparent 50%, currentColor 50%), linear-gradient(135deg, currentColor 50%, transparent 50%);
+      background-position: right 14px center, right 9px center; background-size: 5px 5px; background-repeat: no-repeat;
+    }
+    .songs { list-style: none; display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }
+    .song { padding: 13px 14px 14px; }
+    .song .top { display: flex; gap: 10px; align-items: flex-start; }
+    .song .titles { flex: 1; min-width: 0; background: none; border: 0; text-align: left; padding: 0; }
+    .song .t { font-weight: 600; font-size: 15.5px; line-height: 1.25; }
+    .song .c { color: var(--muted); font-size: 13px; margin-top: 2px; }
+    .tag { font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 999px; background: var(--surface-2); color: var(--muted); flex: none; }
+    .row { display: flex; align-items: center; gap: 12px; margin-top: 12px; }
+    .row .k { font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); width: 84px; flex: none; }
+    .row .v { font-family: "JetBrains Mono", monospace; font-size: 13px; width: 44px; text-align: right; flex: none; }
+    input[type="range"] { flex: 1; min-width: 0; accent-color: var(--accent); height: 28px; }
+    .perf { flex: 1; min-width: 0; height: 8px; border-radius: 4px; background: var(--surface-2); overflow: hidden; }
+    .perf b { display: block; height: 100%; border-radius: 4px; background: linear-gradient(90deg, var(--warn), var(--good)); }
+    .plus { width: 44px; height: 36px; border-radius: 10px; border: 0; background: var(--surface-2); font-size: 18px; flex: none; }
+    .done .t::after { content: " ✓"; color: var(--good); }
+  </style>
+</head>
+<body>
+  <main>
+    <a class="back" href="../">← Apps</a>
+    <header class="app-head">
+      <h1>Repertoire<em>.</em></h1>
+      <p class="sub" id="summary"></p>
+    </header>
+  </main>
+
+  <div class="sticky">
+    <div class="bar">
+      <div class="seg" role="group" aria-label="Instrument" id="inst"></div>
+      <select class="pick" id="sort" aria-label="Sort">
+        <option value="progress">In progress first</option>
+        <option value="least">Least learned</option>
+        <option value="perf">Most performed</option>
+        <option value="name">A–Z</option>
+      </select>
+    </div>
+  </div>
+
+  <main>
+    <ul class="songs" id="list"></ul>
+    <div style="margin-top:12px"><button class="btn ghost small" id="addBtn">+ Add a piece</button></div>
+
+    <details class="about card">
+      <summary>How it works</summary>
+      <div class="body">
+        <p><b>Learned</b> is how much of the piece you can play, from 0 to 100%.</p>
+        <p><b>Performed</b> goes up each time you tap <b>+</b> after playing the piece through for someone, or for a recording. It grows logarithmically: the first few performances count the most, and each doubling of the count adds the same amount. Ten performances fill the bar about halfway, and a hundred fill it.</p>
+        <p>Tap a piece's title to edit or delete it. Your data stays in this browser. Back it up now and then:</p>
+        <div class="backup">
+          <button class="btn small" id="backupBtn">Download backup</button>
+          <button class="btn small" id="restoreBtn">Restore</button>
+        </div>
+      </div>
+    </details>
+  </main>
+
+  <script src="../shared/store.js"></script>
+  <script>
+  (function () {
+    var esc = Kit.esc, uid = Kit.uid;
+    var INST = ["Guitar", "Piano"];
+    // From the "Classical Pieces to Practice" lists on the old music page.
+    var SEED = [
+      ["Guitar", "Wild Mountain Thyme", "Traditional, arr. Scott Tennant"],
+      ["Guitar", "Lady Daydream (Flower)", "Vincent Diamante"],
+      ["Guitar", "Cullare la Tempesta", "Scott Ouellette"],
+      ["Guitar", "Dolomiti Dance", "Ralph Towner"],
+      ["Guitar", "The Bannered Mare (Skyrim)", "Jeremy Soule"],
+      ["Guitar", "The Last of Us", "Gustavo Santaolalla"],
+      ["Guitar", "Concerning Hobbits (The Lord of the Rings)", "Howard Shore"],
+      ["Guitar", "Sons de Carrilhões", "João Pernambuco"],
+      ["Guitar", "Julia Florida", "Agustín Barrios"],
+      ["Guitar", "Howl's Moving Castle", "Joe Hisaishi"],
+      ["Guitar", "Los Sueños", "Astor Piazzolla"],
+      ["Guitar", "Gran Vals", "Francisco Tárrega"],
+      ["Piano", "Liebestraum No. 3", "Liszt"],
+      ["Piano", "Raindrop Prelude, Op. 28 No. 15", "Chopin"],
+      ["Piano", "Moment Musical No. 3", "Schubert"],
+      ["Piano", "Dolly's Dreaming and Awakening", "Oesten"],
+      ["Piano", "The Maiden's Prayer", "Bądarzewska"],
+      ["Piano", "Howl's Moving Castle", "Joe Hisaishi"],
+      ["Piano", "Ecruteak City (Pokémon Gold/Silver)", "Go Ichinose"],
+      ["Piano", "National Park (Pokémon Gold/Silver)", "Go Ichinose"],
+      ["Piano", "Verdanturf Town (Pokémon Ruby/Sapphire)", "Go Ichinose"],
+      ["Piano", "Canalave City (Pokémon Diamond/Pearl)", "Go Ichinose"],
+      ["Piano", "Kiss the Rain", "Yiruma"],
+      ["Piano", "Comptine d'un autre été (Amélie)", "Yann Tiersen"],
+      ["Piano", "Nocturne in E-flat major, Op. 9 No. 2", "Chopin"],
+      ["Piano", "The Entertainer", "Scott Joplin"]
+    ];
+    var store = new Kit.Store("repertoire:v1", {
+      inst: "All", sort: "progress",
+      songs: SEED.map(function (s) { return { id: uid(), inst: s[0], title: s[1], by: s[2], done: 0, perf: 0 }; })
+    });
+    var data = store.load();
+    function save() { store.save(data); }
+
+    // log2(1 + n) / log2(101): 1 → 15%, 3 → 30%, 10 → 52%, 30 → 75%, 100 → 100%
+    function perfFill(n) { return Math.min(1, Math.log2(1 + n) / Math.log2(101)); }
+
+    var instEl = document.getElementById("inst");
+    instEl.innerHTML = ["All"].concat(INST).map(function (i) { return '<button data-i="' + i + '">' + i + "</button>"; }).join("");
+    instEl.onclick = function (e) { var b = e.target.closest("button"); if (!b) return; data.inst = b.dataset.i; save(); render(); };
+    var sortEl = document.getElementById("sort");
+    sortEl.value = data.sort;
+    sortEl.onchange = function () { data.sort = sortEl.value; save(); render(); };
+
+    var listEl = document.getElementById("list");
+    function render() {
+      instEl.querySelectorAll("button").forEach(function (b) { b.setAttribute("aria-pressed", b.dataset.i === data.inst); });
+      var rows = data.songs.filter(function (s) { return data.inst === "All" || s.inst === data.inst; });
+      var by = {
+        progress: function (a, b) { return rank(a) - rank(b) || b.done - a.done || a.title.localeCompare(b.title); },
+        least: function (a, b) { return a.done - b.done || a.title.localeCompare(b.title); },
+        perf: function (a, b) { return b.perf - a.perf || b.done - a.done; },
+        name: function (a, b) { return a.title.localeCompare(b.title); }
+      }[data.sort];
+      function rank(s) { return s.done > 0 && s.done < 100 ? 0 : s.done === 0 ? 1 : 2; }
+      rows.sort(by);
+      listEl.innerHTML = rows.map(function (s) {
+        return '<li class="card song' + (s.done >= 100 ? " done" : "") + '" data-id="' + s.id + '">' +
+          '<div class="top"><button class="titles" data-edit="' + s.id + '"><div class="t">' + esc(s.title) + '</div><div class="c">' + esc(s.by) + "</div></button>" +
+          (data.inst === "All" ? '<span class="tag">' + esc(s.inst) + "</span>" : "") + "</div>" +
+          '<div class="row"><span class="k">Learned</span><input type="range" min="0" max="100" step="5" value="' + s.done + '" data-done="' + s.id + '" aria-label="Learned, percent" />' +
+          '<span class="v" id="v-' + s.id + '">' + s.done + "%</span></div>" +
+          '<div class="row"><span class="k">Performed</span><div class="perf"><b style="width:' + (perfFill(s.perf) * 100).toFixed(1) + '%"></b></div>' +
+          '<span class="v">' + s.perf + '×</span><button class="plus" data-perf="' + s.id + '" aria-label="Log a performance">+</button></div></li>';
+      }).join("") || '<li class="empty">No pieces here yet.</li>';
+
+      var all = data.songs, learned = all.filter(function (s) { return s.done >= 100; }).length;
+      var avg = all.length ? Math.round(all.reduce(function (a, s) { return a + s.done; }, 0) / all.length) : 0;
+      var perfs = all.reduce(function (a, s) { return a + s.perf; }, 0);
+      document.getElementById("summary").textContent = learned + " of " + all.length + " learned · " + avg + "% average · " + perfs + " performance" + (perfs === 1 ? "" : "s");
+    }
+    function find(id) { return data.songs.find(function (s) { return s.id === id; }); }
+
+    listEl.addEventListener("input", function (e) {
+      var id = e.target.dataset.done; if (!id) return;
+      find(id).done = +e.target.value;
+      document.getElementById("v-" + id).textContent = e.target.value + "%";
+      save();
+    });
+    listEl.addEventListener("change", function (e) { if (e.target.dataset.done) render(); });
+    listEl.addEventListener("click", function (e) {
+      var b = e.target.closest("button"); if (!b) return;
+      if (b.dataset.perf) {
+        var s = find(b.dataset.perf); s.perf++; save(); render();
+        Kit.toast(s.title + ": " + s.perf + " performance" + (s.perf === 1 ? "" : "s"), "Undo", function () { s.perf = Math.max(0, s.perf - 1); save(); render(); });
+      }
+      if (b.dataset.edit) edit(find(b.dataset.edit));
+    });
+
+    function edit(s) {
+      Kit.sheet(function (el, close) {
+        el.innerHTML = "<div><h2>" + (s ? "Edit piece" : "New piece") + "</h2>" +
+          '<label for="fT">Title</label><input class="field" id="fT" value="' + esc(s ? s.title : "") + '" />' +
+          '<label for="fB">Composer or artist</label><input class="field" id="fB" value="' + esc(s ? s.by : "") + '" />' +
+          '<label for="fI">Instrument</label><select class="field" id="fI">' + INST.map(function (i) {
+            return "<option" + ((s ? s.inst : (data.inst === "All" ? "Guitar" : data.inst)) === i ? " selected" : "") + ">" + i + "</option>";
+          }).join("") + "</select>" +
+          (s ? '<label for="fP">Performances</label><input class="field" id="fP" type="number" inputmode="numeric" min="0" value="' + s.perf + '" />' : "") +
+          '<div class="actions">' + (s ? '<button class="btn" id="fDel" style="color:var(--bad)">Delete</button>' : "") +
+          '<button class="btn" id="fCancel">Cancel</button><button class="btn primary" id="fSave">Save</button></div></div>';
+        el.querySelector("#fCancel").onclick = close;
+        el.querySelector("#fSave").onclick = function () {
+          var t = el.querySelector("#fT").value.trim(); if (!t) return;
+          var o = s || { id: uid(), done: 0, perf: 0 };
+          o.title = t; o.by = el.querySelector("#fB").value.trim(); o.inst = el.querySelector("#fI").value;
+          if (s) o.perf = Math.max(0, parseInt(el.querySelector("#fP").value, 10) || 0);
+          if (!s) data.songs.push(o);
+          save(); render(); close();
+        };
+        if (s) el.querySelector("#fDel").onclick = function () {
+          if (!confirm("Delete " + s.title + "?")) return;
+          data.songs = data.songs.filter(function (x) { return x !== s; }); save(); render(); close();
+        };
+      });
+    }
+    document.getElementById("addBtn").onclick = function () { edit(null); };
+    document.getElementById("backupBtn").onclick = function () { store.backup(data, "repertoire"); };
+    document.getElementById("restoreBtn").onclick = function () {
+      store.restore(function (d) {
+        if (!d || !Array.isArray(d.songs)) { alert("That isn't a Repertoire backup."); return; }
+        data = d; save(); sortEl.value = data.sort; render(); Kit.toast("Restored");
+      });
+    };
+    render();
+  })();
+  </script>
+</body>
+</html>

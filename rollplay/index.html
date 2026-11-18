@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>RollPlay</title>
+  <meta name="description" content="Roll a weighted die to pick what to do next, favouring what you've done least." />
+  <meta name="theme-color" content="#0b0b10" media="(prefers-color-scheme: dark)" />
+  <meta name="theme-color" content="#f4f1ea" media="(prefers-color-scheme: light)" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="RollPlay" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../shared/base.css" />
+  <style>
+    .stage { padding: 22px 18px 18px; text-align: center; position: relative; overflow: hidden; }
+    .die {
+      width: 92px; height: 92px; margin: 0 auto; border-radius: 22px; position: relative;
+      background: linear-gradient(145deg, color-mix(in srgb, var(--accent) 80%, #fff 20%), var(--accent));
+      box-shadow: 0 14px 30px -12px color-mix(in srgb, var(--accent) 70%, transparent), inset 0 -4px 0 rgba(0,0,0,.18);
+      display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(3, 1fr); padding: 14px;
+    }
+    .die i { width: 14px; height: 14px; border-radius: 50%; background: var(--accent-fg); place-self: center; opacity: 0; }
+    .die.rolling { animation: tumble .9s cubic-bezier(.3, .7, .3, 1); }
+    @keyframes tumble {
+      0% { transform: rotate(0) scale(1); }
+      30% { transform: rotate(200deg) scale(.86) translateY(-10px); }
+      70% { transform: rotate(330deg) scale(1.06); }
+      100% { transform: rotate(360deg) scale(1); }
+    }
+    .result { margin-top: 18px; min-height: 66px; }
+    .result .what { font-family: "Instrument Serif", Georgia, serif; font-size: clamp(32px, 9vw, 44px); line-height: 1.05; }
+    .result .why { color: var(--muted); font-size: 13px; margin-top: 6px; }
+    .stage .row { display: flex; gap: 8px; justify-content: center; margin-top: 16px; flex-wrap: wrap; }
+    .stage .row .btn { min-width: 112px; }
+    .rollbtn { font-size: 16px; min-height: 50px; padding: 0 28px; }
+
+    .tools { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; justify-content: space-between; margin: 24px 2px 10px; }
+    .tools h2 { font-family: "Instrument Serif", Georgia, serif; font-weight: 400; font-size: 26px; }
+
+    .acts { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+    .act { display: flex; align-items: center; gap: 10px; padding: 10px 10px 10px 14px; }
+    .act .main { flex: 1; min-width: 0; }
+    .act .nm { font-weight: 600; font-size: 15px; background: none; border: 0; text-align: left; padding: 0; }
+    .act .meta { color: var(--muted); font-size: 12.5px; margin-top: 2px; display: flex; gap: 10px; flex-wrap: wrap; }
+    .act .odds { height: 4px; border-radius: 2px; background: var(--surface-2); margin-top: 7px; overflow: hidden; }
+    .act .odds b { display: block; height: 100%; background: var(--accent); border-radius: 2px; }
+    .act .cnt { font-family: "JetBrains Mono", monospace; font-size: 18px; min-width: 30px; text-align: right; }
+    .act .plus { background: var(--surface-2); }
+    .act.hot { box-shadow: inset 0 0 0 1.5px var(--accent); }
+    .wctl { display: none; align-items: center; gap: 4px; }
+    .weights .wctl { display: flex; }
+    .weights .act .cnt, .weights .act .plus { display: none; }
+    .wctl .iconbtn { width: 34px; height: 34px; font-size: 16px; }
+    .wctl .w { font-family: "JetBrains Mono", monospace; min-width: 26px; text-align: center; font-size: 16px; }
+  </style>
+</head>
+<body>
+  <main>
+    <a class="back" href="../">← Apps</a>
+    <header class="app-head">
+      <h1>RollPlay<em>.</em></h1>
+      <p class="sub" id="summary"></p>
+    </header>
+
+    <section class="card stage">
+      <div class="die" id="die" aria-hidden="true"></div>
+      <div class="result" id="result" aria-live="polite">
+        <div class="what">Roll for it</div>
+        <div class="why">Weighted toward what matters and what you've skipped lately.</div>
+      </div>
+      <div class="row" id="actions">
+        <button class="btn primary rollbtn" id="rollBtn">Roll</button>
+      </div>
+    </section>
+
+    <div class="tools">
+      <h2>Activities</h2>
+      <div class="seg" role="group" aria-label="Count window">
+        <button data-win="1">Today</button>
+        <button data-win="7">7 days</button>
+        <button data-win="0">All time</button>
+      </div>
+    </div>
+    <ul class="acts" id="acts"></ul>
+    <div style="display:flex; gap:8px; margin-top:12px; flex-wrap:wrap">
+      <button class="btn ghost small" id="weightsBtn" aria-pressed="false">Edit weights</button>
+      <button class="btn ghost small" id="addBtn">+ Add activity</button>
+    </div>
+
+    <details class="about card">
+      <summary>How the die works</summary>
+      <div class="body">
+        <p>Each activity has a <b>weight</b>: how much of your time you'd like it to get, relative to the others. With nothing logged, an activity with weight 6 comes up twice as often as one with weight 3.</p>
+        <p>The die also looks at the <b>last 7 days</b>. It works out each activity's fair share of what you've logged (its weight's share of the total) and compares it with what you actually did. The chance is <span class="mono">weight × (1 + fair share) ÷ (1 + times done)</span>. Something you've neglected climbs, and something you've overdone drops, until things even out.</p>
+        <p>Tap <b>Done</b> after a roll, or the <b>+</b> next to any activity, to log it. Tap an activity's name to rename or delete it.</p>
+        <p>Your data stays in this browser. Back it up now and then:</p>
+        <div class="backup">
+          <button class="btn small" id="backupBtn">Download backup</button>
+          <button class="btn small" id="restoreBtn">Restore</button>
+        </div>
+      </div>
+    </details>
+  </main>
+
+  <script src="../shared/store.js"></script>
+  <script>
+  (function () {
+    var esc = Kit.esc;
+    var DEFAULT_ACTS = [
+      ["Read", 3], ["Walk", 6], ["Drink water", 10], ["Study", 5], ["Meditate", 3], ["Yoga", 3],
+      ["Test prior knowledge", 2], ["Call a loved one", 4], ["Play guitar", 5], ["Play piano", 4],
+      ["Sing", 3], ["Play Rocksmith", 2], ["Make a song", 3], ["Learn a new song", 4], ["Listen to music", 3],
+      ["Cook", 2], ["Calisthenics", 3], ["Watch TV", 1], ["Play a video game", 1], ["Clean up", 3],
+      ["Contemplate lifestyle", 1]
+    ];
+    var store = new Kit.Store("rollplay:v1", {
+      acts: DEFAULT_ACTS.map(function (a) { return { id: Kit.uid(), name: a[0], w: a[1] }; }),
+      log: [], win: 7
+    });
+    var data = store.load();
+    function save() { store.save(data); }
+
+    var DAY = 864e5;
+    function since(days) {
+      if (!days) return 0;
+      if (days === 1) { var d = new Date(); d.setHours(0, 0, 0, 0); return d.getTime(); }
+      return Date.now() - days * DAY;
+    }
+    function counts(days) {
+      var t0 = since(days), c = {};
+      data.log.forEach(function (e) { if (e.t >= t0) c[e.a] = (c[e.a] || 0) + 1; });
+      return c;
+    }
+    // Probability of each activity: weight × (1 + fair share) ÷ (1 + times done), over the last 7 days.
+    function odds() {
+      var c = counts(7), W = 0, N = 0;
+      data.acts.forEach(function (a) { W += a.w; N += c[a.id] || 0; });
+      var raw = data.acts.map(function (a) {
+        if (a.w <= 0) return 0;
+        var fair = W ? (a.w / W) * N : 0;
+        return a.w * (1 + fair) / (1 + (c[a.id] || 0));
+      });
+      var tot = raw.reduce(function (x, y) { return x + y; }, 0) || 1;
+      var p = {};
+      data.acts.forEach(function (a, i) { p[a.id] = raw[i] / tot; });
+      return p;
+    }
+    function pick() {
+      var p = odds(), r = Math.random(), acc = 0, last = null;
+      for (var i = 0; i < data.acts.length; i++) {
+        var a = data.acts[i];
+        if (!p[a.id]) continue;
+        acc += p[a.id]; last = a;
+        if (r < acc) return a;
+      }
+      return last;
+    }
+
+    // ---- die faces ----
+    var PIPS = { 1: [4], 2: [0, 8], 3: [0, 4, 8], 4: [0, 2, 6, 8], 5: [0, 2, 4, 6, 8], 6: [0, 2, 3, 5, 6, 8] };
+    var dieEl = document.getElementById("die");
+    for (var i = 0; i < 9; i++) dieEl.appendChild(document.createElement("i"));
+    function face(n) {
+      var dots = dieEl.children;
+      for (var i = 0; i < 9; i++) dots[i].style.opacity = PIPS[n].indexOf(i) >= 0 ? 1 : 0;
+    }
+    face(5);
+
+    var current = null, hot = null;
+    var resultEl = document.getElementById("result"), actionsEl = document.getElementById("actions");
+
+    function roll() {
+      if (!data.acts.some(function (a) { return a.w > 0; })) { Kit.toast("Give an activity a weight first."); return; }
+      var chosen = pick(), p = odds()[chosen.id];
+      dieEl.classList.remove("rolling"); void dieEl.offsetWidth; dieEl.classList.add("rolling");
+      var reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+      var names = data.acts.filter(function (a) { return a.w > 0; });
+      var ticks = reduce ? 0 : 9, k = 0;
+      (function spin() {
+        if (k < ticks) {
+          face(1 + Math.floor(Math.random() * 6));
+          resultEl.innerHTML = '<div class="what" style="opacity:.35">' + esc(names[Math.floor(Math.random() * names.length)].name) + "</div>";
+          k++;
+          setTimeout(spin, 45 + k * 12);
+          return;
+        }
+        face(1 + Math.floor(Math.random() * 6));
+        current = chosen; hot = chosen.id;
+        var c7 = counts(7)[chosen.id] || 0;
+        resultEl.innerHTML = '<div class="what">' + esc(chosen.name) + "</div>" +
+          '<div class="why">' + Math.round(p * 100) + "% chance · done " + c7 + "× in the last 7 days</div>";
+        actionsEl.innerHTML = '<button class="btn primary" id="doneBtn">Done</button><button class="btn" id="againBtn">Reroll</button>';
+        document.getElementById("doneBtn").onclick = function () { logIt(chosen.id); resetStage(chosen.name); };
+        document.getElementById("againBtn").onclick = roll;
+        render();
+      })();
+    }
+    function resetStage(name) {
+      current = null; hot = null;
+      resultEl.innerHTML = '<div class="what">Nice.</div><div class="why">' + esc(name) + " logged. Roll again when you're ready.</div>";
+      actionsEl.innerHTML = '<button class="btn primary rollbtn" id="rollBtn">Roll</button>';
+      document.getElementById("rollBtn").onclick = roll;
+    }
+    document.getElementById("rollBtn").onclick = roll;
+
+    function logIt(id) {
+      var entry = { a: id, t: Date.now() };
+      data.log.push(entry); save(); render();
+      var a = data.acts.find(function (x) { return x.id === id; });
+      Kit.toast("Logged " + (a ? a.name : ""), "Undo", function () {
+        var i = data.log.lastIndexOf(entry);
+        if (i >= 0) data.log.splice(i, 1);
+        save(); render();
+      });
+    }
+
+    // ---- list ----
+    var listEl = document.getElementById("acts");
+    var editingWeights = false;
+    function render() {
+      var cw = counts(data.win), call = counts(0), p = odds();
+      var maxP = Math.max.apply(null, data.acts.map(function (a) { return p[a.id] || 0; }).concat([0.0001]));
+      listEl.className = "acts" + (editingWeights ? " weights" : "");
+      listEl.innerHTML = data.acts.map(function (a) {
+        var n = cw[a.id] || 0;
+        return '<li class="card act' + (hot === a.id ? " hot" : "") + '" data-id="' + a.id + '">' +
+          '<div class="main"><button class="nm" data-edit="' + a.id + '">' + esc(a.name) + "</button>" +
+          '<div class="meta"><span>' + (p[a.id] ? (p[a.id] * 100).toFixed(p[a.id] < 0.1 ? 1 : 0) + "% next roll" : "off the die") + "</span>" +
+          (data.win !== 0 ? "<span>" + (call[a.id] || 0) + " all time</span>" : "") +
+          (editingWeights ? "" : "<span>weight " + a.w + "</span>") + "</div>" +
+          '<div class="odds"><b style="width:' + ((p[a.id] || 0) / maxP * 100).toFixed(1) + '%"></b></div></div>' +
+          '<span class="cnt" aria-label="' + n + ' times">' + n + "</span>" +
+          '<button class="iconbtn plus" data-plus="' + a.id + '" aria-label="Log ' + esc(a.name) + '">+</button>' +
+          '<div class="wctl"><button class="iconbtn" data-w="-1" data-id="' + a.id + '" aria-label="Lower weight">−</button>' +
+          '<span class="w">' + a.w + '</span><button class="iconbtn" data-w="1" data-id="' + a.id + '" aria-label="Raise weight">+</button></div>' +
+          "</li>";
+      }).join("") || '<li class="empty">No activities yet.</li>';
+
+      var total = 0; for (var k in cw) total += cw[k];
+      var label = { 1: "today", 7: "in the last 7 days", 0: "all time" }[data.win];
+      document.getElementById("summary").textContent = total + " logged " + label + " · " + data.acts.length + " activities";
+      document.querySelectorAll(".seg button").forEach(function (b) { b.setAttribute("aria-pressed", +b.dataset.win === data.win); });
+    }
+    listEl.addEventListener("click", function (e) {
+      var t = e.target.closest("button");
+      if (!t) return;
+      if (t.dataset.plus) { logIt(t.dataset.plus); return; }
+      if (t.dataset.w) {
+        var a = data.acts.find(function (x) { return x.id === t.dataset.id; });
+        a.w = Math.max(0, Math.min(20, a.w + +t.dataset.w)); save(); render(); return;
+      }
+      if (t.dataset.edit) editAct(t.dataset.edit);
+    });
+    document.querySelectorAll(".seg button").forEach(function (b) {
+      b.onclick = function () { data.win = +b.dataset.win; save(); render(); };
+    });
+    var wBtn = document.getElementById("weightsBtn");
+    wBtn.onclick = function () {
+      editingWeights = !editingWeights;
+      wBtn.setAttribute("aria-pressed", editingWeights);
+      wBtn.textContent = editingWeights ? "Done editing" : "Edit weights";
+      render();
+    };
+
+    function editAct(id) {
+      var a = id ? data.acts.find(function (x) { return x.id === id; }) : null;
+      Kit.sheet(function (el, close) {
+        el.innerHTML = "<div><h2>" + (a ? "Edit activity" : "New activity") + "</h2>" +
+          '<label for="fName">Name</label><input class="field" id="fName" value="' + esc(a ? a.name : "") + '" />' +
+          '<label for="fW">Weight (0 takes it off the die)</label><input class="field" id="fW" type="number" inputmode="numeric" min="0" max="20" value="' + (a ? a.w : 3) + '" />' +
+          '<div class="actions">' + (a ? '<button class="btn" id="fDel" style="color:var(--bad)">Delete</button>' : "") +
+          '<button class="btn" id="fCancel">Cancel</button><button class="btn primary" id="fSave">Save</button></div></div>';
+        el.querySelector("#fCancel").onclick = close;
+        el.querySelector("#fSave").onclick = function () {
+          var name = el.querySelector("#fName").value.trim();
+          var w = Math.max(0, Math.min(20, parseInt(el.querySelector("#fW").value, 10) || 0));
+          if (!name) return;
+          if (a) { a.name = name; a.w = w; } else data.acts.push({ id: Kit.uid(), name: name, w: w });
+          save(); render(); close();
+        };
+        if (a) el.querySelector("#fDel").onclick = function () {
+          if (!confirm("Delete " + a.name + " and its history?")) return;
+          data.acts = data.acts.filter(function (x) { return x !== a; });
+          data.log = data.log.filter(function (e) { return e.a !== a.id; });
+          save(); render(); close();
+        };
+      });
+    }
+    document.getElementById("addBtn").onclick = function () { editAct(null); };
+    document.getElementById("backupBtn").onclick = function () { store.backup(data, "rollplay"); };
+    document.getElementById("restoreBtn").onclick = function () {
+      store.restore(function (d) {
+        if (!d || !Array.isArray(d.acts) || !Array.isArray(d.log)) { alert("That isn't a RollPlay backup."); return; }
+        data = d; save(); render(); Kit.toast("Restored");
+      });
+    };
+    render();
+  })();
+  </script>
+</body>
+</html>
