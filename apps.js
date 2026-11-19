@@ -71,6 +71,14 @@ window.APPS = [
     section: "Music",
   },
   {
+    slug: "guitar-tools",
+    name: "Guitar",
+    blurb: "Metronome, tuner, scale finder and chord identifier",
+    glyph: "♫",
+    hue: 45,
+    section: "Music",
+  },
+  {
     slug: "stochastic-chess",
     name: "Chess",
     blurb: "Stochastic chess: pieces may disobey",
