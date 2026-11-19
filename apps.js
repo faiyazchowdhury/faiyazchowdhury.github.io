@@ -70,4 +70,12 @@ window.APPS = [
     icon: "midee/icons/icon-192.png",
     section: "Music",
   },
+  {
+    slug: "stochastic-chess",
+    name: "Chess",
+    blurb: "Stochastic chess: pieces may disobey",
+    glyph: "♞",
+    hue: 20,
+    section: "Games",
+  },
 ];
