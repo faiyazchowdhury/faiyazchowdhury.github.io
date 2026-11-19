@@ -89,6 +89,10 @@
     <a class="back" href="../">← Apps</a>
     <header class="app-head">
       <h1>Stochastic Chess<em>.</em></h1>
+      <div class="seg" id="modeBar" role="group" aria-label="Opponent" style="margin-top:12px">
+        <button data-m="ai">vs Computer</button>
+        <button data-m="2p">Two players</button>
+      </div>
       <p class="sub" id="modeLine"></p>
     </header>
 
@@ -424,7 +428,8 @@
       var you = cfg.mode === "ai" ? (st.turn === "w" ? "Your move" : "Computer is thinking…") : (st.turn === "w" ? "White to move" : "Black to move");
       document.getElementById("statusTxt").textContent = st.over || (checkSq >= 0 ? (st.turn === "w" ? "White" : "Black") + " is in check" : you);
       document.getElementById("statusSub").textContent = st.over ? "Tap New game to play again" : checkSq >= 0 ? you : "";
-      document.getElementById("modeLine").textContent = cfg.mode === "ai" ? "You play white against the computer." : "Two players, passing the phone.";
+      document.getElementById("modeLine").textContent = cfg.mode === "ai" ? "You play white against the computer." : "Pass the phone between turns.";
+      document.querySelectorAll("#modeBar button").forEach(function (b) { b.setAttribute("aria-pressed", b.dataset.m === cfg.mode); });
 
       var bn = document.getElementById("banner");
       bn.className = "banner" + (game.msg && game.msg.kind ? " " + game.msg.kind : "");
@@ -494,6 +499,12 @@
       game = { st: newState(), hist: [], log: [], last: null, msg: null, caps: { w: [], b: [] } };
       sel = -1; selMoves = []; save(); render();
     };
+    // Switching opponent keeps the current game; the computer takes over black if it's black's turn.
+    document.getElementById("modeBar").onclick = function (e) {
+      var b = e.target.closest("button"); if (!b || busy || b.dataset.m === cfg.mode) return;
+      cfg.mode = b.dataset.m; sel = -1; selMoves = [];
+      save(); render(); maybeAI();
+    };
     document.getElementById("setBtn").onclick = function () {
       Kit.sheet(function (el, close) {
         var draft = { mode: cfg.mode, odds: cfg.odds.slice() };
@@ -503,14 +514,9 @@
               '<input type="range" min="0" max="80" step="1" value="' + draft.odds[k] + '" data-k="' + k + '" aria-label="' + n + ' disobey chance" />';
           }).join("");
         }
-        el.innerHTML = "<div><h2>Settings</h2><label>Opponent</label>" +
-          '<div class="seg" id="modeSeg"><button data-m="ai">Computer</button><button data-m="2p">Two players</button></div>' +
-          '<label style="margin-top:16px">Chance a piece disobeys</label>' + sliders() +
-          '<p class="hint" style="margin-top:10px">Changing the opponent starts a new game.</p>' +
+        el.innerHTML = "<div><h2>Settings</h2>" +
+          '<label>Chance a piece disobeys</label>' + sliders() +
           '<div class="actions"><button class="btn" id="fReset">Default odds</button><button class="btn primary" id="fDone">Done</button></div></div>';
-        function syncSeg() { el.querySelectorAll("#modeSeg button").forEach(function (b) { b.setAttribute("aria-pressed", b.dataset.m === draft.mode); }); }
-        syncSeg();
-        el.querySelector("#modeSeg").onclick = function (e) { var b = e.target.closest("button"); if (!b) return; draft.mode = b.dataset.m; syncSeg(); };
         el.addEventListener("input", function (e) {
           var k = e.target.dataset.k; if (k == null) return;
           draft.odds[k] = +e.target.value; el.querySelector("#ov" + k).textContent = e.target.value + "%";
@@ -520,9 +526,7 @@
           el.querySelectorAll("input[type=range]").forEach(function (r) { r.value = draft.odds[r.dataset.k]; el.querySelector("#ov" + r.dataset.k).textContent = r.value + "%"; });
         };
         el.querySelector("#fDone").onclick = function () {
-          var modeChanged = draft.mode !== cfg.mode;
           cfg = draft;
-          if (modeChanged) { game = { st: newState(), hist: [], log: [], last: null, msg: null, caps: { w: [], b: [] } }; sel = -1; selMoves = []; }
           save(); render(); close(); maybeAI();
         };
       });
