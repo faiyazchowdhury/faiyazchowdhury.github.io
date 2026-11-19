@@ -35,6 +35,11 @@
       border-radius: 10px; overflow: hidden; box-shadow: 0 12px 30px -14px rgba(0,0,0,.6), 0 0 0 1px var(--line);
       touch-action: manipulation; user-select: none; -webkit-user-select: none;
     }
+    .board.turning { animation: turn .55s cubic-bezier(.3, .7, .3, 1); }
+    @keyframes turn { from { transform: rotate(-180deg) scale(.92); } to { transform: none; } }
+    @media (prefers-reduced-motion: reduce) { .board.turning { animation: none; } }
+    .check-row { display: flex; align-items: center; gap: 10px; margin-top: 16px; font-size: 14.5px; }
+    .check-row input { width: 20px; height: 20px; accent-color: var(--accent); flex: none; }
     .sq { position: relative; display: grid; place-items: center; border: 0; padding: 0; min-width: 0; min-height: 0; overflow: hidden; background: var(--sq-light); }
     .sq.d { background: var(--sq-dark); }
     .sq.last::before { content: ""; position: absolute; inset: 0; background: rgba(255, 214, 10, .32); }
@@ -336,6 +341,15 @@
     function save() { store.save({ cfg: cfg, game: game }); }
 
     var sel = -1, selMoves = [], busy = false, anim = null;
+    // Which colour sits at the bottom. With two players it follows the side to move (unless turned off).
+    var view = "w";
+    view = cfg.mode === "2p" && cfg.rotate !== false ? game.st.turn : "w";
+    function syncView(animate) {
+      var v = cfg.mode === "2p" && cfg.rotate !== false ? (game.st.over ? view : game.st.turn) : "w";
+      if (v === view) return;
+      view = v; render();
+      if (animate) { boardEl.classList.remove("turning"); void boardEl.offsetWidth; boardEl.classList.add("turning"); }
+    }
     var boardEl = document.getElementById("board");
 
     function snapshot() { return JSON.stringify({ st: game.st, log: game.log, last: game.last, msg: game.msg, caps: game.caps }); }
@@ -382,6 +396,11 @@
       checkOver();
       save();
       render();
+      if (cfg.mode === "2p" && cfg.rotate !== false && !game.st.over) {
+        // Let the move (or refusal) register, then turn the board for the next player.
+        busy = true;
+        setTimeout(function () { busy = false; syncView(true); render(); }, 1100);
+      }
       maybeAI();
     }
     function checkOver() {
@@ -404,7 +423,8 @@
       var targets = {};
       selMoves.forEach(function (m) { targets[m.to] = risk(st, m); });
       var html = "";
-      for (var i = 0; i < 64; i++) {
+      for (var d = 0; d < 64; d++) {
+        var i = view === "b" ? 63 - d : d;
         var r = i >> 3, c = i & 7, x = b[i], cls = "sq" + ((r + c) % 2 ? " d" : "");
         if (game.last && (i === game.last.from || i === game.last.to)) cls += " last";
         if (i === sel) cls += " sel";
@@ -415,8 +435,8 @@
           var col = "var(" + RISK_VARS[targets[i]] + ")";
           inner += x || (st.ep === i && b[sel] && b[sel][1] === "P") ? '<span class="ring" style="border-color:' + col + '"></span>' : '<span class="dot" style="background:' + col + '"></span>';
         }
-        if (c === 0) inner += '<span class="coord r">' + (8 - r) + "</span>";
-        if (r === 7) inner += '<span class="coord f">' + FILES[c] + "</span>";
+        if ((d & 7) === 0) inner += '<span class="coord r">' + (8 - r) + "</span>";
+        if ((d >> 3) === 7) inner += '<span class="coord f">' + FILES[c] + "</span>";
         var label = name(i) + (x ? " " + (x[0] === "w" ? "white " : "black ") + { K: "king", Q: "queen", R: "rook", B: "bishop", N: "knight", P: "pawn" }[x[1]] : "") +
           (i in targets ? ", " + RISK_NAMES[targets[i]].toLowerCase() + " move" : "");
         html += '<button class="' + cls + '" data-sq="' + i + '" aria-label="' + label + '">' + inner + "</button>";
@@ -443,8 +463,8 @@
       function capHtml(list) {
         return list.slice().sort(function (a, b) { return VALUE[b[1]] - VALUE[a[1]]; }).map(function (x) { return '<span class="pc ' + x[0] + '" style="font-size:20px">' + GLYPH[x[1]] + "</span>"; }).join("");
       }
-      document.getElementById("capTop").innerHTML = capHtml(game.caps.b);
-      document.getElementById("capBot").innerHTML = capHtml(game.caps.w);
+      document.getElementById("capTop").innerHTML = capHtml(view === "b" ? game.caps.w : game.caps.b);
+      document.getElementById("capBot").innerHTML = capHtml(view === "b" ? game.caps.b : game.caps.w);
 
       var lines = [];
       for (var k = 0; k < game.log.length; k += 2) {
@@ -492,22 +512,22 @@
       while (steps-- && game.hist.length) snap = game.hist.pop();
       var s = JSON.parse(snap);
       game.st = s.st; game.log = s.log; game.last = s.last; game.msg = s.msg; game.caps = s.caps;
-      sel = -1; selMoves = []; save(); render(); maybeAI();
+      sel = -1; selMoves = []; save(); render(); syncView(true); maybeAI();
     };
     document.getElementById("newBtn").onclick = function () {
       if (game.log.length && !game.st.over && !confirm("Start a new game?")) return;
       game = { st: newState(), hist: [], log: [], last: null, msg: null, caps: { w: [], b: [] } };
-      sel = -1; selMoves = []; save(); render();
+      sel = -1; selMoves = []; save(); render(); syncView(true);
     };
     // Switching opponent keeps the current game; the computer takes over black if it's black's turn.
     document.getElementById("modeBar").onclick = function (e) {
       var b = e.target.closest("button"); if (!b || busy || b.dataset.m === cfg.mode) return;
       cfg.mode = b.dataset.m; sel = -1; selMoves = [];
-      save(); render(); maybeAI();
+      save(); render(); syncView(true); maybeAI();
     };
     document.getElementById("setBtn").onclick = function () {
       Kit.sheet(function (el, close) {
-        var draft = { mode: cfg.mode, odds: cfg.odds.slice() };
+        var draft = { mode: cfg.mode, odds: cfg.odds.slice(), rotate: cfg.rotate !== false };
         function sliders() {
           return RISK_NAMES.map(function (n, k) {
             return '<label><span class="slider-row"><span>' + n + ' square</span><span class="mono" id="ov' + k + '">' + draft.odds[k] + '%</span></span></label>' +
@@ -516,6 +536,7 @@
         }
         el.innerHTML = "<div><h2>Settings</h2>" +
           '<label>Chance a piece disobeys</label>' + sliders() +
+          '<label class="check-row" style="color:var(--fg)"><input type="checkbox" id="fRot"' + (draft.rotate ? " checked" : "") + ' />Turn the board for each player (two players)</label>' +
           '<div class="actions"><button class="btn" id="fReset">Default odds</button><button class="btn primary" id="fDone">Done</button></div></div>';
         el.addEventListener("input", function (e) {
           var k = e.target.dataset.k; if (k == null) return;
@@ -526,8 +547,9 @@
           el.querySelectorAll("input[type=range]").forEach(function (r) { r.value = draft.odds[r.dataset.k]; el.querySelector("#ov" + r.dataset.k).textContent = r.value + "%"; });
         };
         el.querySelector("#fDone").onclick = function () {
+          draft.rotate = el.querySelector("#fRot").checked;
           cfg = draft;
-          save(); render(); close(); maybeAI();
+          save(); render(); syncView(true); close(); maybeAI();
         };
       });
     };
