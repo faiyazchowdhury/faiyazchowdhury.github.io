@@ -106,23 +106,25 @@
         "Building Microservices (Newman)",
         "Domain-Driven Design (Evans)",
         "Patterns of Enterprise Application Architecture (Fowler)"
-      ]]
+      ]],
+      ["Write a Book", ["Choose the idea", "Outline the chapters", "Write the first chapter", "Finish the first draft", "Revise the draft", "Get feedback from readers", "Final edit", "Publish"]]
     ];
     function makeGoal(g) {
       return { id: uid(), title: g[0], why: "", year: "", manual: 0, done: false, notes: [],
                steps: g[1].map(function (s) { return { id: uid(), text: s, done: false }; }) };
     }
     var store = new Kit.Store("journey:v1", null);
-    var SEED_VERSION = 2;
+    var SEED_VERSION = 3;
+    function seedGoal(title) { return SEED.find(function (g) { return g[0] === title; }); }
+    function addIfMissing(title) {
+      if (!data.goals.some(function (g) { return g.title === title; })) data.goals.push(makeGoal(seedGoal(title)));
+    }
     var data = store.load() || { view: "active", goals: SEED.map(makeGoal), seedVer: SEED_VERSION };
     function save() { store.save(data); }
     // Version 2: add the software architecture reading goal to saved lists.
-    if ((data.seedVer || 1) < 2) {
-      var sa = SEED[SEED.length - 1];
-      if (!data.goals.some(function (g) { return g.title === sa[0]; })) data.goals.push(makeGoal(sa));
-      data.seedVer = 2;
-      save();
-    }
+    if ((data.seedVer || 1) < 2) { addIfMissing("Read Software Architecture Books"); data.seedVer = 2; save(); }
+    // Version 3: add the book-writing goal.
+    if (data.seedVer < 3) { addIfMissing("Write a Book"); data.seedVer = 3; save(); }
     var open = {};
 
     function progress(g) {
