@@ -48,6 +48,14 @@ window.APPS = [
     section: "Books",
   },
   {
+    slug: "history",
+    name: "History",
+    blurb: "The world's territories on a globe, through time",
+    glyph: "◍",
+    hue: 210,
+    section: "Learning",
+  },
+  {
     slug: "repertoire",
     name: "Repertoire",
     blurb: "Guitar and piano pieces to learn and perform",
