@@ -37,6 +37,10 @@
     .perf b { display: block; height: 100%; border-radius: 4px; background: linear-gradient(90deg, var(--warn), var(--good)); }
     .plus { width: 44px; height: 36px; border-radius: 10px; border: 0; background: var(--surface-2); font-size: 18px; flex: none; }
     .done .t::after { content: " ✓"; color: var(--good); }
+    .vidrow { display: flex; align-items: center; gap: 14px; margin-top: 12px; }
+    .vidrow .linkbtn { font-size: 13px; color: var(--muted); }
+    .video { position: relative; margin-top: 10px; aspect-ratio: 16 / 9; border-radius: 12px; overflow: hidden; background: #000; }
+    .video iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
   </style>
 </head>
 <body>
@@ -83,41 +87,58 @@
   (function () {
     var esc = Kit.esc, uid = Kit.uid;
     var INST = ["Guitar", "Piano"];
-    // From the "Classical Pieces to Practice" lists on the old music page.
+    // From the "Classical Pieces to Practice" lists on the old music page, with the YouTube videos it embedded.
     var SEED = [
-      ["Guitar", "Wild Mountain Thyme", "Traditional, arr. Scott Tennant"],
-      ["Guitar", "Lady Daydream (Flower)", "Vincent Diamante"],
-      ["Guitar", "Cullare la Tempesta", "Scott Ouellette"],
-      ["Guitar", "Dolomiti Dance", "Ralph Towner"],
-      ["Guitar", "The Bannered Mare (Skyrim)", "Jeremy Soule"],
-      ["Guitar", "The Last of Us", "Gustavo Santaolalla"],
-      ["Guitar", "Concerning Hobbits (The Lord of the Rings)", "Howard Shore"],
-      ["Guitar", "Sons de Carrilhões", "João Pernambuco"],
-      ["Guitar", "Julia Florida", "Agustín Barrios"],
-      ["Guitar", "Howl's Moving Castle", "Joe Hisaishi"],
-      ["Guitar", "Los Sueños", "Astor Piazzolla"],
-      ["Guitar", "Gran Vals", "Francisco Tárrega"],
-      ["Piano", "Liebestraum No. 3", "Liszt"],
-      ["Piano", "Raindrop Prelude, Op. 28 No. 15", "Chopin"],
-      ["Piano", "Moment Musical No. 3", "Schubert"],
-      ["Piano", "Dolly's Dreaming and Awakening", "Oesten"],
-      ["Piano", "The Maiden's Prayer", "Bądarzewska"],
-      ["Piano", "Howl's Moving Castle", "Joe Hisaishi"],
-      ["Piano", "Ecruteak City (Pokémon Gold/Silver)", "Go Ichinose"],
-      ["Piano", "National Park (Pokémon Gold/Silver)", "Go Ichinose"],
-      ["Piano", "Verdanturf Town (Pokémon Ruby/Sapphire)", "Go Ichinose"],
-      ["Piano", "Canalave City (Pokémon Diamond/Pearl)", "Go Ichinose"],
-      ["Piano", "Kiss the Rain", "Yiruma"],
-      ["Piano", "Comptine d'un autre été (Amélie)", "Yann Tiersen"],
-      ["Piano", "Nocturne in E-flat major, Op. 9 No. 2", "Chopin"],
-      ["Piano", "The Entertainer", "Scott Joplin"]
+      ["Guitar", "Wild Mountain Thyme", "Traditional, arr. Scott Tennant", "B2U_wn3S0fE"],
+      ["Guitar", "Lady Daydream (Flower)", "Vincent Diamante", "t-gXQqtjBjU"],
+      ["Guitar", "Cullare la Tempesta", "Scott Ouellette", "sqsmDwL6v2w"],
+      ["Guitar", "Dolomiti Dance", "Ralph Towner", "fTZeZcWA88k"],
+      ["Guitar", "The Bannered Mare (Skyrim)", "Jeremy Soule", "2XtvRB1mMWo"],
+      ["Guitar", "The Last of Us", "Gustavo Santaolalla", "8SWhBsbxmpk"],
+      ["Guitar", "Concerning Hobbits (The Lord of the Rings)", "Howard Shore", "1ZYwuqCMXBM"],
+      ["Guitar", "Sons de Carrilhões", "João Pernambuco", "1KO0rkOAiig"],
+      ["Guitar", "Julia Florida", "Agustín Barrios", "bEgeuuZUJLo"],
+      ["Guitar", "Howl's Moving Castle", "Joe Hisaishi", "LZjkKjj0VEs"],
+      ["Guitar", "Los Sueños", "Astor Piazzolla", "EPoaaRD6h7s"],
+      ["Guitar", "Gran Vals", "Francisco Tárrega", "r79PDtIE4xw"],
+      ["Piano", "Liebestraum No. 3", "Liszt", "MBOa-2b4uQQ"],
+      ["Piano", "Raindrop Prelude, Op. 28 No. 15", "Chopin", "HVau-JRGirg"],
+      ["Piano", "Moment Musical No. 3", "Schubert", "t0A3zvqUZuw"],
+      ["Piano", "Dolly's Dreaming and Awakening", "Oesten", "9fIGIlbuZqs"],
+      ["Piano", "The Maiden's Prayer", "Bądarzewska", ""],
+      ["Piano", "Howl's Moving Castle", "Joe Hisaishi", "9qS68rkG334"],
+      ["Piano", "Ecruteak City (Pokémon Gold/Silver)", "Go Ichinose", "gIUE-851D9Q"],
+      ["Piano", "National Park (Pokémon Gold/Silver)", "Go Ichinose", "Hk8_NNnammE"],
+      ["Piano", "Verdanturf Town (Pokémon Ruby/Sapphire)", "Go Ichinose", "CkarqAJ-lik"],
+      ["Piano", "Canalave City (Pokémon Diamond/Pearl)", "Go Ichinose", "ZPFmZ1f_9x0"],
+      ["Piano", "Kiss the Rain", "Yiruma", "GJWU2Y_tGRk"],
+      ["Piano", "Comptine d'un autre été (Amélie)", "Yann Tiersen", "EZUZKgAvLdQ"],
+      ["Piano", "Nocturne in E-flat major, Op. 9 No. 2", "Chopin", "p29JUpsOSTE"],
+      ["Piano", "The Entertainer", "Scott Joplin", "TSoXBkF832I"]
     ];
     var store = new Kit.Store("repertoire:v1", {
       inst: "All", sort: "progress",
-      songs: SEED.map(function (s) { return { id: uid(), inst: s[0], title: s[1], by: s[2], done: 0, perf: 0 }; })
+      songs: SEED.map(function (s) { return { id: uid(), inst: s[0], title: s[1], by: s[2], video: s[3] || "", done: 0, perf: 0 }; }),
+      seedVer: 2
     });
     var data = store.load();
     function save() { store.save(data); }
+    // Version 2: give the starting pieces their videos, unless one was already set.
+    if ((data.seedVer || 1) < 2) {
+      data.songs.forEach(function (s) {
+        var m = SEED.find(function (x) { return x[0] === s.inst && x[1] === s.title; });
+        if (m && m[3] && !s.video) s.video = m[3];
+      });
+      data.seedVer = 2; save();
+    }
+    // Accepts a YouTube link (watch, youtu.be, shorts, embed) or a bare video ID.
+    function youtubeId(text) {
+      text = (text || "").trim();
+      if (/^[\w-]{11}$/.test(text)) return text;
+      var m = /(?:v=|youtu\.be\/|shorts\/|embed\/|live\/)([\w-]{11})/.exec(text);
+      return m ? m[1] : "";
+    }
+    var openVideo = null;
 
     // log2(1 + n) / log2(101): 1 → 15%, 3 → 30%, 10 → 52%, 30 → 75%, 100 → 100%
     function perfFill(n) { return Math.min(1, Math.log2(1 + n) / Math.log2(101)); }
@@ -148,7 +169,11 @@
           '<div class="row"><span class="k">Learned</span><input type="range" min="0" max="100" step="5" value="' + s.done + '" data-done="' + s.id + '" aria-label="Learned, percent" />' +
           '<span class="v" id="v-' + s.id + '">' + s.done + "%</span></div>" +
           '<div class="row"><span class="k">Performed</span><div class="perf"><b style="width:' + (perfFill(s.perf) * 100).toFixed(1) + '%"></b></div>' +
-          '<span class="v">' + s.perf + '×</span><button class="plus" data-perf="' + s.id + '" aria-label="Log a performance">+</button></div></li>';
+          '<span class="v">' + s.perf + '×</span><button class="plus" data-perf="' + s.id + '" aria-label="Log a performance">+</button></div>' +
+          (s.video ? '<div class="vidrow"><button class="btn small" data-watch="' + s.id + '">' + (openVideo === s.id ? "Hide video" : "▶ Watch") + "</button>" +
+            '<a class="linkbtn" href="https://www.youtube.com/watch?v=' + esc(s.video) + '" target="_blank" rel="noopener">Open in YouTube</a></div>' +
+            (openVideo === s.id ? '<div class="video"><iframe src="https://www.youtube-nocookie.com/embed/' + esc(s.video) + '?playsinline=1&rel=0&autoplay=1" title="' + esc(s.title) + '" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe></div>' : "")
+          : "") + "</li>";
       }).join("") || '<li class="empty">No pieces here yet.</li>';
 
       var all = data.songs, learned = all.filter(function (s) { return s.done >= 100; }).length;
@@ -172,6 +197,7 @@
         Kit.toast(s.title + ": " + s.perf + " performance" + (s.perf === 1 ? "" : "s"), "Undo", function () { s.perf = Math.max(0, s.perf - 1); save(); render(); });
       }
       if (b.dataset.edit) edit(find(b.dataset.edit));
+      if (b.dataset.watch) { openVideo = openVideo === b.dataset.watch ? null : b.dataset.watch; render(); }
     });
 
     function edit(s) {
@@ -182,6 +208,7 @@
           '<label for="fI">Instrument</label><select class="field" id="fI">' + INST.map(function (i) {
             return "<option" + ((s ? s.inst : (data.inst === "All" ? "Guitar" : data.inst)) === i ? " selected" : "") + ">" + i + "</option>";
           }).join("") + "</select>" +
+          '<label for="fV">YouTube link (optional)</label><input class="field" id="fV" inputmode="url" autocapitalize="off" autocorrect="off" placeholder="https://youtu.be/…" value="' + esc(s && s.video ? "https://youtu.be/" + s.video : "") + '" />' +
           (s ? '<label for="fP">Performances</label><input class="field" id="fP" type="number" inputmode="numeric" min="0" value="' + s.perf + '" />' : "") +
           '<div class="actions">' + (s ? '<button class="btn" id="fDel" style="color:var(--bad)">Delete</button>' : "") +
           '<button class="btn" id="fCancel">Cancel</button><button class="btn primary" id="fSave">Save</button></div></div>';
@@ -190,6 +217,9 @@
           var t = el.querySelector("#fT").value.trim(); if (!t) return;
           var o = s || { id: uid(), done: 0, perf: 0 };
           o.title = t; o.by = el.querySelector("#fB").value.trim(); o.inst = el.querySelector("#fI").value;
+          var vRaw = el.querySelector("#fV").value.trim(), vId = youtubeId(vRaw);
+          if (vRaw && !vId) { Kit.toast("That doesn't look like a YouTube link."); return; }
+          o.video = vId;
           if (s) o.perf = Math.max(0, parseInt(el.querySelector("#fP").value, 10) || 0);
           if (!s) data.songs.push(o);
           save(); render(); close();
