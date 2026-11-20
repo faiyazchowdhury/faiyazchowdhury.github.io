@@ -32,6 +32,14 @@ window.APPS = [
     section: "Lifestyle",
   },
   {
+    slug: "probe",
+    name: "Probe",
+    blurb: "Check in on your needs: hunger, thirst, energy, mood…",
+    glyph: "◆",
+    hue: 145,
+    section: "Lifestyle",
+  },
+  {
     slug: "learn",
     name: "Learn",
     blurb: "Cognitive science topics, with a confidence rating for each",

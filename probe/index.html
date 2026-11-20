@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Probe</title>
+  <meta name="description" content="Check in on your needs: hunger, thirst, energy, mood and more." />
+  <meta name="theme-color" content="#0b0b10" media="(prefers-color-scheme: dark)" />
+  <meta name="theme-color" content="#f4f1ea" media="(prefers-color-scheme: light)" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Probe" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../shared/base.css" />
+  <style>
+    .top { display: flex; align-items: center; gap: 16px; }
+    .gem { width: 58px; height: 80px; flex: none; filter: drop-shadow(0 8px 14px rgba(0,0,0,.3)); animation: bob 3.2s ease-in-out infinite; }
+    @keyframes bob { 50% { transform: translateY(-5px) rotate(3deg); } }
+    @media (prefers-reduced-motion: reduce) { .gem { animation: none; } }
+    .overall { font-family: "Instrument Serif", Georgia, serif; font-size: 48px; line-height: 1; }
+    .overall small { font-family: Inter, sans-serif; font-size: 14px; color: var(--muted); margin-left: 6px; }
+    .when { color: var(--muted); font-size: 13px; margin-top: 4px; }
+
+    .attn { margin-top: 16px; padding: 12px 14px; }
+    .attn h3 { font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 600; margin-bottom: 6px; }
+    .attn li { list-style: none; font-size: 14.5px; padding: 4px 0; display: flex; gap: 8px; }
+    .attn li b { font-weight: 600; }
+
+    .group { margin-top: 22px; }
+    .group h2 { font-family: "Instrument Serif", Georgia, serif; font-weight: 400; font-size: 26px; margin: 0 2px 8px; display: flex; align-items: baseline; gap: 10px; }
+    .group h2 small { font-family: Inter, sans-serif; font-size: 13px; color: var(--muted); margin-left: auto; }
+    .needs { display: flex; flex-direction: column; gap: 6px; }
+    .need { padding: 11px 14px 10px; }
+    .need .row { display: flex; align-items: baseline; gap: 8px; }
+    .need .ic { font-size: 18px; width: 24px; text-align: center; flex: none; }
+    .need .nm { font-weight: 600; font-size: 15px; }
+    .need .st { margin-left: auto; font-size: 13px; font-weight: 500; }
+    .need input[type="range"] { -webkit-appearance: none; appearance: none; width: 100%; height: 30px; background: transparent; margin-top: 4px; }
+    .need input[type="range"]::-webkit-slider-runnable-track { height: 14px; border-radius: 7px; background: linear-gradient(90deg, var(--fill) 0 var(--v), var(--surface-2) var(--v) 100%); }
+    .need input[type="range"]::-moz-range-track { height: 14px; border-radius: 7px; background: linear-gradient(90deg, var(--fill) 0 var(--v), var(--surface-2) var(--v) 100%); }
+    .need input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 26px; height: 26px; border-radius: 50%; background: var(--fg); margin-top: -6px; box-shadow: 0 2px 6px rgba(0,0,0,.35); }
+    .need input[type="range"]::-moz-range-thumb { width: 26px; height: 26px; border: 0; border-radius: 50%; background: var(--fg); }
+    .need .ends { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); margin-top: -2px; }
+    .spark { display: block; width: 100%; height: 26px; margin-top: 6px; }
+
+    .actions-row { display: flex; gap: 8px; margin-top: 18px; }
+    .actions-row .btn { flex: 1; }
+    .history { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+    .entry { padding: 10px 14px; font-size: 13.5px; }
+    .entry .t { display: flex; justify-content: space-between; color: var(--muted); font-size: 12px; }
+    .entry .t b { color: var(--fg); font-weight: 600; font-size: 13px; }
+    .entry .note { margin-top: 4px; }
+    .entry .low { margin-top: 4px; color: var(--muted); }
+    .toggle-list label { display: flex !important; align-items: center; gap: 10px; color: var(--fg) !important; font-size: 15px !important; margin: 0 !important; padding: 8px 0; border-bottom: 1px solid var(--line); }
+    .toggle-list input { width: 20px; height: 20px; accent-color: var(--accent); }
+  </style>
+</head>
+<body>
+  <main>
+    <a class="back" href="../">← Apps</a>
+    <header class="app-head">
+      <div class="top">
+        <svg class="gem" viewBox="0 0 60 84" aria-hidden="true"><defs><linearGradient id="gg" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".55"/><stop offset=".5" stop-color="#fff" stop-opacity="0"/></linearGradient></defs>
+          <polygon id="gemA" points="30,0 58,42 30,84 2,42" fill="#5fd49a"/><polygon points="30,0 58,42 30,42" fill="#000" opacity=".12"/><polygon points="30,42 58,42 30,84" fill="#000" opacity=".25"/><polygon points="2,42 30,42 30,84" fill="#000" opacity=".1"/><polygon points="30,0 58,42 30,84 2,42" fill="url(#gg)"/></svg>
+        <div><h1>Probe<em>.</em></h1><div class="overall" id="overall"></div><div class="when" id="when"></div></div>
+      </div>
+    </header>
+
+    <div class="card attn" id="attn"></div>
+    <div id="groups"></div>
+
+    <div class="actions-row">
+      <button class="btn primary" id="logBtn">Save check-in</button>
+      <button class="btn" id="editBtn">Choose needs</button>
+    </div>
+
+    <h2 class="section-title">Check-ins <span class="count" id="histCount"></span></h2>
+    <ul class="history" id="history"></ul>
+
+    <details class="about card">
+      <summary>How it works</summary>
+      <div class="body">
+        <p>Each need is a bar, like in The Sims: <b>full and green is good</b>, empty and red needs attention. Drag the sliders to how you feel right now. The diamond's colour shows your overall state.</p>
+        <p><b>Save check-in</b> records a snapshot, with an optional note. The small line under each need traces your last two weeks of check-ins, so patterns show up, like energy dipping every afternoon or mood tracking sleep.</p>
+        <p>Beyond the classic needs, Probe adds <b>Thirst</b>, plus reflection gauges: <b>Mood</b>, <b>Calm</b> (stress), <b>Focus</b>, <b>Movement</b>, <b>Outdoors</b> (daylight and fresh air), and <b>Purpose</b> (whether today feels meaningful). Hide any you don't want with <b>Choose needs</b>.</p>
+        <p>Your data stays in this browser. Back it up now and then:</p>
+        <div class="backup">
+          <button class="btn small" id="backupBtn">Download backup</button>
+          <button class="btn small" id="restoreBtn">Restore</button>
+        </div>
+      </div>
+    </details>
+  </main>
+
+  <script src="../shared/store.js"></script>
+  <script>
+  (function () {
+    var esc = Kit.esc;
+    // [key, name, icon, low label, high label, tip when low, group]
+    var NEEDS = [
+      ["hunger", "Hunger", "🍽️", "Starving", "Full", "Eat something nourishing.", "Body"],
+      ["thirst", "Thirst", "💧", "Parched", "Hydrated", "Drink a glass of water.", "Body"],
+      ["energy", "Energy", "🌙", "Exhausted", "Rested", "Rest, nap, or get to bed earlier.", "Body"],
+      ["bladder", "Bladder", "🚻", "Bursting", "Fine", "Take a bathroom break.", "Body"],
+      ["hygiene", "Hygiene", "🧼", "Grimy", "Fresh", "Shower, brush your teeth, change clothes.", "Body"],
+      ["comfort", "Comfort", "🛋️", "Aching", "Comfortable", "Stretch, fix your posture, or get cosy.", "Body"],
+      ["movement", "Movement", "🏃", "Stiff", "Active", "Go for a walk or do some calisthenics.", "Body"],
+      ["mood", "Mood", "🙂", "Low", "Great", "Do something you enjoy, or talk to someone.", "Mind"],
+      ["calm", "Calm", "🌿", "Stressed", "Calm", "Breathe slowly for a minute, or meditate.", "Mind"],
+      ["focus", "Focus", "🎯", "Scattered", "Focused", "Clear distractions and pick one task.", "Mind"],
+      ["fun", "Fun", "🎸", "Bored", "Entertained", "Play music, a game, or something new.", "Mind"],
+      ["social", "Social", "💬", "Lonely", "Connected", "Call or message a loved one.", "Life"],
+      ["room", "Room", "🏠", "Messy", "Tidy", "Tidy one small area.", "Life"],
+      ["outdoors", "Outdoors", "☀️", "Cooped up", "Sun-soaked", "Step outside for some daylight.", "Life"],
+      ["purpose", "Purpose", "🧭", "Aimless", "Meaningful", "Take one step on a Journey goal.", "Life"]
+    ];
+    var STATES = ["Critical", "Low", "Okay", "Good", "Great"];
+    var store = new Kit.Store("probe:v1", null);
+    var data = store.load() || { cur: {}, hidden: [], log: [], updated: 0 };
+    NEEDS.forEach(function (n) { if (data.cur[n[0]] == null) data.cur[n[0]] = 60; });
+    function save() { store.save(data); }
+    function shown() { return NEEDS.filter(function (n) { return data.hidden.indexOf(n[0]) < 0; }); }
+
+    // Red → amber → green, like the Sims need bars.
+    function colour(v) { var h = Math.round(v * 1.25); return "hsl(" + h + ", 72%, " + (matchMedia("(prefers-color-scheme: dark)").matches ? 52 : 44) + "%)"; }
+    function stateOf(v) { return STATES[Math.min(4, Math.floor(v / 20))]; }
+    function ago(t) {
+      if (!t) return "never";
+      var m = Math.round((Date.now() - t) / 60000);
+      if (m < 1) return "just now"; if (m < 60) return m + " min ago";
+      var h = Math.round(m / 60); if (h < 24) return h + " h ago";
+      return Math.round(h / 24) + " d ago";
+    }
+    function overall() {
+      var ns = shown(); if (!ns.length) return 0;
+      return Math.round(ns.reduce(function (a, n) { return a + data.cur[n[0]]; }, 0) / ns.length);
+    }
+
+    function spark(key) {
+      var cutoff = Date.now() - 14 * 864e5, pts = data.log.filter(function (e) { return e.t >= cutoff && e.v[key] != null; });
+      if (pts.length < 2) return "";
+      var t0 = pts[0].t, t1 = pts[pts.length - 1].t, span = Math.max(1, t1 - t0);
+      var d = pts.map(function (e, i) { return (i ? "L" : "M") + ((e.t - t0) / span * 300).toFixed(1) + "," + (24 - e.v[key] / 100 * 22).toFixed(1); }).join(" ");
+      return '<svg class="spark" viewBox="0 0 300 26" preserveAspectRatio="none" aria-hidden="true"><path d="M0,13 H300" stroke="var(--faint)" stroke-dasharray="3 4"/><path d="' + d + '" fill="none" stroke="var(--muted)" stroke-width="1.6" vector-effect="non-scaling-stroke"/></svg>';
+    }
+
+    function renderTop() {
+      var o = overall();
+      document.getElementById("gemA").setAttribute("fill", colour(o));
+      document.getElementById("overall").innerHTML = o + "<small>" + stateOf(o).toLowerCase() + " overall</small>";
+      var last = data.log.length ? data.log[data.log.length - 1].t : 0;
+      document.getElementById("when").textContent = "Last check-in " + ago(last);
+      var low = shown().map(function (n) { return [n, data.cur[n[0]]]; }).filter(function (x) { return x[1] < 50; })
+        .sort(function (a, b) { return a[1] - b[1]; }).slice(0, 3);
+      document.getElementById("attn").innerHTML = low.length
+        ? "<h3>Needs attention</h3><ul>" + low.map(function (x) { return "<li><span>" + x[0][2] + "</span><span><b>" + esc(x[0][1]) + "</b> · " + esc(x[0][5]) + "</span></li>"; }).join("") + "</ul>"
+        : "<h3>All good</h3><ul><li>Every need is at least halfway full. Nice.</li></ul>";
+    }
+    function render() {
+      var groups = {};
+      shown().forEach(function (n) { (groups[n[6]] = groups[n[6]] || []).push(n); });
+      document.getElementById("groups").innerHTML = ["Body", "Mind", "Life"].filter(function (g) { return groups[g]; }).map(function (g) {
+        var avg = Math.round(groups[g].reduce(function (a, n) { return a + data.cur[n[0]]; }, 0) / groups[g].length);
+        return '<section class="group"><h2>' + g + "<small>" + avg + '</small></h2><div class="needs">' + groups[g].map(function (n) {
+          var v = data.cur[n[0]];
+          return '<div class="card need"><div class="row"><span class="ic">' + n[2] + '</span><span class="nm">' + esc(n[1]) + '</span><span class="st" id="st-' + n[0] + '" style="color:' + colour(v) + '">' + stateOf(v) + "</span></div>" +
+            '<input type="range" min="0" max="100" step="5" value="' + v + '" data-k="' + n[0] + '" aria-label="' + esc(n[1]) + '" style="--v:' + v + "%;--fill:" + colour(v) + '" />' +
+            '<div class="ends"><span>' + esc(n[3]) + "</span><span>" + esc(n[4]) + "</span></div>" + spark(n[0]) + "</div>";
+        }).join("") + "</div></section>";
+      }).join("");
+      renderTop();
+      renderHistory();
+    }
+    function renderHistory() {
+      var list = data.log.slice().reverse().slice(0, 30);
+      document.getElementById("histCount").textContent = data.log.length || "";
+      document.getElementById("history").innerHTML = list.map(function (e) {
+        var lows = NEEDS.filter(function (n) { return e.v[n[0]] != null && e.v[n[0]] < 40; }).map(function (n) { return n[2] + " " + n[1]; });
+        var d = new Date(e.t);
+        return '<li class="card entry"><div class="t"><span>' + d.toLocaleDateString(undefined, { weekday: "short", month: "short", day: "numeric" }) + " · " +
+          d.toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" }) + "</span><b>" + e.o + " · " + stateOf(e.o).toLowerCase() + "</b></div>" +
+          (e.note ? '<div class="note">' + esc(e.note) + "</div>" : "") + (lows.length ? '<div class="low">Low: ' + esc(lows.join(", ")) + "</div>" : "") + "</li>";
+      }).join("") || '<li class="empty">No check-ins yet. Set your sliders and save one.</li>';
+    }
+
+    document.getElementById("groups").addEventListener("input", function (e) {
+      var k = e.target.dataset.k; if (!k) return;
+      var v = +e.target.value; data.cur[k] = v; data.updated = Date.now();
+      e.target.style.setProperty("--v", v + "%"); e.target.style.setProperty("--fill", colour(v));
+      var st = document.getElementById("st-" + k); st.textContent = stateOf(v); st.style.color = colour(v);
+      save(); renderTop();
+    });
+    document.getElementById("groups").addEventListener("change", function () { render(); });
+
+    document.getElementById("logBtn").onclick = function () {
+      Kit.sheet(function (el, close) {
+        el.innerHTML = "<div><h2>Save check-in</h2><p class=\"hint\">Overall " + overall() + ". Anything on your mind? (optional)</p>" +
+          '<label for="fN">Note</label><textarea class="field" id="fN" rows="3" placeholder="Slept badly, big day tomorrow…"></textarea>' +
+          '<div class="actions"><button class="btn" id="fC">Cancel</button><button class="btn primary" id="fS">Save</button></div></div>';
+        el.querySelector("#fC").onclick = close;
+        el.querySelector("#fS").onclick = function () {
+          var v = {}; shown().forEach(function (n) { v[n[0]] = data.cur[n[0]]; });
+          var entry = { t: Date.now(), v: v, o: overall(), note: el.querySelector("#fN").value.trim() };
+          data.log.push(entry); save(); render(); close();
+          Kit.toast("Check-in saved", "Undo", function () { var i = data.log.indexOf(entry); if (i >= 0) data.log.splice(i, 1); save(); render(); });
+        };
+      });
+    };
+    document.getElementById("editBtn").onclick = function () {
+      Kit.sheet(function (el, close) {
+        el.innerHTML = '<div><h2>Choose needs</h2><div class="toggle-list">' + NEEDS.map(function (n) {
+          return '<label><input type="checkbox" value="' + n[0] + '"' + (data.hidden.indexOf(n[0]) < 0 ? " checked" : "") + " />" + n[2] + " " + esc(n[1]) + '<span style="margin-left:auto;color:var(--muted);font-size:12.5px">' + n[6] + "</span></label>";
+        }).join("") + '</div><div class="actions"><button class="btn primary" id="fD">Done</button></div></div>';
+        el.querySelector("#fD").onclick = function () {
+          data.hidden = Array.prototype.filter.call(el.querySelectorAll("input"), function (i) { return !i.checked; }).map(function (i) { return i.value; });
+          save(); render(); close();
+        };
+      });
+    };
+    document.getElementById("backupBtn").onclick = function () { store.backup(data, "probe"); };
+    document.getElementById("restoreBtn").onclick = function () {
+      store.restore(function (d) {
+        if (!d || !d.cur || !Array.isArray(d.log)) { alert("That isn't a Probe backup."); return; }
+        data = d; save(); render(); Kit.toast("Restored");
+      });
+    };
+    setInterval(renderTop, 60000);
+    render();
+  })();
+  </script>
+</body>
+</html>
