@@ -1,0 +1,338 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Sophia</title>
+  <meta name="description" content="Sparkles: A Field Guide to Goodness. Philosophies, religious messages, ideologies, strategies and actions on one scale of good." />
+  <meta name="theme-color" content="#0b0b10" media="(prefers-color-scheme: dark)" />
+  <meta name="theme-color" content="#f4f1ea" media="(prefers-color-scheme: light)" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Sophia" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../shared/base.css" />
+  <style>
+    :root {
+      --sparkle: #e8c55a;
+      --g-yours: #8f86ff; --g-phil: #4fc3d6; --g-strat: #5fd49a; --g-rel: #e8a35a; --g-pol: #e0607a; --g-act: #b18cf0;
+    }
+    @media (prefers-color-scheme: light) {
+      :root { --sparkle: #b58a10; --g-yours: #5b4fe0; --g-phil: #138aa0; --g-strat: #1e9a62; --g-rel: #c06a10; --g-pol: #c4304f; --g-act: #7d4fd0; }
+    }
+    .sub b { color: var(--fg); font-weight: 500; }
+    .controls { display: flex; flex-direction: column; gap: 8px; }
+    .search { width: 100%; background: var(--surface); border: 0; border-radius: 12px; padding: 11px 14px; font-size: 16px; box-shadow: inset 0 0 0 1px var(--line); outline: none; }
+    .search:focus { box-shadow: inset 0 0 0 1.5px var(--muted); }
+    .chips { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; padding-bottom: 2px; }
+    .chips::-webkit-scrollbar { display: none; }
+    .chip { flex: none; border: 0; border-radius: 999px; padding: 7px 12px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--line); font-size: 13px; font-weight: 500; color: var(--muted); display: inline-flex; align-items: center; gap: 6px; }
+    .chip i { width: 8px; height: 8px; border-radius: 50%; display: block; }
+    .chip[aria-pressed="true"] { background: var(--fg); color: var(--bg); box-shadow: none; }
+    .sortrow { display: flex; align-items: center; gap: 8px; font-size: 12.5px; color: var(--muted); }
+    .sortrow .seg button { padding: 6px 10px; font-size: 12.5px; }
+
+    .axis { position: relative; height: 16px; margin: 6px 0 0; }
+    #axis { margin: 6px 14px 0 46px; } /* lines up with the bars inside list cards */
+    .axis span { position: absolute; transform: translateX(-50%); font-family: "JetBrains Mono", monospace; font-size: 10px; color: var(--muted); }
+
+    .list { list-style: none; display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
+    .item { display: block; width: 100%; text-align: left; border: 0; padding: 12px 14px 12px; background: var(--surface); border-radius: 14px; box-shadow: inset 0 0 0 1px var(--line); }
+    .item .row1 { display: flex; align-items: flex-start; gap: 10px; }
+    .item .no { font-family: "JetBrains Mono", monospace; font-size: 12px; color: var(--muted); width: 22px; flex: none; padding-top: 3px; }
+    .item .ttl { flex: 1; min-width: 0; font-weight: 600; font-size: 15.5px; line-height: 1.25; }
+    .item .grp { display: block; font-weight: 500; font-size: 12px; margin-top: 3px; }
+    .item .told { flex: none; text-align: right; }
+    .item .told b { font-family: "Instrument Serif", Georgia, serif; font-weight: 400; font-size: 30px; line-height: .95; display: block; }
+    .item .told small { font-size: 10.5px; color: var(--muted); }
+    .bar { position: relative; height: 10px; margin: 10px 0 0 32px; border-radius: 5px; background: var(--surface-2); }
+    .bar .rng { position: absolute; top: 3px; height: 4px; border-radius: 2px; opacity: .45; }
+    .bar .t { position: absolute; top: 0; height: 10px; width: 10px; border-radius: 50%; transform: translateX(-5px); }
+    .bar .bv { position: absolute; top: 1px; height: 8px; width: 8px; border-radius: 50%; transform: translateX(-4px); box-shadow: inset 0 0 0 2px var(--fg); opacity: .7; }
+    .meta { display: flex; gap: 12px; margin: 7px 0 0 32px; font-size: 12px; color: var(--muted); flex-wrap: wrap; }
+
+    /* chapter view */
+    .chapter { display: none; }
+    .reading .chapter { display: block; }
+    .reading .home { display: none; }
+    .ch-head { margin: 12px 0 14px; }
+    .ch-head .grp { font-size: 12.5px; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; }
+    .ch-head h2 { font-family: "Instrument Serif", Georgia, serif; font-weight: 400; font-size: clamp(34px, 9vw, 48px); line-height: 1.05; margin-top: 6px; }
+    .scores { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .score { background: var(--surface); border-radius: 14px; box-shadow: inset 0 0 0 1px var(--line); padding: 12px; }
+    .score .k { font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
+    .score .v { font-family: "Instrument Serif", Georgia, serif; font-size: 34px; line-height: 1.05; margin-top: 4px; }
+    .score .v.na { font-family: Inter, sans-serif; font-size: 13.5px; color: var(--muted); margin-top: 8px; line-height: 1.3; }
+    .score small { display: block; font-size: 11px; color: var(--muted); margin-top: 2px; }
+    .scale-card { margin-top: 8px; padding: 14px 14px 10px; }
+    .scale-card .bar { margin: 6px 0 0; height: 14px; border-radius: 7px; }
+    .scale-card .bar .t { height: 14px; width: 14px; transform: translateX(-7px); }
+    .scale-card .bar .bv { top: 2px; height: 10px; width: 10px; transform: translateX(-5px); }
+    .scale-card .bar .rng { top: 4px; height: 6px; }
+    .legend { display: flex; gap: 14px; font-size: 12px; color: var(--muted); margin-top: 8px; flex-wrap: wrap; }
+    .legend span { display: inline-flex; align-items: center; gap: 6px; }
+    .legend i { width: 10px; height: 10px; border-radius: 50%; display: block; }
+
+    .prose { margin-top: 22px; font-size: 16.5px; line-height: 1.65; }
+    .prose p { margin: 0 0 14px; }
+    .prose ul { margin: -6px 0 16px; padding-left: 22px; }
+    .prose li { margin: 4px 0; }
+    .prose b, .prose strong { font-weight: 600; }
+    .prose .lead { font-size: 18px; line-height: 1.55; font-weight: 500; }
+    .prose .label { display: block; font-size: 11.5px; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin: 22px 0 4px; }
+    .prose blockquote, .prose .quote { font-family: "Instrument Serif", Georgia, serif; font-style: italic; font-size: 21px; }
+    .pager { display: flex; gap: 8px; margin-top: 26px; }
+    .pager button { flex: 1; text-align: left; border: 0; background: var(--surface); border-radius: 14px; box-shadow: inset 0 0 0 1px var(--line); padding: 12px 14px; min-height: 64px; }
+    .pager button:last-child { text-align: right; }
+    .pager small { display: block; font-size: 11.5px; color: var(--muted); }
+    .pager span { font-weight: 600; font-size: 14px; }
+    .pager button:disabled { opacity: .35; }
+    .topbar { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    .topbar .pos { font-family: "JetBrains Mono", monospace; font-size: 12px; color: var(--muted); }
+    .intro .prose { margin-top: 0; font-size: 15px; }
+    .err { color: var(--bad); }
+  </style>
+</head>
+<body>
+  <main id="app">
+    <div class="home">
+      <a class="back" href="../">← Apps</a>
+      <header class="app-head">
+        <h1>Sophia<em>.</em></h1>
+        <p class="sub" id="bookTitle">Loading the book…</p>
+      </header>
+    </div>
+  </main>
+
+  <div class="sticky home-sticky" id="homeSticky">
+    <div class="controls">
+      <input class="search" id="q" type="search" placeholder="Search ideas, people, books" autocomplete="off" />
+      <div class="chips" id="groups"></div>
+      <div class="sortrow">Sort by
+        <div class="seg" id="sort">
+          <button data-s="told">Told</button>
+          <button data-s="believed">Believed</button>
+          <button data-s="true">Likely true</button>
+          <button data-s="gap">Belief gap</button>
+        </div>
+      </div>
+      <div class="axis" id="axis"></div>
+    </div>
+  </div>
+
+  <main>
+    <div class="home">
+      <ul class="list" id="list"></ul>
+      <details class="about card intro" id="intro">
+        <summary>How to read this book</summary>
+        <div class="body"><div class="prose" id="introBody"></div></div>
+      </details>
+    </div>
+
+    <article class="chapter" id="chapter">
+      <div class="topbar"><button class="linkbtn" id="backBtn" style="text-decoration:none">← All ideas</button><span class="pos" id="pos"></span></div>
+      <div class="ch-head"><div class="grp" id="chGrp"></div><h2 id="chTitle"></h2></div>
+      <div class="scores" id="chScores"></div>
+      <div class="card scale-card" id="chScale"></div>
+      <div class="prose" id="chBody"></div>
+      <div class="pager"><button id="prevBtn"></button><button id="nextBtn"></button></div>
+    </article>
+  </main>
+
+  <script src="../shared/store.js"></script>
+  <script>
+  (function () {
+    var esc = Kit.esc;
+    var GROUPS = [
+      { key: "yours", label: "Yours", match: ["Your principle", "Your former belief"], color: "--g-yours" },
+      { key: "phil", label: "Philosophies", match: ["Philosophy"], color: "--g-phil" },
+      { key: "rel", label: "Religious messages", match: ["Religious message"], color: "--g-rel" },
+      { key: "pol", label: "Political ideologies", match: ["Political ideology"], color: "--g-pol" },
+      { key: "strat", label: "Strategies", match: ["Strategy"], color: "--g-strat" },
+      { key: "act", label: "Actions", match: ["Action"], color: "--g-act" }
+    ];
+    var MAX = 500;
+    function groupOf(name) { return GROUPS.find(function (g) { return g.match.indexOf(name) >= 0; }) || GROUPS[1]; }
+    function pct(v) { return (v / MAX * 100).toFixed(2) + "%"; }
+
+    var store = new Kit.Store("sophia:v1", {});
+    var S = Object.assign({ group: "all", sort: "told", q: "" }, store.load());
+    function save() { store.save({ group: S.group, sort: S.sort }); }
+
+    // ---------- Minimal markdown (bold, italic, lists, paragraphs) ----------
+    function inline(s) {
+      return esc(s)
+        .replace(/\*\*([^*]+)\*\*/g, "<b>$1</b>")
+        .replace(/\*([^*]+)\*/g, "<i>$1</i>");
+    }
+    function blocks(md) {
+      var out = [], list = null;
+      md.split("\n").forEach(function (line) {
+        var t = line.trim();
+        if (/^- /.test(t)) { if (!list) { list = []; out.push(list); } list.push(t.slice(2)); return; }
+        list = null;
+        if (!t || t === "---") { out.push(null); return; }
+        if (out.length && typeof out[out.length - 1] === "string") out[out.length - 1] += " " + t;
+        else out.push(t);
+      });
+      return out.filter(function (b) { return b; }).map(function (b) {
+        if (Array.isArray(b)) return "<ul>" + b.map(function (li) { return "<li>" + inline(li) + "</li>"; }).join("") + "</ul>";
+        // "**Label.** text" paragraphs become a small heading plus text
+        var m = /^\*\*([^*]+?)\.?\*\*\s*(.*)$/.exec(b);
+        if (m) {
+          var label = m[1].replace(/\.$/, "");
+          if (/^In summary$/.test(label)) return '<p class="lead">' + inline(m[2]) + "</p>";
+          return '<span class="label">' + esc(label) + "</span>" + (m[2] ? "<p>" + inline(m[2]) + "</p>" : "");
+        }
+        return "<p>" + inline(b) + "</p>";
+      }).join("");
+    }
+
+    // ---------- Parse the book ----------
+    var book = { title: "", subtitle: "", intro: "", chapters: [] };
+    function parse(md) {
+      md = md.replace(/\r\n/g, "\n");
+      var t = /^# (.+)$/m.exec(md); book.title = t ? t[1] : "Sparkles";
+      var st = /^\*([^*\n]+)\*$/m.exec(md); book.subtitle = st ? st[1] : "";
+      var body = md.split(/^# Appendix/m)[0];
+      var parts = body.split(/^## /m).slice(1);
+      parts.forEach(function (p) {
+        var nl = p.indexOf("\n"), head = p.slice(0, nl).trim(), rest = p.slice(nl + 1);
+        if (/^How to Read/i.test(head)) { book.intro = rest; return; }
+        var hm = /^(\d+)\.\s+(.+)$/.exec(head); if (!hm) return;
+        var meta = /^\*Group: (.+?) · Told: (\d+)(?: \(range (\d+)–(\d+)\))? · Believed: (\d+) · Likely true: (.+?)\*\s*$/m.exec(rest);
+        if (!meta) return;
+        var lt = /^(\d+)%$/.exec(meta[6].trim());
+        book.chapters.push({
+          no: +hm[1], title: hm[2].replace(/^Former Belief:\s*/i, ""), group: meta[1], g: groupOf(meta[1]),
+          told: +meta[2], lo: meta[3] ? +meta[3] : null, hi: meta[4] ? +meta[4] : null, believed: +meta[5],
+          truth: lt ? +lt[1] : null, truthNote: lt ? "" : meta[6].replace(/^not assessed\s*/, "").replace(/^\(|\)$/g, ""),
+          body: rest.replace(meta[0], "").trim(),
+          text: (hm[2] + " " + meta[1] + " " + rest).toLowerCase()
+        });
+      });
+    }
+
+    // ---------- Home ----------
+    var listEl = document.getElementById("list");
+    function visible() {
+      var q = S.q.trim().toLowerCase();
+      var rows = book.chapters.filter(function (c) {
+        if (S.group !== "all" && c.g.key !== S.group) return false;
+        return !q || c.text.indexOf(q) >= 0;
+      });
+      var by = {
+        told: function (a, b) { return b.told - a.told || a.no - b.no; },
+        believed: function (a, b) { return b.believed - a.believed || a.no - b.no; },
+        "true": function (a, b) { return (b.truth == null ? -1 : b.truth) - (a.truth == null ? -1 : a.truth) || a.no - b.no; },
+        gap: function (a, b) { return (b.believed - b.told) - (a.believed - a.told) || a.no - b.no; }
+      }[S.sort];
+      return rows.slice().sort(by);
+    }
+    function barHtml(c) {
+      var col = "var(" + c.g.color + ")";
+      return '<div class="bar">' + (c.lo != null ? '<span class="rng" style="left:' + pct(c.lo) + ";width:calc(" + pct(c.hi) + " - " + pct(c.lo) + ");background:" + col + '"></span>' : "") +
+        '<span class="bv" style="left:' + pct(c.believed) + '"></span><span class="t" style="left:' + pct(c.told) + ";background:" + col + '"></span></div>';
+    }
+    function renderHome() {
+      document.getElementById("groups").innerHTML = ['<button class="chip" data-g="all" aria-pressed="' + (S.group === "all") + '">All ' + book.chapters.length + "</button>"].concat(GROUPS.map(function (g) {
+        var n = book.chapters.filter(function (c) { return c.g.key === g.key; }).length;
+        return '<button class="chip" data-g="' + g.key + '" aria-pressed="' + (S.group === g.key) + '"><i style="background:var(' + g.color + ')"></i>' + g.label + " " + n + "</button>";
+      })).join("");
+      document.querySelectorAll("#sort button").forEach(function (b) { b.setAttribute("aria-pressed", b.dataset.s === S.sort); });
+      var rows = visible();
+      listEl.innerHTML = rows.map(function (c) {
+        var tv = c.truth != null ? c.truth + "% likely true" : "truth not assessed";
+        var gap = c.believed - c.told;
+        return '<li><button class="item" data-no="' + c.no + '"><div class="row1"><span class="no">' + c.no + '</span><span class="ttl">' + esc(c.title) +
+          '<span class="grp" style="color:var(' + c.g.color + ')">' + esc(c.group) + '</span></span><span class="told"><b>' + c.told + "</b><small>told</small></span></div>" +
+          barHtml(c) + '<div class="meta"><span>Believed ' + c.believed + (gap ? " (" + (gap > 0 ? "+" : "") + gap + ")" : "") + "</span><span>" + tv + "</span>" +
+          (c.lo != null ? "<span>range " + c.lo + "–" + c.hi + "</span>" : "") + "</div></button></li>";
+      }).join("") || '<li class="empty">No ideas match.</li>';
+    }
+    document.getElementById("axis").innerHTML = [0, 100, 200, 300, 400, 500].map(function (v) {
+      return '<span style="left:' + v / MAX * 100 + '%">' + v + "</span>";
+    }).join("");
+    document.getElementById("groups").onclick = function (e) { var b = e.target.closest("button"); if (!b) return; S.group = b.dataset.g; save(); renderHome(); };
+    document.getElementById("sort").onclick = function (e) { var b = e.target.closest("button"); if (!b) return; S.sort = b.dataset.s; save(); renderHome(); };
+    document.getElementById("q").oninput = function (e) { S.q = e.target.value; renderHome(); };
+    var fromList = false;
+    listEl.onclick = function (e) { var b = e.target.closest(".item"); if (b) { fromList = true; location.hash = "#" + b.dataset.no; } };
+    // Paging between chapters replaces the history entry, so Back always returns to the list.
+    function goChapter(no) { location.replace("#" + no); }
+
+    // ---------- Chapter ----------
+    var homeScroll = 0;
+    function renderChapter(no) {
+      var rows = visible(), idx = rows.findIndex(function (c) { return c.no === no; });
+      var c = book.chapters.find(function (x) { return x.no === no; });
+      if (!c) { location.hash = ""; return; }
+      if (idx < 0) { rows = book.chapters.slice().sort(function (a, b) { return a.no - b.no; }); idx = rows.indexOf(c); }
+      var col = "var(" + c.g.color + ")";
+      document.getElementById("pos").textContent = (idx + 1) + " of " + rows.length;
+      document.getElementById("chGrp").innerHTML = '<span style="color:' + col + '">' + esc(c.group) + "</span> · No. " + c.no;
+      document.getElementById("chTitle").textContent = c.title;
+      document.getElementById("chScores").innerHTML =
+        '<div class="score"><div class="k">Told</div><div class="v">' + c.told + "</div>" + (c.lo != null ? "<small>range " + c.lo + "–" + c.hi + "</small>" : "<small>sparkles</small>") + "</div>" +
+        '<div class="score"><div class="k">Believed</div><div class="v">' + c.believed + "</div><small>" + (c.believed === c.told ? "same as told" : (c.believed > c.told ? "+" : "") + (c.believed - c.told) + " vs told") + "</small></div>" +
+        '<div class="score"><div class="k">Likely true</div>' + (c.truth != null ? '<div class="v">' + c.truth + "%</div><small>estimate</small>" : '<div class="v na">Not assessed<br>' + esc(c.truthNote) + "</div>") + "</div>";
+      document.getElementById("chScale").innerHTML = '<div class="axis" style="margin:0">' + [0, 100, 200, 300, 400, 500].map(function (v) { return '<span style="left:' + v / MAX * 100 + '%">' + v + "</span>"; }).join("") + "</div>" +
+        barHtml(c).replace('class="bar"', 'class="bar" style="margin:6px 0 0"') +
+        '<div class="legend"><span><i style="background:' + col + '"></i>Told</span><span><i style="box-shadow:inset 0 0 0 2px var(--fg);opacity:.7"></i>Believed</span><span>0 = destroy the universe · 500 = perfect moral objectivity</span></div>';
+      document.getElementById("chBody").innerHTML = blocks(c.body);
+      var prev = rows[idx - 1], next = rows[idx + 1];
+      var pb = document.getElementById("prevBtn"), nb = document.getElementById("nextBtn");
+      pb.disabled = !prev; nb.disabled = !next;
+      pb.innerHTML = prev ? "<small>← Previous</small><span>" + esc(prev.title) + "</span>" : "<small>Start of list</small>";
+      nb.innerHTML = next ? "<small>Next →</small><span>" + esc(next.title) + "</span>" : "<small>End of list</small>";
+      pb.onclick = function () { if (prev) goChapter(prev.no); };
+      nb.onclick = function () { if (next) goChapter(next.no); };
+      document.title = c.title + " · Sophia";
+    }
+    function route() {
+      var no = parseInt(location.hash.slice(1), 10), app = document.body;
+      if (no) {
+        if (!app.classList.contains("reading")) homeScroll = scrollY;
+        app.classList.add("reading");
+        document.getElementById("homeSticky").style.display = "none";
+        renderChapter(no);
+        scrollTo(0, 0);
+      } else {
+        app.classList.remove("reading");
+        document.getElementById("homeSticky").style.display = "";
+        document.title = "Sophia";
+        renderHome();
+        scrollTo(0, homeScroll);
+      }
+    }
+    document.getElementById("backBtn").onclick = function () {
+      if (fromList) { fromList = false; history.back(); } else location.hash = "";
+    };
+    window.addEventListener("hashchange", route);
+    // Swipe left/right on a chapter to page through.
+    var sx = null, sy = null;
+    document.getElementById("chapter").addEventListener("touchstart", function (e) { sx = e.touches[0].clientX; sy = e.touches[0].clientY; }, { passive: true });
+    document.getElementById("chapter").addEventListener("touchend", function (e) {
+      if (sx == null) return;
+      var dx = e.changedTouches[0].clientX - sx, dy = e.changedTouches[0].clientY - sy; sx = null;
+      if (Math.abs(dx) > 70 && Math.abs(dx) > Math.abs(dy) * 2) document.getElementById(dx < 0 ? "nextBtn" : "prevBtn").click();
+    }, { passive: true });
+
+    // ---------- Load ----------
+    fetch("book.md", { cache: "no-cache" }).then(function (r) {
+      if (!r.ok) throw new Error(r.status);
+      return r.text();
+    }).then(function (md) {
+      parse(md);
+      document.getElementById("bookTitle").innerHTML = "<b>" + esc(book.title) + "</b><br>" + esc(book.subtitle);
+      document.getElementById("introBody").innerHTML = blocks(book.intro);
+      route();
+    }).catch(function () {
+      document.getElementById("bookTitle").innerHTML = '<span class="err">Couldn’t load the book. Check your connection and reload.</span>';
+    });
+  })();
+  </script>
+</body>
+</html>

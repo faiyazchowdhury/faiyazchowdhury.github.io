@@ -40,6 +40,14 @@ window.APPS = [
     section: "Learning",
   },
   {
+    slug: "sophia",
+    name: "Sophia",
+    blurb: "Sparkles: a field guide to goodness",
+    glyph: "✧",
+    hue: 50,
+    section: "Books",
+  },
+  {
     slug: "repertoire",
     name: "Repertoire",
     blurb: "Guitar and piano pieces to learn and perform",
