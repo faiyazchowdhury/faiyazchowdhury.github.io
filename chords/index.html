@@ -79,8 +79,9 @@
         <p>Progressions are written as <b>scale degrees</b>, so they hold in any key: upper case is a major chord, lower case is minor, and <span class="mono">b</span> lowers the root a semitone. For example, <span class="mono">I V vi IV</span> is C G Am F in C, or G D Em C in G.</p>
         <p>A progression's <b>points</b> are the number of songs you know that use it. The more songs you can play over a progression, the deeper it's in your hands.</p>
         <p>Mark things you want to dig into with <b>Eager</b>. They all collect on the <b>Explore</b> tab. Tap any title to edit or delete it.</p>
-        <p>Your data stays in this browser. Back it up now and then:</p>
+        <p>Your data stays in this browser. <b>Export data</b> saves one ZIP with spreadsheet-ready CSV files, a readable summary (README.md) and a full backup. <b>Download backup</b> saves just the backup, which <b>Restore</b> can load again.</p>
         <div class="backup">
+          <button class="btn small primary" id="exportBtn">Export data</button>
           <button class="btn small" id="backupBtn">Download backup</button>
           <button class="btn small" id="restoreBtn">Restore</button>
         </div>
@@ -291,6 +292,21 @@
     }
 
     document.getElementById("backupBtn").onclick = function () { store.backup(data, "chords"); };
+    document.getElementById("exportBtn").onclick = function () {
+      function yn(b) { return b ? "yes" : "no"; }
+      var progs = data.progs.slice().sort(function (a, b) { return points(b) - points(a); });
+      var md = "# Chords export\n\nExported " + Kit.stamp(Date.now()) + ". A progression's points are the number of songs you know that use it.\n\n" +
+        "## Progressions\n\n| Degrees | Name | Points | Known | Eager | Songs |\n|---|---|---|---|---|---|\n" +
+        progs.map(function (p) { return "| " + p.deg + " | " + (p.name || "") + " | " + points(p) + " | " + yn(p.known) + " | " + yn(p.eager) + " | " + songsOf(p).map(function (s) { return s.title + (s.known ? " ✓" : ""); }).join(", ") + " |"; }).join("\n") +
+        "\n\n## Eager to explore\n\n" + (["progs", "scales", "songs"].map(function (k) {
+          return data[k].filter(function (o) { return o.eager; }).map(function (o) { return "- " + (o.deg || o.name || o.title); }).join("\n"); }).filter(Boolean).join("\n") || "Nothing marked yet.") +
+        "\n\n## Files\n\n- `progressions.csv`, `songs.csv`, `scales.csv`: everything, with known and eager flags.\n- `chords-backup.json`: the full data, for Restore.\n";
+      Kit.exportData("chords", [
+        { name: "progressions.csv", rows: [["Degrees", "Name", "Points", "Known", "Eager", "Songs"]].concat(progs.map(function (p) { return [p.deg, p.name, points(p), yn(p.known), yn(p.eager), songsOf(p).map(function (s) { return s.title; }).join("; ")]; })) },
+        { name: "songs.csv", rows: [["Title", "Artist", "Progressions", "Known", "Eager"]].concat(data.songs.map(function (s) { return [s.title, s.artist, s.progs.map(prog).filter(Boolean).map(function (p) { return p.deg; }).join("; "), yn(s.known), yn(s.eager)]; })) },
+        { name: "scales.csv", rows: [["Scale", "Known", "Eager"]].concat(data.scales.map(function (c) { return [c.name, yn(c.known), yn(c.eager)]; })) }
+      ], md, data);
+    };
     document.getElementById("restoreBtn").onclick = function () {
       store.restore(function (d) {
         if (!d || !Array.isArray(d.progs) || !Array.isArray(d.songs)) { alert("That isn't a Chords backup."); return; }

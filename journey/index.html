@@ -75,8 +75,9 @@
         <p>Each goal breaks into <b>steps</b>, and its ring fills as you tick them off. The first unticked step shows on the card as <b>Next</b>, so you always know what to do. A goal with no steps uses a progress slider instead.</p>
         <p>Add <b>notes</b> along the way, such as what you tried, what you learned or how it felt, and they're dated automatically. Tap <b>Edit</b> to change a goal's title, its reason or its target year.</p>
         <p>The starting steps are suggestions. Rename, delete or add your own.</p>
-        <p>Your data stays in this browser. Back it up now and then:</p>
+        <p>Your data stays in this browser. <b>Export data</b> saves one ZIP with spreadsheet-ready CSV files, a readable summary (README.md) and a full backup. <b>Download backup</b> saves just the backup, which <b>Restore</b> can load again.</p>
         <div class="backup">
+          <button class="btn small primary" id="exportBtn">Export data</button>
           <button class="btn small" id="backupBtn">Download backup</button>
           <button class="btn small" id="restoreBtn">Restore</button>
         </div>
@@ -242,6 +243,22 @@
     }
     document.getElementById("addBtn").onclick = function () { edit(null); };
     document.getElementById("backupBtn").onclick = function () { store.backup(data, "journey"); };
+    document.getElementById("exportBtn").onclick = function () {
+      var md = "# Journey export\n\nExported " + Kit.stamp(Date.now()) + ".\n";
+      var goals = [["Goal", "Status", "Progress (%)", "Target year", "Why", "Steps done", "Steps total", "Next step"]], steps = [["Goal", "Step", "Done"]], notes = [["Goal", "Date and time", "Note"]];
+      data.goals.forEach(function (g) {
+        var p = Math.round(progress(g) * 100), done = g.steps.filter(function (s) { return s.done; }).length, next = g.steps.find(function (s) { return !s.done; });
+        md += "\n## " + g.title + (g.done ? " ✓" : "") + "\n\n" + (g.done ? "Reached" : "In progress") + " · " + p + "%" + (g.year ? " · target " + g.year : "") + "\n" +
+          (g.why ? "\n> " + g.why.replace(/\n/g, "\n> ") + "\n" : "") +
+          (g.steps.length ? "\n" + g.steps.map(function (s) { return "- [" + (s.done ? "x" : " ") + "] " + s.text; }).join("\n") + "\n" : "") +
+          (g.notes.length ? "\n**Notes**\n\n" + g.notes.map(function (n) { return "- " + Kit.stamp(n.t) + ": " + n.text.replace(/\n/g, " "); }).join("\n") + "\n" : "");
+        goals.push([g.title, g.done ? "Reached" : "In progress", p, g.year, g.why, done, g.steps.length, next ? next.text : ""]);
+        g.steps.forEach(function (s) { steps.push([g.title, s.text, s.done ? "yes" : "no"]); });
+        g.notes.forEach(function (n) { notes.push([g.title, Kit.stamp(n.t), n.text]); });
+      });
+      md += "\n## Files\n\n- `goals.csv`: one row per goal with its progress and next step.\n- `steps.csv`: every step and whether it's done.\n- `notes.csv`: every dated note.\n- `journey-backup.json`: the full data, for Restore.\n";
+      Kit.exportData("journey", [{ name: "goals.csv", rows: goals }, { name: "steps.csv", rows: steps }, { name: "notes.csv", rows: notes }], md, data);
+    };
     document.getElementById("restoreBtn").onclick = function () {
       store.restore(function (d) {
         if (!d || !Array.isArray(d.goals)) { alert("That isn't a Journey backup."); return; }

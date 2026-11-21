@@ -85,8 +85,9 @@
         <p>Each need is a bar, like in The Sims: <b>full and green is good</b>, empty and red needs attention. Drag the sliders to how you feel right now. The diamond's colour shows your overall state.</p>
         <p><b>Save check-in</b> records a snapshot, with an optional note. The small line under each need traces your last two weeks of check-ins, so patterns show up, like energy dipping every afternoon or mood tracking sleep.</p>
         <p>Beyond the classic needs, Probe adds <b>Thirst</b>, plus reflection gauges: <b>Mood</b>, <b>Calm</b> (stress), <b>Focus</b>, <b>Movement</b>, <b>Outdoors</b> (daylight and fresh air), and <b>Purpose</b> (whether today feels meaningful). Hide any you don't want with <b>Choose needs</b>.</p>
-        <p>Your data stays in this browser. Back it up now and then:</p>
+        <p>Your data stays in this browser. <b>Export data</b> saves one ZIP with spreadsheet-ready CSV files, a readable summary (README.md) and a full backup. <b>Download backup</b> saves just the backup, which <b>Restore</b> can load again.</p>
         <div class="backup">
+          <button class="btn small primary" id="exportBtn">Export data</button>
           <button class="btn small" id="backupBtn">Download backup</button>
           <button class="btn small" id="restoreBtn">Restore</button>
         </div>
@@ -220,6 +221,24 @@
       });
     };
     document.getElementById("backupBtn").onclick = function () { store.backup(data, "probe"); };
+    document.getElementById("exportBtn").onclick = function () {
+      var head = ["Date and time", "Overall"].concat(NEEDS.map(function (n) { return n[1]; })).concat(["Note"]);
+      var rows = [head].concat(data.log.map(function (e) {
+        return [Kit.stamp(e.t), e.o].concat(NEEDS.map(function (n) { return e.v[n[0]] == null ? "" : e.v[n[0]]; })).concat([e.note || ""]);
+      }));
+      var cutoff = Date.now() - 30 * 864e5, recent = data.log.filter(function (e) { return e.t >= cutoff; });
+      var avgs = NEEDS.map(function (n) {
+        var vs = recent.map(function (e) { return e.v[n[0]]; }).filter(function (v) { return v != null; });
+        return [n, vs.length ? Math.round(vs.reduce(function (a, b) { return a + b; }, 0) / vs.length) : null];
+      });
+      var md = "# Probe export\n\nExported " + Kit.stamp(Date.now()) + ". " + data.log.length + " check-ins. Scores run from 0 (critical) to 100 (great).\n\n" +
+        "## Right now (overall " + overall() + ")\n\n| Need | Now | 30-day average |\n|---|---|---|\n" +
+        avgs.map(function (x) { return "| " + x[0][2] + " " + x[0][1] + " | " + data.cur[x[0][0]] + " | " + (x[1] == null ? "–" : x[1]) + " |"; }).join("\n") +
+        "\n\n## Lowest on average (last 30 days)\n\n" + (avgs.filter(function (x) { return x[1] != null; }).sort(function (a, b) { return a[1] - b[1]; }).slice(0, 3).map(function (x) { return "- " + x[0][1] + ": " + x[1] + ". " + x[0][5]; }).join("\n") || "No check-ins yet.") +
+        "\n\n## Notes\n\n" + (data.log.filter(function (e) { return e.note; }).map(function (e) { return "- " + Kit.stamp(e.t) + " (overall " + e.o + "): " + e.note.replace(/\n/g, " "); }).join("\n") || "None yet.") +
+        "\n\n## Files\n\n- `checkins.csv`: one row per check-in with every need and your note.\n- `probe-backup.json`: the full data, for Restore.\n";
+      Kit.exportData("probe", [{ name: "checkins.csv", rows: rows }], md, data);
+    };
     document.getElementById("restoreBtn").onclick = function () {
       store.restore(function (d) {
         if (!d || !d.cur || !Array.isArray(d.log)) { alert("That isn't a Probe backup."); return; }

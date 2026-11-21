@@ -96,8 +96,9 @@
         <p>Each activity has a <b>weight</b>: how much of your time you'd like it to get, relative to the others. With nothing logged, an activity with weight 6 comes up twice as often as one with weight 3.</p>
         <p>The die also looks at the <b>last 7 days</b>. It works out each activity's fair share of what you've logged (its weight's share of the total) and compares it with what you actually did. The chance is <span class="mono">weight × (1 + fair share) ÷ (1 + times done)</span>. Something you've neglected climbs, and something you've overdone drops, until things even out.</p>
         <p>Tap <b>Done</b> after a roll, or the <b>+</b> next to any activity, to log it. Tap an activity's name to rename or delete it.</p>
-        <p>Your data stays in this browser. Back it up now and then:</p>
+        <p>Your data stays in this browser. <b>Export data</b> saves one ZIP with spreadsheet-ready CSV files, a readable summary (README.md) and a full backup. <b>Download backup</b> saves just the backup, which <b>Restore</b> can load again.</p>
         <div class="backup">
+          <button class="btn small primary" id="exportBtn">Export data</button>
           <button class="btn small" id="backupBtn">Download backup</button>
           <button class="btn small" id="restoreBtn">Restore</button>
         </div>
@@ -323,6 +324,24 @@
     }
     document.getElementById("addBtn").onclick = function () { editAct(null); };
     document.getElementById("backupBtn").onclick = function () { store.backup(data, "rollplay"); };
+    document.getElementById("exportBtn").onclick = function () {
+      var c1 = counts(1), c7 = counts(7), call = counts(0), p = odds();
+      var acts = data.acts.slice().sort(function (a, b) { return (call[b.id] || 0) - (call[a.id] || 0); });
+      var name = {}; data.acts.forEach(function (a) { name[a.id] = a.name; });
+      var total7 = 0; for (var k in c7) total7 += c7[k];
+      var first = data.log.length ? Kit.stamp(data.log[0].t) : "–";
+      var neglected = data.acts.filter(function (a) { return a.w > 0 && !c7[a.id]; }).map(function (a) { return a.name; });
+      var md = "# RollPlay export\n\nExported " + Kit.stamp(Date.now()) + ". " + data.log.length + " activities logged since " + first + ", " + total7 + " in the last 7 days.\n\n" +
+        "## Activities\n\n| Activity | Weight | Today | 7 days | All time | Next roll |\n|---|---|---|---|---|---|\n" +
+        acts.map(function (a) { return "| " + a.name + " | " + a.w + " | " + (c1[a.id] || 0) + " | " + (c7[a.id] || 0) + " | " + (call[a.id] || 0) + " | " + Math.round((p[a.id] || 0) * 100) + "% |"; }).join("\n") +
+        (neglected.length ? "\n\nNot done in the last 7 days: " + neglected.join(", ") + "." : "") +
+        "\n\n## Files\n\n- `activities.csv`: each activity with its weight, counts and current chance on the next roll.\n- `log.csv`: every logged activity with its date and time.\n- `rollplay-backup.json`: the full data, for Restore.\n";
+      Kit.exportData("rollplay", [
+        { name: "activities.csv", rows: [["Activity", "Weight", "Today", "Last 7 days", "All time", "Chance on next roll (%)"]].concat(acts.map(function (a) {
+          return [a.name, a.w, c1[a.id] || 0, c7[a.id] || 0, call[a.id] || 0, Math.round((p[a.id] || 0) * 1000) / 10]; })) },
+        { name: "log.csv", rows: [["Date and time", "Activity"]].concat(data.log.map(function (e) { return [Kit.stamp(e.t), name[e.a] || "(deleted)"]; })) }
+      ], md, data);
+    };
     document.getElementById("restoreBtn").onclick = function () {
       store.restore(function (d) {
         if (!d || !Array.isArray(d.acts) || !Array.isArray(d.log)) { alert("That isn't a RollPlay backup."); return; }

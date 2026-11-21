@@ -84,8 +84,9 @@
       <div class="body">
         <p>Cognitive science is usually drawn as six fields: philosophy, psychology, linguistics, neuroscience, artificial intelligence and anthropology. Here, AI is split into <b>Machine Learning</b> and <b>Robotics</b>, and anthropology is left out. Add it back with <b>+ Add pillar</b> if you want it.</p>
         <p>Rate each topic from 0 to 4: <b>0</b> not started, <b>1</b> heard of it, <b>2</b> know the basics, <b>3</b> comfortable using it, <b>4</b> could teach it. Each subject's percentage is its average rating out of 4. Tap a topic's name to rename or delete it.</p>
-        <p>Your data stays in this browser. Back it up now and then:</p>
+        <p>Your data stays in this browser. <b>Export data</b> saves one ZIP with spreadsheet-ready CSV files, a readable summary (README.md) and a full backup. <b>Download backup</b> saves just the backup, which <b>Restore</b> can load again.</p>
         <div class="backup">
+          <button class="btn small primary" id="exportBtn">Export data</button>
           <button class="btn small" id="backupBtn">Download backup</button>
           <button class="btn small" id="restoreBtn">Restore</button>
         </div>
@@ -258,6 +259,21 @@
     }
 
     document.getElementById("backupBtn").onclick = function () { store.backup(data, "learn"); };
+    document.getElementById("exportBtn").onclick = function () {
+      var rows = [["Pillar", "Subject", "Topic", "Confidence (0-4)", "Level"]];
+      var md = "# Learn export\n\nExported " + Kit.stamp(Date.now()) + ". Confidence runs from 0 (not started) to 4 (could teach it); percentages are the average out of 4.\n";
+      data.pillars.forEach(function (p) {
+        var st = stats(allTopics(p));
+        md += "\n## " + p.name + " · " + st.pct + "%\n\n";
+        p.subjects.forEach(function (s) {
+          var ss = stats(s.topics);
+          md += "### " + s.name + " · " + ss.pct + "%\n\n" + s.topics.map(function (t) { return "- " + t.name + ": " + t.c + " (" + LEVELS[t.c].toLowerCase() + ")"; }).join("\n") + "\n\n";
+          s.topics.forEach(function (t) { rows.push([p.name, s.name, t.name, t.c, LEVELS[t.c]]); });
+        });
+      });
+      md += "## Files\n\n- `topics.csv`: one row per topic with its pillar, subject and confidence.\n- `learn-backup.json`: the full data, for Restore.\n";
+      Kit.exportData("learn", [{ name: "topics.csv", rows: rows }], md, data);
+    };
     document.getElementById("restoreBtn").onclick = function () {
       store.restore(function (d) {
         if (!d || !Array.isArray(d.pillars)) { alert("That isn't a Learn backup."); return; }

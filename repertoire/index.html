@@ -73,8 +73,10 @@
       <div class="body">
         <p><b>Learned</b> is how much of the piece you can play, from 0 to 100%.</p>
         <p><b>Performed</b> goes up each time you tap <b>+</b> after playing the piece through for someone, or for a recording. It grows logarithmically: the first few performances count the most, and each doubling of the count adds the same amount. Ten performances fill the bar about halfway, and a hundred fill it.</p>
-        <p>Tap a piece's title to edit or delete it. Your data stays in this browser. Back it up now and then:</p>
+        <p>Tap a piece's title to edit or delete it.</p>
+        <p>Your data stays in this browser. <b>Export data</b> saves one ZIP with spreadsheet-ready CSV files, a readable summary (README.md) and a full backup. <b>Download backup</b> saves just the backup, which <b>Restore</b> can load again.</p>
         <div class="backup">
+          <button class="btn small primary" id="exportBtn">Export data</button>
           <button class="btn small" id="backupBtn">Download backup</button>
           <button class="btn small" id="restoreBtn">Restore</button>
         </div>
@@ -232,6 +234,19 @@
     }
     document.getElementById("addBtn").onclick = function () { edit(null); };
     document.getElementById("backupBtn").onclick = function () { store.backup(data, "repertoire"); };
+    document.getElementById("exportBtn").onclick = function () {
+      var songs = data.songs.slice().sort(function (a, b) { return a.inst.localeCompare(b.inst) || a.title.localeCompare(b.title); });
+      var md = "# Repertoire export\n\nExported " + Kit.stamp(Date.now()) + ".\n";
+      INST.forEach(function (inst) {
+        var list = songs.filter(function (s) { return s.inst === inst; });
+        if (!list.length) return;
+        md += "\n## " + inst + "\n\n| Piece | Composer | Learned | Performed |\n|---|---|---|---|\n" +
+          list.map(function (s) { return "| " + (s.video ? "[" + s.title + "](https://www.youtube.com/watch?v=" + s.video + ")" : s.title) + " | " + (s.by || "") + " | " + s.done + "% | " + s.perf + "× |"; }).join("\n") + "\n";
+      });
+      md += "\n## Files\n\n- `pieces.csv`: every piece with its instrument, composer, progress, performances and video link.\n- `repertoire-backup.json`: the full data, for Restore.\n";
+      Kit.exportData("repertoire", [{ name: "pieces.csv", rows: [["Instrument", "Piece", "Composer or artist", "Learned (%)", "Performances", "Video"]].concat(songs.map(function (s) {
+        return [s.inst, s.title, s.by, s.done, s.perf, s.video ? "https://www.youtube.com/watch?v=" + s.video : ""]; })) }], md, data);
+    };
     document.getElementById("restoreBtn").onclick = function () {
       store.restore(function (d) {
         if (!d || !Array.isArray(d.songs)) { alert("That isn't a Repertoire backup."); return; }
