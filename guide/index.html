@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Make Your Own</title>
+  <meta name="description" content="How to build your own home screen of web apps with GitHub Pages and Claude, plus a skill file to hand to Claude." />
+  <meta name="theme-color" content="#0b0b10" media="(prefers-color-scheme: dark)" />
+  <meta name="theme-color" content="#f4f1ea" media="(prefers-color-scheme: light)" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../shared/base.css" />
+  <style>
+    .intro { font-size: 17px; line-height: 1.55; margin-top: 4px; }
+    .intro b { font-weight: 600; }
+    .flow { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin: 18px 0 4px; font-size: 13.5px; color: var(--muted); }
+    .flow span { background: var(--surface); box-shadow: inset 0 0 0 1px var(--line); border-radius: 999px; padding: 6px 12px; color: var(--fg); font-weight: 500; }
+    .need { list-style: none; display: grid; gap: 8px; margin-top: 4px; }
+    .need li { display: flex; gap: 12px; align-items: flex-start; padding: 12px 14px; }
+    .need .ic { font-size: 22px; line-height: 1; flex: none; width: 28px; text-align: center; }
+    .need b { display: block; font-weight: 600; }
+    .need span { color: var(--muted); font-size: 14px; }
+    .steps { list-style: none; counter-reset: s; display: grid; gap: 10px; }
+    .step { counter-increment: s; padding: 16px 16px 16px 58px; position: relative; }
+    .step::before { content: counter(s); position: absolute; left: 16px; top: 14px; width: 28px; height: 28px; border-radius: 50%; background: var(--accent); color: var(--accent-fg); display: grid; place-items: center; font-weight: 600; font-size: 14px; }
+    .step h3 { font-size: 16px; font-weight: 600; }
+    .step p, .step li { font-size: 14.5px; line-height: 1.55; color: var(--muted); margin-top: 6px; }
+    .step p b, .step li b { color: var(--fg); font-weight: 600; }
+    .step ul { padding-left: 18px; }
+    .step a { color: var(--fg); }
+    code, .mono { font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 13px; background: var(--surface-2); border-radius: 6px; padding: 1px 6px; color: var(--fg); }
+    .prompt { position: relative; margin-top: 10px; background: var(--surface-2); border-radius: 12px; padding: 12px 14px; font-size: 14px; line-height: 1.5; color: var(--fg); }
+    .dl { padding: 18px 16px; }
+    .dl h2 { font-family: "Instrument Serif", Georgia, serif; font-weight: 400; font-size: 30px; }
+    .dl p { color: var(--muted); font-size: 14.5px; line-height: 1.55; margin-top: 6px; }
+    .dl .row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px; }
+    .dl .row .btn { flex: 1; min-width: 140px; text-decoration: none; }
+    .examples { list-style: none; display: grid; gap: 6px; }
+    .examples li { padding: 11px 14px; font-size: 14.5px; line-height: 1.45; }
+    .examples li::before { content: "“"; color: var(--muted); }
+    .examples li::after { content: "”"; color: var(--muted); }
+    .tips { padding-left: 20px; display: grid; gap: 8px; font-size: 14.5px; line-height: 1.55; color: var(--muted); }
+    .tips b { color: var(--fg); font-weight: 600; }
+    .fine { font-size: 12.5px; color: var(--muted); margin-top: 26px; line-height: 1.5; }
+  </style>
+</head>
+<body>
+  <main>
+    <a class="back" href="../">← Apps</a>
+    <header class="app-head">
+      <h1>Make your own<em>.</em></h1>
+    </header>
+    <p class="intro">This site is a phone home screen of small apps. Each one started as a few sentences typed to <b>Claude</b>, which wrote the app, tested it, and published it. You can have your own in about half an hour, <b>without writing any code</b>.</p>
+    <div class="flow"><span>You describe an app</span>→<span>Claude builds and tests it</span>→<span>It's live on your phone</span></div>
+
+    <h2 class="section-title">What you need</h2>
+    <ul class="need">
+      <li class="card"><span class="ic">🐙</span><div><b>A GitHub account</b><span>Free, at github.com. It stores your site and publishes it with GitHub Pages, also free.</span></div></li>
+      <li class="card"><span class="ic">✳️</span><div><b>Claude with Claude Code on the web</b><span>At claude.ai/code. Claude works in a "cloud session": a private computer in the cloud with your site's files, so nothing runs on your phone or laptop.</span></div></li>
+      <li class="card"><span class="ic">📱</span><div><b>Your phone</b><span>Where the site lives as an icon on your home screen.</span></div></li>
+    </ul>
+
+    <h2 class="section-title">Set it up</h2>
+    <ol class="steps">
+      <li class="card step">
+        <h3>Create your site's repository on GitHub</h3>
+        <p>On github.com, tap <b>New repository</b>. Name it exactly <code>yourname.github.io</code>, using your GitHub username. Make it <b>Public</b>, tick <b>Add a README</b>, and create it. That name tells GitHub to publish it as your website at <code>https://yourname.github.io</code>.</p>
+      </li>
+      <li class="card step">
+        <h3>Connect Claude to GitHub</h3>
+        <p>Open <a href="https://claude.ai/code" target="_blank" rel="noopener">claude.ai/code</a> and connect your GitHub account when it asks. Allow Claude's GitHub app to access your new repository, so Claude can read and publish its files.</p>
+      </li>
+      <li class="card step">
+        <h3>Start a cloud session and hand Claude the skill</h3>
+        <p>Start a new session with your <code>yourname.github.io</code> repository selected. Download the skill file below, attach it to your first message, and send:</p>
+        <div class="prompt" id="setupPrompt">Set up my app launcher site using this skill. Make it mine: call it "[your name]'s Apps", and pick colours you think suit it. Push it live and tell me when to check my phone.</div>
+        <p>Claude creates the launcher page, the shared styles, the app list and a <code>CLAUDE.md</code> file of house rules, so every later session follows the same conventions.</p>
+      </li>
+      <li class="card step">
+        <h3>Put it on your home screen</h3>
+        <p>When Claude says it's live, open <code>https://yourname.github.io</code> on your phone. On iPhone, tap <b>Share</b>, then <b>Add to Home Screen</b>. On Android, open Chrome's menu and tap <b>Add to Home screen</b>. It now opens full screen like an app, and it keeps your apps' data safer than a browser tab.</p>
+      </li>
+      <li class="card step">
+        <h3>Ask for your first app</h3>
+        <p>Describe what you want, as plainly as you'd tell a friend. Claude builds it in its own folder, tests it on a phone-sized screen in light and dark mode, adds a tile, and publishes it. Reopen your home-screen icon a minute later and it's there.</p>
+      </li>
+    </ol>
+
+    <section class="card dl" id="skill">
+      <h2>The skill file</h2>
+      <p>A skill is a set of instructions Claude reads before it starts. This one teaches Claude how sites like this are laid out, the house rules (phone first, light and dark mode, your data stays on your phone with an export, publish straight away), and how to test each app before publishing.</p>
+      <div class="row">
+        <a class="btn primary" href="app-launcher/SKILL.md" download="SKILL.md">Download SKILL.md</a>
+        <button class="btn" id="zipBtn">Download as .zip</button>
+      </div>
+      <p>Attach <b>SKILL.md</b> to your first message in a session. If your Claude app lets you add your own skills in its settings, upload the <b>.zip</b> there so every chat has it. You can also ask Claude to save it in your repository under <code>.claude/skills/</code>, so cloud sessions on that repository always load it.</p>
+    </section>
+
+    <h2 class="section-title">Things to ask for</h2>
+    <ul class="examples">
+      <li class="card">An app that rolls a die to pick my next activity, favouring things I've been neglecting.</li>
+      <li class="card">A list of songs I want to learn, with a slider for how far along I am and a button to count performances.</li>
+      <li class="card">A guitar tuner and metronome that work on my phone.</li>
+      <li class="card">A page of my long-term goals, broken into steps, where I can add dated notes.</li>
+      <li class="card">Turn this document into an app I can browse. (Attach the file.)</li>
+    </ul>
+
+    <h2 class="section-title">Tips</h2>
+    <ul class="tips">
+      <li><b>Say what matters, skip the how.</b> "I need to drink water about 8 times a day" is more useful than naming a setting.</li>
+      <li><b>Changes are live in a minute or two.</b> If you don't see one, close and reopen the home-screen app.</li>
+      <li><b>Just asking a question?</b> Say "just answer, don't change anything", and Claude won't touch the site.</li>
+      <li><b>Your data stays on your phone.</b> Apps save to the browser, not to a server. Use each app's <b>Export</b> now and then: it saves spreadsheets, a readable summary and a backup.</li>
+      <li><b>Apps that need the internet.</b> If an app needs outside data, such as maps, Wikipedia or song files, Claude may ask you to allow those sites in your cloud environment's network settings, so it can test them. Your phone isn't limited this way.</li>
+      <li><b>Start over any time.</b> Each new session reads the house rules in <code>CLAUDE.md</code>, so it picks up where the last one left off.</li>
+    </ul>
+
+    <p class="fine">This site's code is open source under the MIT licence at <a href="https://github.com/faiyazchowdhury/faiyazchowdhury.github.io" target="_blank" rel="noopener" style="color:inherit">github.com/faiyazchowdhury/faiyazchowdhury.github.io</a>. The skill tells Claude it may copy the launcher and shared code from there as a starting point.</p>
+  </main>
+
+  <script src="../shared/store.js"></script>
+  <script>
+    document.getElementById("zipBtn").onclick = function () {
+      fetch("app-launcher/SKILL.md").then(function (r) { if (!r.ok) throw new Error(); return r.text(); }).then(function (t) {
+        Kit.saveFile(Kit.zip([{ name: "app-launcher-site/SKILL.md", text: t }]), "app-launcher-site-skill.zip");
+      }).catch(function () { Kit.toast("Couldn't load the skill. Check your connection."); });
+    };
+  </script>
+</body>
+</html>

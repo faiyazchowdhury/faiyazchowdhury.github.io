@@ -10,6 +10,7 @@ app must work on a phone browser first.
 - `apps.js`: the app registry (`window.APPS`). Its header comment documents the fields.
 - `<slug>/`: each app lives in its own top-level folder with its own `index.html`.
 - `shared/`: `base.css` (palette, light/dark, buttons, sheets) and `store.js` (`window.Kit`: localStorage store with JSON backup/restore, toast, bottom sheet, escaping). Apps load them with `../shared/...`.
+- `guide/`: the "Make your own app site" page linked from the bottom of the launcher, and `guide/app-launcher/SKILL.md`, a skill other people can hand to Claude to build a site like this. Keep the skill in step when the house rules here change.
 - `midee/`: a pre-built third-party bundle (Vite build, base `/midee/`). Don't hand-edit it; replace it with a fresh build when updating.
 
 ## Adding an app
