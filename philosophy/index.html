@@ -83,6 +83,11 @@
     .prose .lead { font-size: 18px; line-height: 1.55; font-weight: 500; }
     .prose .label { display: block; font-size: 11.5px; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin: 22px 0 4px; }
     .prose blockquote, .prose .quote { font-family: "Instrument Serif", Georgia, serif; font-style: italic; font-size: 21px; }
+    .talk { display: flex; flex-direction: column; gap: 8px; margin: 6px 0 18px; }
+    .turn { max-width: 86%; padding: 9px 13px 10px; border-radius: 16px; font-size: 15.5px; line-height: 1.5; }
+    .turn .who { display: block; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); margin-bottom: 2px; }
+    .turn.a { align-self: flex-start; background: var(--surface-2); border-bottom-left-radius: 5px; }
+    .turn.b { align-self: flex-end; background: color-mix(in srgb, var(--g-yours) 18%, var(--surface)); border-bottom-right-radius: 5px; }
     .pager { display: flex; gap: 8px; margin-top: 26px; }
     .pager button { flex: 1; text-align: left; border: 0; background: var(--surface); border-radius: 14px; box-shadow: inset 0 0 0 1px var(--line); padding: 12px 14px; min-height: 64px; }
     .pager button:last-child { text-align: right; }
@@ -168,9 +173,20 @@
         .replace(/\*([^*]+)\*/g, "<i>$1</i>");
     }
     function blocks(md) {
-      var out = [], list = null;
+      var out = [], list = null, talk = null;
       md.split("\n").forEach(function (line) {
         var t = line.trim();
+        // "> **Name:** words" lines form a conversation, shown as chat bubbles.
+        if (/^>/.test(t)) {
+          list = null;
+          var turn = /^>\s*\*\*([^*]+?):\*\*\s*(.*)$/.exec(t);
+          if (!turn) { if (talk && t.replace(/^>\s*/, "")) talk.turns[talk.turns.length - 1].text += " " + t.replace(/^>\s*/, ""); return; }
+          if (!talk) { talk = { turns: [], who: [] }; out.push(talk); }
+          if (talk.who.indexOf(turn[1]) < 0) talk.who.push(turn[1]);
+          talk.turns.push({ who: turn[1], text: turn[2] });
+          return;
+        }
+        if (t) talk = null;
         if (/^- /.test(t)) { if (!list) { list = []; out.push(list); } list.push(t.slice(2)); return; }
         list = null;
         if (!t || t === "---") { out.push(null); return; }
@@ -178,6 +194,9 @@
         else out.push(t);
       });
       return out.filter(function (b) { return b; }).map(function (b) {
+        if (b.turns) return '<div class="talk">' + b.turns.map(function (u) {
+          return '<div class="turn ' + (b.who.indexOf(u.who) === 0 ? "a" : "b") + '"><span class="who">' + esc(u.who) + "</span>" + inline(u.text) + "</div>";
+        }).join("") + "</div>";
         if (Array.isArray(b)) return "<ul>" + b.map(function (li) { return "<li>" + inline(li) + "</li>"; }).join("") + "</ul>";
         // "**Label.** text" paragraphs become a small heading plus text
         var m = /^\*\*([^*]+?)\.?\*\*\s*(.*)$/.exec(b);
