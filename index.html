@@ -156,11 +156,11 @@
     }
 
     .make {
-      display: flex; align-items: center; gap: 14px; margin-top: 48px; padding: 14px 16px;
+      display: flex; align-items: center; gap: 12px; margin: -14px 0 34px; padding: 10px 14px;
       border-radius: 18px; text-decoration: none; color: inherit;
       box-shadow: inset 0 0 0 1px var(--tile-ring); background: color-mix(in srgb, var(--fg) 4%, transparent);
     }
-    .make-ic { font-size: 22px; width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; background: color-mix(in srgb, var(--fg) 8%, transparent); flex: none; }
+    .make-ic { font-size: 18px; width: 34px; height: 34px; border-radius: 12px; display: grid; place-items: center; background: color-mix(in srgb, var(--fg) 8%, transparent); flex: none; }
     .make b { display: block; font-weight: 500; font-size: 15px; }
     .make small { display: block; color: var(--muted); font-size: 12.5px; margin-top: 2px; line-height: 1.35; }
     .make-go { margin-left: auto; color: var(--muted); font-size: 18px; }
@@ -185,12 +185,12 @@
       <p class="date" id="date"></p>
       <h1>Apps<em>.</em></h1>
     </header>
-    <div id="sections"></div>
     <a class="make" href="guide/">
       <span class="make-ic">✦</span>
-      <span><b>Make your own app site</b><small>How this was built with GitHub and Claude, and a skill file to get you started</small></span>
+      <span><b>Make your own</b><small>Claude builds it with you. No coding needed.</small></span>
       <span class="make-go">→</span>
     </a>
+    <div id="sections"></div>
   </main>
 
   <script src="apps.js"></script>
