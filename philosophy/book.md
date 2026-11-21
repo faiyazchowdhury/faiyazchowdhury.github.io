@@ -178,7 +178,7 @@ The principles also guard each other. Releasing expectations could drift into co
 
 **The core image.** Goodness is distance travelled. Some people walk on pavement; others walk through mud. Someone who moves a little through mud may be working harder than someone who strolls far on a smooth road. So people are not compared to each other, and no one is written off. Everyone is accountable, always, for the most good they can do from where they stand.
 
-**Where it came from.** The system was built from lived experience across many countries, then refined in conversation. Its conclusion, that goodness is objective and limitless while badness depends on a chosen baseline, came first. The author later recognized that conclusion as the *litmus reading*, and the six principles as the underlying chemistry.
+**Where it came from.** The system was refined in conversation. Its conclusion, that goodness is objective and limitless while badness depends on a chosen baseline, came first. The author later recognized that conclusion as the *litmus reading*, and the six principles as the underlying chemistry.
 
 **Closest relatives.** Augustine and Aquinas on evil as privation; Alastair Norcross's *Morality by Degrees* (2020), which treats right and wrong as arbitrary cutoffs on a scale of better and worse; Bernard Williams and Thomas Nagel on moral luck; Robert Sapolsky on determinism; the Buddha on craving; William James on meliorism and pragmatism.
 
@@ -493,11 +493,13 @@ The Darley and Batson study is a sobering footnote. Seminary students on their w
 
 This principle combines two positions that are usually thought to clash. The first is hard determinism: everything a person does comes from causes they didn't choose, from genes and upbringing to the circumstances of the moment. Looked at this way, nobody deserves blame in the deep sense, and understanding the causes of someone's behaviour makes forgiveness natural, including forgiveness of yourself.
 
-The second is illusionism, Saul Smilansky's idea that the *feeling* of free will, though not literally accurate, is worth keeping. In daily life we can't experience ourselves as a sequence of causes, and trying to tends to sap motivation. So the principle recommends using the sense of choice deliberately: when facing options, act as though you're choosing, and choose the better one. The choosing is itself one of the causes.
+The second is the illusion, and the author describes it simply. Every thought I have appears, from the inside, to be free will. But each of those thoughts only comes because of my prior experiences: what I've lived through, learned and felt before. The feeling of authoring my thoughts is real as a feeling; the authorship is not. That is the illusion.
 
-Accountability survives in a forward-looking form. Holding someone accountable isn't about making them pay for what they "freely" did; it's adding a new cause, feedback, consequences or support, that shapes what they'll do next. The same applies to yourself: instead of berating yourself for a failure, ask what caused it and change those causes. This is where the practical advice comes from: change the environment, not just the intention, because people fall to the level of their systems.
+Nothing about this asks you to stop feeling free. You couldn't if you tried, since the next thought will feel free too. The illusion is simply how prior experience turns into action, and it is useful: it lets you weigh options and pick the better one, which is exactly what the principle recommends. What changes is how you read the results. Your choices, and everyone else's, are the visible end of a long chain of experience, and today's choices become part of the experience behind tomorrow's thoughts.
 
-The principle sits at a "likely true" of 35% because most philosophers favour compatibilism, the view that meaningful free will is compatible with determinism, and because deliberately keeping an illusion sits uneasily with valuing truth. The principle's answer is pragmatic: if a belief is useful, consistent with what we observe about behaviour, and simple to live by, it earns its place.
+Accountability survives in a forward-looking form. Holding someone accountable isn't about making them pay for what they "freely" did; it adds a new experience, such as feedback, consequences or support, that shapes what they'll think and do next. The same applies to yourself: instead of berating yourself for a failure, ask what caused it and change those causes. This is where the practical advice comes from: change the environment, not just the intention, because people fall to the level of their systems.
+
+The principle sits at a "likely true" of 35% because most philosophers favour compatibilism, the view that meaningful free will is compatible with determinism. Saul Smilansky, whose name for the view this chapter borrows, argued that the illusion of free will plays a valuable role in moral life, even if it isn't literally accurate.
 
 **Key figures.** Robert Sapolsky (born 1957), a Stanford neuroscientist and primatologist, for the compassionate determinism; Saul Smilansky (born 1961), an Israeli philosopher, for illusionism.
 
@@ -523,21 +525,21 @@ The principle sits at a "likely true" of 35% because most philosophers favour co
 
 **In conversation.**
 
-> **Ari:** If free will doesn't exist, why try at all?
+> **Ari:** If free will doesn't exist, why does it feel like I'm choosing right now?
 >
-> **Author:** Because trying is one of the causes. Your effort is part of what shapes what happens next.
+> **Author:** It feels that way to me too. Every thought I have appears to be free will. But those thoughts only come because of my prior experiences. That's the illusion.
 >
-> **Ari:** But you just said the effort isn't really free.
+> **Ari:** So you're not really choosing?
 >
-> **Author:** True. But the feeling of choosing is useful, so I use it on purpose. When I face two options, I act as if I'm choosing, and I pick the better one.
+> **Author:** The choosing happens. It's just made of everything that came before. From the inside, it feels free.
 >
-> **Ari:** Isn't that lying to yourself?
+> **Ari:** Then why try at all?
 >
-> **Author:** It's more like using a map that's simpler than the territory. Good enough to navigate by.
+> **Author:** Because what I do now becomes the experience behind my next thoughts. Trying is part of the chain.
 >
 > **Ari:** And when someone hurts you?
 >
-> **Author:** I look at what made them do it. It's very hard to hate someone once you see their causes. I still hold them accountable, because that's a cause too, for what they do next.
+> **Author:** Their thoughts came from their experiences too. That makes forgiving much easier. I still hold them accountable, because that becomes part of what shapes them next.
 >
 > **Ari:** And your own mistakes?
 >
@@ -558,13 +560,17 @@ The principle sits at a "likely true" of 35% because most philosophers favour co
 
 **In depth.**
 
-Relative deprivation explains a puzzle: why people with plenty can feel deprived, and people with little can feel content. The answer is that satisfaction depends less on what we have than on the gap between what we have and what we expected, or what we see others having. Stouffer's soldiers made the point vividly: military police, rarely promoted, were more satisfied with their chances than Air Corps soldiers, who were promoted often, because the airmen compared themselves with peers who had moved up.
+Relative deprivation explains a puzzle: why people with plenty can feel deprived, and people with little can feel content. Satisfaction depends less on what we have than on the gap between what we have and what we expected, or what we see others having. Stouffer's soldiers made the point vividly: military police, rarely promoted, were more satisfied with their chances than Air Corps soldiers, who were promoted often, because the airmen compared themselves with peers who had moved up.
 
-Applied personally, the principle becomes a practice: expect less, demand nothing, appreciate what is here. Much suffering comes not from the event itself but from "it should have been otherwise." A delayed train, a friend who forgets your birthday, a career that doesn't follow the plan: each hurts partly because of the event and largely because of the expectation it broke.
+Applied personally, the principle becomes a practice: expect less, demand nothing, appreciate what is here. Much suffering comes not from the event itself but from "it should have been otherwise." A delayed train or a plan that falls through hurts partly because of the event and largely because of the expectation it broke.
 
-The important refinement is the difference between *standards* and *demands*. Releasing demands doesn't mean accepting mistreatment. You can still hold clear standards, such as what you'll accept from a partner or employer, and act when they aren't met, while not insisting that the world owes you a particular outcome. Albert Ellis's distinction between preferences ("I'd like this") and demands ("this must happen") captures it: preferences lead to disappointment when unmet, demands to anguish.
+The author practises this directly. When asking someone out, he always assumes the answer will be no. A no then costs almost nothing, because nothing was taken away, and a yes is a pleasant surprise. It helps the other person too: people are glad when they can say no to someone who clearly doesn't mind.
 
-This principle covers mainly the social side of suffering: comparing ourselves with others. Its inner twin, self-discrepancy theory, covers the gap between who we are and who we think we *should* be, which produces shame. The book's other principles help there: understanding causes and treating "bad" as a signal soften that inner gap too.
+Releasing demands isn't the same as having no standards, and the principle treats institutions and people differently. A company's rules and the law aren't negotiable: you work within them, or, if you think a law is wrong, you try to change it yourself. With a colleague, a standard only works if it's shared, because it lives between two people rather than in a rulebook. A company doesn't have feelings; people do. So demands, which press on feelings, are what to let go of with people.
+
+The same logic reaches as far as death. Loss is measured against the life we expected. The death of someone who lived a comparatively long and enjoyable life is far less painful than an early one, because less of what was expected is taken away. And when a person is already dying in great pain, ending their life is often perceived as a mercy rather than a loss, because the expected lifespan hasn't really changed; only the suffering has.
+
+This principle covers mainly the social side of suffering: comparing ourselves with others and with what we expected. Its inner twin, self-discrepancy theory, covers the gap between who we are and who we think we *should* be, which produces shame.
 
 **Key figures.** Samuel Stouffer, who identified the effect in World War II soldiers; W. G. Runciman, who developed it into a social theory.
 
@@ -592,19 +598,23 @@ This principle covers mainly the social side of suffering: comparing ourselves w
 
 > **Ari:** Expect nothing? Doesn't that mean settling for less?
 >
-> **Author:** It means not demanding. I can still hold standards and walk away from what doesn't meet them.
+> **Author:** It means not demanding. Take asking someone out. I always assume the answer is no.
 >
-> **Ari:** What's the difference?
+> **Ari:** Isn't that pessimistic?
 >
-> **Author:** A demand says the world must give me this. When it doesn't, I suffer twice: once from the loss, once from the outrage. A standard just tells me what I'll accept.
+> **Author:** It's freeing. If she says no, nothing was taken from me, so it doesn't sting. And she's happy I don't mind. A yes is just a nice surprise.
 >
-> **Ari:** Why do people feel so deprived when they have so much?
+> **Ari:** Should I expect nothing from my employer too?
 >
-> **Author:** Because we measure against expectations and neighbours, not against what we actually have. The soldiers who got promoted most were the least satisfied.
+> **Author:** Companies and the law are different. Their rules aren't up for negotiation. You follow them, or you work to change the law yourself. A company doesn't have feelings. People do.
 >
-> **Ari:** So the trick is lowering expectations?
+> **Ari:** And with people?
 >
-> **Author:** Loosening them. Then good things feel like gifts instead of what you were owed, and bad things hurt once instead of twice.
+> **Author:** A standard with a colleague only works if they share it. You can't demand it into someone.
+>
+> **Ari:** Does this reach bigger things?
+>
+> **Author:** Even death. Losing someone who lived a long, happy life hurts much less than losing someone young, because less of what we expected is taken away.
 
 **Try it.**
 
@@ -627,6 +637,8 @@ The open sky comes from meliorism, William James's word for the belief that the 
 
 Together they produce a particular emotional stance: gratitude and ambition at once. Because the world is good, appreciate it; because it can always be better, improve it. Neither half works alone. Gratitude without ambition becomes complacency; ambition without gratitude becomes exhausting, a sense that nothing is ever enough. The author arrived at the second half through the first: once badness is understood as absence, the only direction left is up, and nothing caps how far.
 
+Pain is not the same as bad. The usual objection to privation theory is that agony seems to be a real presence, not a mere lack. The author's answer is that the objection confuses suffering with badness. Suffering is real, but that doesn't make it bad, and certainly not universally bad, or evil: losing a game of chess hurts, but nobody calls it evil. Suffering is a normal and arguably healthy motivator of life. It signals what to change, drives effort, and makes relief and achievement meaningful.
+
 This connects to James Carse's distinction between finite games, played to win, and infinite games, played to keep playing. Being good, on this view, is an infinite game: there's no final score, only the next move. Kaizen, the Japanese practice of continuous small improvement, is its everyday form.
 
 **Key figures.** Augustine of Hippo (354–430) for the floor; William James (1842–1910) for the forward motion.
@@ -645,7 +657,7 @@ This connects to James Carse's distinction between finite games, played to win, 
 - Gives the author's income and distance analogies a coherent foundation.
 
 **Cons.**
-- Privation theory struggles with experiences like agony, which seem to have a positive presence rather than being a mere lack.
+- Privation theory struggles with experiences like agony, which seem to have a positive presence rather than being a mere lack. (The author's reply: pain is real, but pain isn't the same as bad.)
 - "Always be better" can become exhausting without the gratitude half.
 - Some critics argue an endless task offers no rest point.
 
@@ -663,7 +675,11 @@ This connects to James Carse's distinction between finite games, played to win, 
 >
 > **Ari:** Doesn't pain feel like more than an absence?
 >
-> **Author:** That's the hardest objection, and I take it seriously. But the framework still helps: it tells me where to put effort, toward adding good.
+> **Author:** Pain is real. But pain isn't the same as bad. Losing a game of chess hurts, and nobody calls it evil.
+>
+> **Ari:** So suffering isn't bad?
+>
+> **Author:** Not necessarily, and certainly not universally. It's a normal, arguably healthy motivator. It's how life shows you what to work on.
 >
 > **Ari:** So being good never ends.
 >
@@ -933,7 +949,7 @@ Seeing "bad" this way doesn't make it useless. The signal carries information: w
 
 So the practice has three steps. Hear the signal, without dismissing it. Learn from it: what value was at stake, and what would honour it next time? Then release it: the lesson stays, the sting doesn't.
 
-The principle needs care in one place. People who have been harmed often need the word "bad" to name what happened to them. Reframing their pain too quickly can feel like minimizing it. The principle applies most cleanly to how we treat our own mistakes and how we hold people accountable, not to how we respond to someone describing harm done to them.
+The principle needs care when someone describes harm done to them. Following a philosophy doesn't mean preaching it at every moment, and something seeming true doesn't mean it needs to be said. We function on reason, not on truth alone: what matters is *why* you respond the way you do. If your reason is to console, acknowledging their pain is enough. Focus on the pain, not the bad.
 
 **Key figures.** Robert Trivers (born 1943), who proposed that emotions like guilt, gratitude, and moral outrage evolved to regulate cooperation; Jonathan Haidt (born 1963), who mapped the moral emotions.
 
@@ -970,9 +986,13 @@ The principle needs care in one place. People who have been harmed often need th
 >
 > **Author:** Feel it enough to learn. Then let it go. Bad is a signal, not a verdict. It's about what you did, not who you are.
 >
-> **Ari:** And if someone hurt me? Can't I call that bad?
+> **Ari:** And if a friend tells me they were hurt? Do I tell them bad is only a signal?
 >
-> **Author:** Of course. When you've been harmed, the word protects you and warns others. That's the signal doing its job.
+> **Author:** No. Just because something seems true doesn't mean it needs to be said. If you want to console them, acknowledge their pain. Focus on the pain, not the bad.
+>
+> **Ari:** Isn't that hiding what you believe?
+>
+> **Author:** It's knowing why you're speaking. We act on reason, not just truth. In that moment, the reason is comfort.
 
 **Try it.**
 
@@ -980,7 +1000,75 @@ The principle needs care in one place. People who have been harmed often need th
 
 ---
 
-## 16. Utilitarianism
+## 16. Intrinsic Motivation
+
+*Group: Your principle · Told: 300 · Believed: 330 · Likely true: 65%*
+
+**In summary.** Do things for what they are, not for what they get you. Chasing happiness directly tends to steal the joy out of the very things that bring it. Love is about the time spent together, not the wedding; success is about the purpose and relief of overcoming challenges, not the payoff.
+
+**In depth.**
+
+The author's image is a slide. A slide is fun on the way down, not because of where it ends. If you spend the ride thinking only about reaching the bottom, you've missed the whole point of the slide. Much of life works the same way: the reward is in the doing, and treating the doing as a means to some later payoff drains it.
+
+This is also a gentle critique of happiness-maximizing philosophies. Utilitarianism and its relatives aim to produce the most happiness, which makes sense as a goal for policy. But as a personal motive, doing something *in order to* be happy tends to backfire. John Stuart Mill, the great utilitarian, discovered this himself during a depression in his twenties: "Ask yourself whether you are happy, and you cease to be so." Philosophers call it the *paradox of hedonism*: happiness comes most reliably to people who aren't aiming at it. Viktor Frankl put it this way: happiness cannot be pursued; it must ensue.
+
+Psychology backs this up. In a classic 1973 study, Mark Lepper and colleagues gave preschoolers who already loved drawing a reward for drawing. Afterwards, those children drew *less* in free time than children who had never been rewarded: the reward turned play into work. Edward Deci and Richard Ryan built on findings like this to develop self-determination theory, which finds that people thrive when three needs are met: *autonomy* (acting from your own choice), *competence* (growing in skill) and *relatedness* (connection with others). Motivation that comes from interest and meaning lasts longer, produces better work and feels better than motivation driven only by rewards, pressure or fear.
+
+The author applies this to two of the biggest goals people chase. Love is about the time spent together, not about reaching marriage as a finish line. Success is about the purpose of a challenge and the relief of overcoming it, not the payoff at the end. Payoffs, such as a ring, a promotion or a trophy, are welcome, but they are where the slide ends, not why you climbed on.
+
+**Key figures.** Edward Deci (born 1942) and Richard Ryan (born 1953), who developed self-determination theory; Mihaly Csikszentmihalyi (1934–2021), who studied flow.
+
+**Key texts.** Deci and Ryan's *Intrinsic Motivation and Self-Determination in Human Behavior* (1985); Csikszentmihalyi's *Flow* (1990); John Stuart Mill's *Autobiography* (1873); Daniel Pink's *Drive* (2009).
+
+**Origins and context.** In 1971 Deci found that students paid to solve puzzles spent less of their free time on them afterwards than unpaid students did. Lepper, Greene and Nisbett's 1973 study of preschoolers and drawing showed the same "overjustification effect." Self-determination theory grew from these findings through the 1980s, during a period when workplaces and schools leaned heavily on rewards and punishments.
+
+**Other voices.** Viktor Frankl, *Man's Search for Meaning* (1946); Alan Watts, who compared life to music and dancing, where nobody aims to reach the end; the Bhagavad Gita's teaching to act without attachment to the fruits of action.
+
+**Related ideas.** The paradox of hedonism; flow; wu wei; the author's relative deprivation principle, since a fixation on the payoff is also an expectation that can be broken.
+
+**Pros.**
+- Makes activities more enjoyable and sustainable.
+- Strong research support from self-determination theory and studies of flow.
+- Protects against the emptiness of reaching a goal and asking "is that it?"
+
+**Cons.**
+- Not everything can be intrinsically enjoyable; some necessary work needs external reasons.
+- Can be misheard as "don't set goals." Goals still give direction; they just shouldn't be the whole reason.
+- Rewards aren't always harmful: for dull tasks, or as unexpected appreciation, they can help.
+
+**Worth knowing.** The author's one-liner: *a slide is only fun when you're not thinking about reaching the bottom.*
+
+**In conversation.**
+
+> **Ari:** Isn't the point of doing things to be happy?
+>
+> **Author:** Happiness is what happens when you're absorbed in something. Aim straight at it and it slips away.
+>
+> **Ari:** How so?
+>
+> **Author:** Think of a slide. It's only fun while you're not thinking about reaching the bottom. If the destination is the point, you've missed the ride.
+>
+> **Ari:** But I want to get married someday.
+>
+> **Author:** Love is about the time you spend together, not reaching marriage. Marriage is lovely, but it's where the slide ends, not why you climbed on.
+>
+> **Ari:** And work? I want to be successful.
+>
+> **Author:** Success is the purpose of a challenge and the relief of overcoming it. The payoff is a bonus. If the payoff is the only reason, the work turns into a grind.
+>
+> **Ari:** So I shouldn't have goals?
+>
+> **Author:** Keep them, for direction. Just don't make them the reason. Enjoy the slide.
+
+**Try it.**
+
+- Pick something you do mainly for a reward and find one part of it you could enjoy for its own sake.
+- Spend time with someone you love this week with no plan or goal, just to be together.
+- Next time you finish something hard, pause to notice the relief of having overcome it, before reaching for the next goal.
+
+---
+
+## 17. Utilitarianism
 
 *Group: Philosophy · Told: 300 · Believed: 310 · Likely true: 20%*
 
@@ -1041,7 +1129,7 @@ Utilitarianism's record in practice is striking: Bentham argued for decriminaliz
 
 ---
 
-## 17. Stoicism
+## 18. Stoicism
 
 *Group: Philosophy · Told: 300 · Believed: 320 · Likely true: 45%*
 
@@ -1107,7 +1195,7 @@ Practical exercises filled their writing: imagining losses in advance (*premedit
 
 ---
 
-## 18. Virtue Ethics
+## 19. Virtue Ethics
 
 *Group: Philosophy · Told: 300 · Believed: 310 · Likely true: 37%*
 
@@ -1168,7 +1256,7 @@ After centuries in the shadow of rule-based and outcome-based theories, virtue e
 
 ---
 
-## 19. Consequentialism
+## 20. Consequentialism
 
 *Group: Philosophy · Told: 300 · Believed: 310 · Likely true: 31%*
 
@@ -1229,7 +1317,7 @@ Alastair Norcross's scalar consequentialism is closest to this book's framing. H
 
 ---
 
-## 20. Turn the Other Cheek
+## 21. Turn the Other Cheek
 
 *Group: Strategy · Told: 300 · Believed: 320 · Likely true: not assessed (a strategy)*
 
@@ -1290,7 +1378,7 @@ The strategy has real limits, which is why its score is high but not top. It dep
 
 ---
 
-## 21. Social Democracy
+## 22. Social Democracy
 
 *Group: Political ideology · Told: 300 · Believed: 310 · Likely true: not assessed (values plus contested empirics)*
 
@@ -1348,7 +1436,7 @@ Its critics raise real questions. High taxes may reduce incentives to work and i
 
 ---
 
-## 22. Free-Market Capitalism
+## 23. Free-Market Capitalism
 
 *Group: Political ideology · Told: 300 · Believed: 300 · Likely true: not assessed (values plus contested empirics)*
 
@@ -1407,7 +1495,7 @@ The main objections are well known. Markets ignore costs that fall on third part
 
 ---
 
-## 23. Diversity of Philosophy
+## 24. Diversity of Philosophy
 
 *Group: Your principle · Told: 290 · Believed: 310 · Likely true: 60%*
 
@@ -1469,7 +1557,7 @@ The principle may be better named this way than as "value pluralism." Isaiah Ber
 
 ---
 
-## 24. Truth Valued by Consistency, Utility, Simplicity
+## 25. Truth Valued by Consistency, Utility, Simplicity
 
 *Group: Your principle · Told: 290 · Believed: 300 · Likely true: 55%*
 
@@ -1530,7 +1618,7 @@ The key safeguard is the meaning of consistency. Pure usefulness could rate a co
 
 ---
 
-## 25. Kantian Ethics
+## 26. Kantian Ethics
 
 *Group: Philosophy · Told: 290 · Believed: 300 · Likely true: 32%*
 
@@ -1591,7 +1679,7 @@ The famous problem is the murderer at the door. If a killer asks where your frie
 
 ---
 
-## 26. Ren and Filial Duty
+## 27. Ren and Filial Duty
 
 *Group: Religious message · Told: 290 · Believed: 300 · Likely true: not assessed (faith-based tradition)*
 
@@ -1652,7 +1740,7 @@ Confucianism shaped East Asian societies for two thousand years, through civil-s
 
 ---
 
-## 27. Conservatism
+## 28. Conservatism
 
 *Group: Political ideology · Told: 290 · Believed: 300 · Likely true: not assessed (values plus contested empirics)*
 
@@ -1710,7 +1798,7 @@ Conservatism has many strands: religious, traditionalist, free-market, national.
 
 ---
 
-## 28. Progressive Liberalism
+## 29. Progressive Liberalism
 
 *Group: Political ideology · Told: 290 · Believed: 300 · Likely true: not assessed (values plus contested empirics)*
 
@@ -1768,7 +1856,7 @@ Critics, including conservatives and libertarians, argue that governments often 
 
 ---
 
-## 29. Radical Acceptance
+## 30. Radical Acceptance
 
 *Group: Strategy · Told: 280 · Believed: 300 · Likely true: not assessed (a strategy)*
 
@@ -1830,7 +1918,7 @@ Acceptance and Commitment Therapy, developed by Steven Hayes, makes a similar mo
 
 ---
 
-## 30. Unconditional Grace
+## 31. Unconditional Grace
 
 *Group: Religious message · Told: 280 · Believed: 290 · Likely true: not assessed (faith-based)*
 
@@ -1889,7 +1977,7 @@ Psychologically, unconditional acceptance resembles Carl Rogers's "unconditional
 
 ---
 
-## 31. Moral Objectivity
+## 32. Moral Objectivity
 
 *Group: Philosophy · Told: 270 · Believed: 280 · Likely true: 62%*
 
@@ -1950,7 +2038,7 @@ The 2020 PhilPapers survey found about 62% of professional philosophers accept o
 
 ---
 
-## 32. Hell and Divine Punishment
+## 33. Hell and Divine Punishment
 
 *Group: Religious message · Told: 270 · Believed: 260 · Likely true: not assessed (faith-based)*
 
@@ -2009,7 +2097,7 @@ The book scores this message lower when *believed* than when *told*, and the rea
 
 ---
 
-## 33. Karma
+## 34. Karma
 
 *Group: Religious message · Told: 270 · Believed: 270 · Likely true: not assessed (faith-based)*
 
@@ -2068,7 +2156,7 @@ It also carries a well-studied risk. Psychologist Melvin Lerner found that peopl
 
 ---
 
-## 34. Libertarianism
+## 35. Libertarianism
 
 *Group: Political ideology · Told: 270 · Believed: 270 · Likely true: not assessed (values plus contested empirics)*
 
@@ -2126,7 +2214,7 @@ Critics argue that libertarianism underrates how unequal bargaining power makes 
 
 ---
 
-## 35. Former Belief: The Law of Conservation of Emotion
+## 36. Former Belief: The Law of Conservation of Emotion
 
 *Group: Your former belief · Told: 260 · Believed: 240 · Likely true: 25%*
 
@@ -2140,7 +2228,9 @@ It had real support. Richard Solomon's opponent-process theory found that strong
 
 The belief did a lot of good. It built discipline, made hardship feel purposeful, and protected against short-term traps. That's why it scores reasonably high when told.
 
-The author moved beyond it for three reasons. First, emotion isn't strictly conserved: kindness, gratitude and relationships seem to leave a net positive, and trauma can leave a lasting net negative. Second, believed fully, it can make a person distrust happiness, always bracing for the payback, which is why its score drops when believed. Third, it contradicts the later principle that good can accumulate without limit. What survives is a narrower, truer lesson: short-term pleasure often costs long-term good.
+The author moved beyond it gradually, for three reasons. First, emotion isn't strictly conserved: kindness, gratitude and relationships seem to leave a net positive, and trauma can leave a lasting net negative. Second, believed fully, it can make a person distrust happiness, always bracing for the payback, which is why its score drops when believed. Third, it contradicts the later principle that good can accumulate without limit. What survives is a narrower, truer lesson: short-term pleasure often costs long-term good.
+
+The belief also survives as a tool for hard moments. Believing that pushing yourself will reward itself makes you push harder, and makes suffering feel like a reward on its way. Sick in bed, the author's version is: "Man, I'm gonna feel so good just to be normal when I get better!" Used like that, during suffering rather than as a law of the universe, it turns pain into anticipation.
 
 **Key figure.** Richard Solomon (1925–1995), an American psychologist.
 
@@ -2169,17 +2259,17 @@ The author moved beyond it for three reasons. First, emotion isn't strictly cons
 >
 > **Author:** I did. Exercise hurts now and feels good later; a binge feels good now and hurts later. So I'd do the hard part first.
 >
-> **Ari:** That sounds sensible. Why drop it?
+> **Ari:** Why drop it?
 >
-> **Author:** Because it isn't a law. Kindness and friendship seem to leave you better off overall, with no payback coming.
+> **Author:** It faded gradually. It isn't a law: kindness and friendship seem to leave you better off overall, with no bill coming. And it can make you suspicious of joy.
 >
-> **Ari:** Did it cause problems?
+> **Ari:** Do you still use it?
 >
-> **Author:** It can make you suspicious of joy, waiting for the bill. That's no way to live.
+> **Author:** When I'm suffering, yes. Believing the effort will pay me back makes me push harder. When I'm sick I think, "Man, I'm gonna feel so good just to be normal when I get better!"
 >
-> **Ari:** What did you keep?
+> **Ari:** So it's a tool now, not a law.
 >
-> **Author:** The useful part: short-term pleasure often costs long-term good. Just not always, and not equally.
+> **Author:** Exactly. Useful when it hurts, not something to believe about every good moment.
 
 **Try it.**
 
@@ -2187,7 +2277,7 @@ The author moved beyond it for three reasons. First, emotion isn't strictly cons
 
 ---
 
-## 36. Existentialism
+## 37. Existentialism
 
 *Group: Philosophy · Told: 260 · Believed: 270 · Likely true: 40%*
 
@@ -2248,7 +2338,7 @@ Existentialism's roots go back to Kierkegaard, who stressed the individual's lea
 
 ---
 
-## 37. Epicureanism
+## 38. Epicureanism
 
 *Group: Philosophy · Told: 260 · Believed: 270 · Likely true: 35%*
 
@@ -2309,7 +2399,7 @@ Epicurus also targeted the two great fears. Fear of the gods was groundless, he 
 
 ---
 
-## 38. Wu Wei
+## 39. Wu Wei
 
 *Group: Religious message · Told: 260 · Believed: 270 · Likely true: not assessed (faith-based tradition)*
 
@@ -2368,7 +2458,7 @@ Edward Slingerland points out a paradox in *Trying Not to Try*: you can't achiev
 
 ---
 
-## 39. Former Belief: Life Is a Magnet
+## 40. Former Belief: Life Is a Magnet
 
 *Group: Your former belief · Told: 250 · Believed: 230 · Likely true: 20%*
 
@@ -2382,7 +2472,7 @@ It drew on deep sources. Chinese yin-yang thought sees reality as the interplay 
 
 The belief had real virtues. It helped find the good in hard times, and it encouraged humility about judging events too quickly, since the story usually isn't over.
 
-The author moved beyond it because, taken literally, it implies that improvement is pointless: if every gain produces an equal loss, nothing can get better overall. It also treats bad as equal and opposite to good, contradicting the later privation view, where bad is the absence of good rather than its mirror image. What survives is a gentler truth: every situation contains some good to find.
+The author moved beyond it gradually, because, taken literally, it implies that improvement is pointless: if every gain produces an equal loss, nothing can get better overall. It also treats bad as equal and opposite to good, contradicting the later privation view, where bad is the absence of good rather than its mirror image. What survives is a gentler truth: every situation contains some good to find.
 
 **Key figures.** Zou Yan (c. 305–240 BCE), associated with China's School of Yin-Yang; the authors of the *Huainanzi*.
 
@@ -2428,7 +2518,7 @@ The author moved beyond it because, taken literally, it implies that improvement
 
 ---
 
-## 40. Cartesian Skepticism
+## 41. Cartesian Skepticism
 
 *Group: Philosophy · Told: 250 · Believed: 250 · Likely true: 10%*
 
@@ -2488,7 +2578,7 @@ His skeptical scenarios have modern versions: Hilary Putnam's brain in a vat, wi
 
 ---
 
-## 41. The Selfish Gene
+## 42. The Selfish Gene
 
 *Group: Philosophy · Told: 250 · Believed: 260 · Likely true: 70%*
 
@@ -2548,7 +2638,7 @@ The gene's-eye view is now central to evolutionary biology, though debates conti
 
 ---
 
-## 42. Absurdism
+## 43. Absurdism
 
 *Group: Philosophy · Told: 250 · Believed: 260 · Likely true: 35%*
 
@@ -2608,7 +2698,7 @@ In *The Rebel* and in novels like *The Plague*, Camus developed an ethics from t
 
 ---
 
-## 43. Evolutionary Ethics
+## 44. Evolutionary Ethics
 
 *Group: Philosophy · Told: 240 · Believed: 230 · Likely true: 50%*
 
@@ -2668,7 +2758,7 @@ The descriptive half is valuable, explaining why moral instincts exist and why t
 
 ---
 
-## 44. Moral Subjectivity
+## 45. Moral Subjectivity
 
 *Group: Philosophy · Told: 230 · Believed: 230 · Likely true: 26%*
 
@@ -2728,7 +2818,7 @@ The problems are serious, which is why most philosophers reject strong versions.
 
 ---
 
-## 45. Anarchism
+## 46. Anarchism
 
 *Group: Political ideology · Told: 230 (range 100–320) · Believed: 230 · Likely true: not assessed (values plus contested empirics)*
 
@@ -2786,7 +2876,7 @@ The wide score range, 100 to 320, reflects this diversity. Peaceful anarchism, f
 
 ---
 
-## 46. Killing to Eat
+## 47. Killing to Eat
 
 *Group: Action · Told: 225 (range 150–300) · Believed: 225 · Likely true: not assessed (an action)*
 
@@ -2842,7 +2932,7 @@ Many Indigenous traditions treat hunting with ritual gratitude and strict norms 
 
 ---
 
-## 47. Tit for Tat
+## 48. Tit for Tat
 
 *Group: Strategy · Told: 220 · Believed: 230 · Likely true: not assessed (a strategy)*
 
@@ -2903,7 +2993,7 @@ Tit for tat has a known weakness: noise. If one player defects by mistake, or a 
 
 ---
 
-## 48. Original Sin
+## 49. Original Sin
 
 *Group: Religious message · Told: 220 · Believed: 200 · Likely true: not assessed (faith-based)*
 
@@ -2961,7 +3051,7 @@ The doctrine has a realistic side. Reinhold Niebuhr argued that groups behave wo
 
 ---
 
-## 49. Nihilism
+## 50. Nihilism
 
 *Group: Philosophy · Told: 200 · Believed: 180 · Likely true: 15%*
 
@@ -3021,7 +3111,7 @@ Dostoevsky dramatized the stakes. In *The Brothers Karamazov* the reasoning that
 
 ---
 
-## 50. Communism (Marx's Ideal)
+## 51. Communism (Marx's Ideal)
 
 *Group: Political ideology · Told: 200 (range 100–300) · Believed: 200 · Likely true: not assessed (values plus contested empirics)*
 
@@ -3080,7 +3170,7 @@ As a blueprint, it was vague, and the book separates the ideal from its practice
 
 ---
 
-## 51. Ethical Egoism
+## 52. Ethical Egoism
 
 *Group: Philosophy · Told: 180 · Believed: 170 · Likely true: 5%*
 
@@ -3140,7 +3230,7 @@ But it faces serious objections, which is why so few philosophers defend it. It 
 
 ---
 
-## 52. An Eye for an Eye
+## 53. An Eye for an Eye
 
 *Group: Strategy · Told: 150 · Believed: 140 · Likely true: not assessed (a strategy)*
 
@@ -3200,7 +3290,7 @@ The book scores the strategy low because, as a personal guide, it keeps attentio
 
 ---
 
-## 53. Marxist-Leninist Practice
+## 54. Marxist-Leninist Practice
 
 *Group: Political ideology · Told: 50 · Believed: 30 · Likely true: 10%*
 
@@ -3254,7 +3344,7 @@ The book records what drew supporters too: rapid industrialization, mass literac
 
 ---
 
-## 54. Fascism
+## 55. Fascism
 
 *Group: Political ideology · Told: 25 · Believed: 10 · Likely true: 2%*
 
@@ -3308,7 +3398,7 @@ The book's near-bottom score reflects war and genocide. Its truth score is very 
 
 ---
 
-## 55. Murder for Revenge
+## 56. Murder for Revenge
 
 *Group: Action · Told: 20 · Believed: 20 · Likely true: not assessed (an action)*
 
@@ -3360,7 +3450,7 @@ Steven Pinker, drawing on the sociologist Norbert Elias, argues that one of hist
 
 ---
 
-## 56. Murder for Territory
+## 57. Murder for Territory
 
 *Group: Action · Told: 15 · Believed: 15 · Likely true: not assessed (an action)*
 
@@ -3412,7 +3502,7 @@ The book places killing for territory near the bottom because it destroys lives,
 
 ---
 
-## 57. Rape for Procreation
+## 58. Rape for Procreation
 
 *Group: Action · Told: 5 · Believed: 5 · Likely true: not assessed (an action)*
 
@@ -3480,47 +3570,48 @@ What reduces this harm is concrete: teaching consent from an early age, bystande
 | 13 | Gradual Compassion | Religious message | 310 | 340 | — |
 | 14 | Classical Liberalism | Political ideology | 310 | 320 | — |
 | 15 | Bad as a Learning Signal | Your principle | 300 | 320 | 60% |
-| 16 | Utilitarianism | Philosophy | 300 | 310 | 20% |
-| 17 | Stoicism | Philosophy | 300 | 320 | 45% |
-| 18 | Virtue Ethics | Philosophy | 300 | 310 | 37% |
-| 19 | Consequentialism | Philosophy | 300 | 310 | 31% |
-| 20 | Turn the Other Cheek | Strategy | 300 | 320 | — |
-| 21 | Social Democracy | Political ideology | 300 | 310 | — |
-| 22 | Free-Market Capitalism | Political ideology | 300 | 300 | — |
-| 23 | Diversity of Philosophy | Your principle | 290 | 310 | 60% |
-| 24 | Truth Valued by Consistency, Utility, Simplicity | Your principle | 290 | 300 | 55% |
-| 25 | Kantian Ethics | Philosophy | 290 | 300 | 32% |
-| 26 | Ren and Filial Duty | Religious message | 290 | 300 | — |
-| 27 | Conservatism | Political ideology | 290 | 300 | — |
-| 28 | Progressive Liberalism | Political ideology | 290 | 300 | — |
-| 29 | Radical Acceptance | Strategy | 280 | 300 | — |
-| 30 | Unconditional Grace | Religious message | 280 | 290 | — |
-| 31 | Moral Objectivity | Philosophy | 270 | 280 | 62% |
-| 32 | Hell and Divine Punishment | Religious message | 270 | 260 | — |
-| 33 | Karma | Religious message | 270 | 270 | — |
-| 34 | Libertarianism | Political ideology | 270 | 270 | — |
-| 35 | The Law of Conservation of Emotion | Your former belief | 260 | 240 | 25% |
-| 36 | Existentialism | Philosophy | 260 | 270 | 40% |
-| 37 | Epicureanism | Philosophy | 260 | 270 | 35% |
-| 38 | Wu Wei | Religious message | 260 | 270 | — |
-| 39 | Life Is a Magnet | Your former belief | 250 | 230 | 20% |
-| 40 | Cartesian Skepticism | Philosophy | 250 | 250 | 10% |
-| 41 | The Selfish Gene | Philosophy | 250 | 260 | 70% |
-| 42 | Absurdism | Philosophy | 250 | 260 | 35% |
-| 43 | Evolutionary Ethics | Philosophy | 240 | 230 | 50% |
-| 44 | Moral Subjectivity | Philosophy | 230 | 230 | 26% |
-| 45 | Anarchism | Political ideology | 230 (range 100–320) | 230 | — |
-| 46 | Killing to Eat | Action | 225 (range 150–300) | 225 | — |
-| 47 | Tit for Tat | Strategy | 220 | 230 | — |
-| 48 | Original Sin | Religious message | 220 | 200 | — |
-| 49 | Nihilism | Philosophy | 200 | 180 | 15% |
-| 50 | Communism (Marx's Ideal) | Political ideology | 200 (range 100–300) | 200 | — |
-| 51 | Ethical Egoism | Philosophy | 180 | 170 | 5% |
-| 52 | An Eye for an Eye | Strategy | 150 | 140 | — |
-| 53 | Marxist-Leninist Practice | Political ideology | 50 | 30 | 10% |
-| 54 | Fascism | Political ideology | 25 | 10 | 2% |
-| 55 | Murder for Revenge | Action | 20 | 20 | — |
-| 56 | Murder for Territory | Action | 15 | 15 | — |
-| 57 | Rape for Procreation | Action | 5 | 5 | — |
+| 16 | Intrinsic Motivation | Your principle | 300 | 330 | 65% |
+| 17 | Utilitarianism | Philosophy | 300 | 310 | 20% |
+| 18 | Stoicism | Philosophy | 300 | 320 | 45% |
+| 19 | Virtue Ethics | Philosophy | 300 | 310 | 37% |
+| 20 | Consequentialism | Philosophy | 300 | 310 | 31% |
+| 21 | Turn the Other Cheek | Strategy | 300 | 320 | — |
+| 22 | Social Democracy | Political ideology | 300 | 310 | — |
+| 23 | Free-Market Capitalism | Political ideology | 300 | 300 | — |
+| 24 | Diversity of Philosophy | Your principle | 290 | 310 | 60% |
+| 25 | Truth Valued by Consistency, Utility, Simplicity | Your principle | 290 | 300 | 55% |
+| 26 | Kantian Ethics | Philosophy | 290 | 300 | 32% |
+| 27 | Ren and Filial Duty | Religious message | 290 | 300 | — |
+| 28 | Conservatism | Political ideology | 290 | 300 | — |
+| 29 | Progressive Liberalism | Political ideology | 290 | 300 | — |
+| 30 | Radical Acceptance | Strategy | 280 | 300 | — |
+| 31 | Unconditional Grace | Religious message | 280 | 290 | — |
+| 32 | Moral Objectivity | Philosophy | 270 | 280 | 62% |
+| 33 | Hell and Divine Punishment | Religious message | 270 | 260 | — |
+| 34 | Karma | Religious message | 270 | 270 | — |
+| 35 | Libertarianism | Political ideology | 270 | 270 | — |
+| 36 | The Law of Conservation of Emotion | Your former belief | 260 | 240 | 25% |
+| 37 | Existentialism | Philosophy | 260 | 270 | 40% |
+| 38 | Epicureanism | Philosophy | 260 | 270 | 35% |
+| 39 | Wu Wei | Religious message | 260 | 270 | — |
+| 40 | Life Is a Magnet | Your former belief | 250 | 230 | 20% |
+| 41 | Cartesian Skepticism | Philosophy | 250 | 250 | 10% |
+| 42 | The Selfish Gene | Philosophy | 250 | 260 | 70% |
+| 43 | Absurdism | Philosophy | 250 | 260 | 35% |
+| 44 | Evolutionary Ethics | Philosophy | 240 | 230 | 50% |
+| 45 | Moral Subjectivity | Philosophy | 230 | 230 | 26% |
+| 46 | Anarchism | Political ideology | 230 (range 100–320) | 230 | — |
+| 47 | Killing to Eat | Action | 225 (range 150–300) | 225 | — |
+| 48 | Tit for Tat | Strategy | 220 | 230 | — |
+| 49 | Original Sin | Religious message | 220 | 200 | — |
+| 50 | Nihilism | Philosophy | 200 | 180 | 15% |
+| 51 | Communism (Marx's Ideal) | Political ideology | 200 (range 100–300) | 200 | — |
+| 52 | Ethical Egoism | Philosophy | 180 | 170 | 5% |
+| 53 | An Eye for an Eye | Strategy | 150 | 140 | — |
+| 54 | Marxist-Leninist Practice | Political ideology | 50 | 30 | 10% |
+| 55 | Fascism | Political ideology | 25 | 10 | 2% |
+| 56 | Murder for Revenge | Action | 20 | 20 | — |
+| 57 | Murder for Territory | Action | 15 | 15 | — |
+| 58 | Rape for Procreation | Action | 5 | 5 | — |
 
 *All scores are estimates meant to start conversations, not end them.*
