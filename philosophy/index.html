@@ -3,13 +3,13 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>Sophia</title>
+  <title>Philosophy</title>
   <meta name="description" content="Sparkles: A Field Guide to Goodness. Philosophies, religious messages, ideologies, strategies and actions on one scale of good." />
   <meta name="theme-color" content="#0b0b10" media="(prefers-color-scheme: dark)" />
   <meta name="theme-color" content="#f4f1ea" media="(prefers-color-scheme: light)" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="apple-mobile-web-app-title" content="Sophia" />
+  <meta name="apple-mobile-web-app-title" content="Philosophy" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet" />
@@ -100,7 +100,7 @@
     <div class="home">
       <a class="back" href="../">← Apps</a>
       <header class="app-head">
-        <h1>Sophia<em>.</em></h1>
+        <h1>Philosophy<em>.</em></h1>
         <p class="sub" id="bookTitle">Loading the book…</p>
       </header>
     </div>
@@ -157,7 +157,7 @@
     function groupOf(name) { return GROUPS.find(function (g) { return g.match.indexOf(name) >= 0; }) || GROUPS[1]; }
     function pct(v) { return (v / MAX * 100).toFixed(2) + "%"; }
 
-    var store = new Kit.Store("sophia:v1", {});
+    var store = new Kit.Store("sophia:v1", {}); // key kept from when this app was called Sophia
     var S = Object.assign({ group: "all", sort: "told", q: "" }, store.load());
     function save() { store.save({ group: S.group, sort: S.sort }); }
 
@@ -289,7 +289,7 @@
       nb.innerHTML = next ? "<small>Next →</small><span>" + esc(next.title) + "</span>" : "<small>End of list</small>";
       pb.onclick = function () { if (prev) goChapter(prev.no); };
       nb.onclick = function () { if (next) goChapter(next.no); };
-      document.title = c.title + " · Sophia";
+      document.title = c.title + " · Philosophy";
     }
     function route() {
       var no = parseInt(location.hash.slice(1), 10), app = document.body;
@@ -302,7 +302,7 @@
       } else {
         app.classList.remove("reading");
         document.getElementById("homeSticky").style.display = "";
-        document.title = "Sophia";
+        document.title = "Philosophy";
         renderHome();
         scrollTo(0, homeScroll);
       }
