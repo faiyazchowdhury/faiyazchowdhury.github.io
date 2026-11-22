@@ -55,6 +55,16 @@
     .entry .low { margin-top: 4px; color: var(--muted); }
     .toggle-list label { display: flex !important; align-items: center; gap: 10px; color: var(--fg) !important; font-size: 15px !important; margin: 0 !important; padding: 8px 0; border-bottom: 1px solid var(--line); }
     .toggle-list input { width: 20px; height: 20px; accent-color: var(--accent); }
+    .viewer { display: none; padding: 14px 16px; margin-bottom: 14px; box-shadow: inset 0 0 0 1.5px var(--accent); }
+    .viewer b { font-weight: 600; }
+    .viewer p { color: var(--muted); font-size: 13.5px; margin-top: 4px; line-height: 1.45; }
+    .viewer .btn { margin-top: 10px; text-decoration: none; color: var(--fg); }
+    body.viewing .viewer { display: block; }
+    body.viewing .owner-only { display: none !important; }
+    .shared-note { margin-top: 12px; padding: 12px 14px; font-size: 15px; line-height: 1.5; }
+    .shared-note .k { font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 600; margin-bottom: 4px; }
+    .sbar { height: 14px; border-radius: 7px; background: var(--surface-2); overflow: hidden; margin: 8px 0 6px; }
+    .sbar b { display: block; height: 100%; border-radius: 7px; }
   </style>
 </head>
 <body>
@@ -68,22 +78,25 @@
       </div>
     </header>
 
+    <div class="card viewer" id="viewer"></div>
     <div class="card attn" id="attn"></div>
     <div id="groups"></div>
 
-    <div class="actions-row">
+    <div class="actions-row owner-only">
       <button class="btn primary" id="logBtn">Save check-in</button>
+      <button class="btn" id="shareBtn">Share</button>
       <button class="btn" id="editBtn">Choose needs</button>
     </div>
 
-    <h2 class="section-title">Check-ins <span class="count" id="histCount"></span></h2>
-    <ul class="history" id="history"></ul>
+    <h2 class="section-title owner-only">Check-ins <span class="count" id="histCount"></span></h2>
+    <ul class="history owner-only" id="history"></ul>
 
-    <details class="about card">
+    <details class="about card owner-only">
       <summary>How it works</summary>
       <div class="body">
         <p>Each need is a bar, like in The Sims: <b>full and green is good</b>, empty and red needs attention. Drag the sliders to how you feel right now. The diamond's colour shows your overall state.</p>
         <p><b>Save check-in</b> records a snapshot, with an optional note. The small line under each need traces your last two weeks of check-ins, so patterns show up, like energy dipping every afternoon or mood tracking sleep.</p>
+        <p><b>Share</b> makes a link to your latest check-in, all 15 needs plus its note, to send to someone like a family member. Tapping it opens a read-only copy of your check-in on their phone. The values travel inside the link and aren't stored on any server, so anyone you send it to can see them. It's a snapshot: share again after your next check-in to update them.</p>
         <p>Beyond the classic needs, Probe adds <b>Thirst</b>, plus reflection gauges: <b>Mood</b>, <b>Calm</b> (stress), <b>Focus</b>, <b>Movement</b>, <b>Outdoors</b> (daylight and fresh air), and <b>Purpose</b> (whether today feels meaningful). Hide any you don't want with <b>Choose needs</b>.</p>
         <p>Your data stays in this browser. <b>Export data</b> saves one ZIP with spreadsheet-ready CSV files, a readable summary (README.md) and a full backup. <b>Download backup</b> saves just the backup, which <b>Restore</b> can load again.</p>
         <div class="backup">
@@ -118,6 +131,62 @@
       ["purpose", "Purpose", "🧭", "Aimless", "Meaningful", "Take one step on a Journey goal.", "Life"]
     ];
     var STATES = ["Critical", "Low", "Okay", "Good", "Great"];
+
+    // ---------- Share links ----------
+    // A link carries one check-in: #share=<base64url of {v, n: name, t: time, note, s: values}>,
+    // where s holds each need's value divided by 5 as one base-36 digit, in NEEDS order.
+    function toB64(str) { return btoa(unescape(encodeURIComponent(str))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, ""); }
+    function fromB64(b) { b = b.replace(/-/g, "+").replace(/_/g, "/"); while (b.length % 4) b += "="; return decodeURIComponent(escape(atob(b))); }
+    function packShare(name, entry) {
+      var s = NEEDS.map(function (n) { return Math.round(Math.max(0, Math.min(100, entry.v[n[0]])) / 5).toString(36); }).join("");
+      return location.origin + location.pathname + "#share=" + toB64(JSON.stringify({ v: 1, n: name || "", t: entry.t, note: entry.note || "", s: s }));
+    }
+    function unpackShare(hash) {
+      var d = JSON.parse(fromB64(hash.replace(/^#share=/, "")));
+      if (!d || d.v !== 1 || typeof d.s !== "string" || d.s.length !== NEEDS.length) throw new Error("bad link");
+      var vals = {}; NEEDS.forEach(function (n, i) { vals[n[0]] = Math.min(100, parseInt(d.s[i], 36) * 5); });
+      return { name: String(d.n || "").slice(0, 40), t: +d.t || 0, note: String(d.note || "").slice(0, 2000), vals: vals };
+    }
+    // Opening a different share link (or leaving one) in the same tab reloads the right view.
+    window.addEventListener("hashchange", function () { location.reload(); });
+    if (/^#share=/.test(location.hash)) { showShared(); return; }
+
+    // Read-only view of someone else's check-in. Never reads or writes this phone's own Probe data.
+    function showShared() {
+      document.body.classList.add("viewing");
+      var sh;
+      try { sh = unpackShare(location.hash); } catch (e) {
+        document.getElementById("viewer").innerHTML = "<b>This share link didn't come through whole.</b><p>Ask for the link to be sent again.</p>" +
+          '<a class="btn small" href="' + location.pathname + '">Open my own Probe</a>';
+        ["attn", "groups"].forEach(function (id) { document.getElementById(id).style.display = "none"; });
+        return;
+      }
+      var who = sh.name ? sh.name + "'s" : "A shared", d = new Date(sh.t);
+      var when = sh.t ? d.toLocaleDateString(undefined, { weekday: "short", day: "numeric", month: "short" }) + ", " + d.toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" }) : "";
+      document.title = (sh.name ? sh.name + "'s " : "") + "check-in · Probe";
+      document.getElementById("viewer").innerHTML = "<b>👀 " + esc(who) + " check-in</b><p>Read-only snapshot" + (when ? " from " + esc(when) : "") +
+        ". Your own Probe isn't affected.</p>" + '<a class="btn small" href="' + location.pathname + '">Open my own Probe</a>';
+      var avg = Math.round(NEEDS.reduce(function (a, n) { return a + sh.vals[n[0]]; }, 0) / NEEDS.length);
+      document.getElementById("gemA").setAttribute("fill", colour(avg));
+      document.getElementById("overall").innerHTML = avg + "<small>" + stateOf(avg).toLowerCase() + " overall</small>";
+      document.getElementById("when").textContent = sh.name ? "Shared by " + sh.name : "Shared check-in";
+      var low = NEEDS.map(function (n) { return [n, sh.vals[n[0]]]; }).filter(function (x) { return x[1] < 50; }).sort(function (a, b) { return a[1] - b[1]; }).slice(0, 3);
+      document.getElementById("attn").innerHTML = (low.length ? "<h3>Lowest right now</h3><ul>" + low.map(function (x) {
+        return "<li><span>" + x[0][2] + "</span><span><b>" + esc(x[0][1]) + "</b> · " + stateOf(x[1]).toLowerCase() + " (" + x[1] + ")</span></li>"; }).join("") + "</ul>"
+        : "<h3>All good</h3><ul><li>Every need is at least halfway full.</li></ul>") +
+        (sh.note ? '<div class="card shared-note" style="box-shadow:none;background:var(--surface-2);padding:10px 12px;margin-top:10px"><div class="k">Note</div>' + esc(sh.note) + "</div>" : "");
+      var groups = {}; NEEDS.forEach(function (n) { (groups[n[6]] = groups[n[6]] || []).push(n); });
+      document.getElementById("groups").innerHTML = ["Body", "Mind", "Life"].map(function (g) {
+        var gavg = Math.round(groups[g].reduce(function (a, n) { return a + sh.vals[n[0]]; }, 0) / groups[g].length);
+        return '<section class="group"><h2>' + g + "<small>" + gavg + '</small></h2><div class="needs">' + groups[g].map(function (n) {
+          var v = sh.vals[n[0]];
+          return '<div class="card need"><div class="row"><span class="ic">' + n[2] + '</span><span class="nm">' + esc(n[1]) + '</span><span class="st" style="color:' + colour(v) + '">' + stateOf(v) + " · " + v + "</span></div>" +
+            '<div class="sbar" role="img" aria-label="' + esc(n[1]) + " " + v + ' out of 100"><b style="width:' + v + "%;background:" + colour(v) + '"></b></div>' +
+            '<div class="ends"><span>' + esc(n[3]) + "</span><span>" + esc(n[4]) + "</span></div></div>";
+        }).join("") + "</div></section>";
+      }).join("");
+    }
+
     var store = new Kit.Store("probe:v1", null);
     var data = store.load() || { cur: {}, hidden: [], log: [], updated: 0 };
     NEEDS.forEach(function (n) { if (data.cur[n[0]] == null) data.cur[n[0]] = 60; });
@@ -206,6 +275,51 @@
           var entry = { t: Date.now(), v: v, o: overall(), note: el.querySelector("#fN").value.trim() };
           data.log.push(entry); save(); render(); close();
           Kit.toast("Check-in saved", "Undo", function () { var i = data.log.indexOf(entry); if (i >= 0) data.log.splice(i, 1); save(); render(); });
+        };
+      });
+    };
+    function latestEntry() {
+      if (!data.log.length) return null;
+      var e = data.log[data.log.length - 1], v = {};
+      NEEDS.forEach(function (n) { v[n[0]] = e.v[n[0]] != null ? e.v[n[0]] : data.cur[n[0]]; });
+      return { t: e.t, v: v, note: e.note || "" };
+    }
+    function slidersChangedSince(entry) {
+      return !entry || NEEDS.some(function (n) { return data.cur[n[0]] !== entry.v[n[0]]; });
+    }
+    function sendLink(url, name) {
+      var text = (name ? name + "'s" : "My") + " Probe check-in";
+      if (navigator.share) {
+        navigator.share({ title: text, text: text, url: url }).catch(function (e) { if (e && e.name !== "AbortError") copyLink(url); });
+      } else copyLink(url);
+    }
+    function copyLink(url) {
+      (navigator.clipboard ? navigator.clipboard.writeText(url) : Promise.reject()).then(function () { Kit.toast("Link copied. Paste it into a message."); })
+        .catch(function () { window.prompt("Copy this link:", url); });
+    }
+    document.getElementById("shareBtn").onclick = function () {
+      var entry = latestEntry(), stale = slidersChangedSince(entry);
+      Kit.sheet(function (el, close) {
+        var d = entry ? new Date(entry.t) : null;
+        el.innerHTML = "<div><h2>Share check-in</h2>" +
+          (stale
+            ? '<p class="hint">' + (entry ? "Your sliders have changed since your last check-in. " : "You haven't saved a check-in yet. ") + "Save them now, with an optional note, and share that.</p>" +
+              '<label for="fN">Note (included in the link)</label><textarea class="field" id="fN" rows="3" placeholder="How are you doing?"></textarea>'
+            : '<p class="hint">Shares your check-in from ' + esc(d.toLocaleDateString(undefined, { weekday: "short", day: "numeric", month: "short" }) + ", " + d.toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" })) +
+              ": all 15 needs" + (entry.note ? ", and its note" : "") + ".</p>") +
+          '<label for="fW">Your name (shown to them)</label><input class="field" id="fW" placeholder="e.g. Faiyaz" value="' + esc(data.shareName || "") + '" />' +
+          '<p class="hint" style="margin-top:10px">They\'ll see a read-only snapshot. Anyone with the link can see it.</p>' +
+          '<div class="actions"><button class="btn" id="fC">Cancel</button><button class="btn primary" id="fS">' + (stale ? "Save and share" : "Share") + "</button></div></div>";
+        el.querySelector("#fC").onclick = close;
+        el.querySelector("#fS").onclick = function () {
+          data.shareName = el.querySelector("#fW").value.trim();
+          if (stale) {
+            var v = {}; shown().forEach(function (n) { v[n[0]] = data.cur[n[0]]; });
+            data.log.push({ t: Date.now(), v: v, o: overall(), note: el.querySelector("#fN").value.trim() });
+            entry = latestEntry();
+          }
+          save(); render(); close();
+          sendLink(packShare(data.shareName, entry), data.shareName);
         };
       });
     };
