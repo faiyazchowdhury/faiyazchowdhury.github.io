@@ -1,0 +1,439 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Vault</title>
+  <meta name="description" content="A password-encrypted diary and private notes, stored only on this device." />
+  <meta name="robots" content="noindex" />
+  <meta name="theme-color" content="#0b0b10" media="(prefers-color-scheme: dark)" />
+  <meta name="theme-color" content="#f4f1ea" media="(prefers-color-scheme: light)" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Vault" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../shared/base.css" />
+  <style>
+    .lock { max-width: 420px; margin: 8vh auto 0; text-align: center; }
+    .lock .ic { font-size: 46px; }
+    .lock h2 { font-family: "Instrument Serif", Georgia, serif; font-weight: 400; font-size: 34px; margin-top: 8px; }
+    .lock p { color: var(--muted); font-size: 14.5px; line-height: 1.5; margin-top: 8px; }
+    .lock form { margin-top: 18px; display: grid; gap: 10px; text-align: left; }
+    .lock .btn { width: 100%; }
+    .warn { font-size: 13px; color: var(--warn); line-height: 1.45; }
+    .busy { color: var(--muted); font-size: 13.5px; min-height: 20px; text-align: center; }
+
+    .topbar { display: flex; align-items: center; gap: 10px; justify-content: space-between; }
+    .tabs { display: flex; }
+    .list { list-style: none; display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
+    .item { display: block; width: 100%; text-align: left; border: 0; background: var(--surface); border-radius: 14px; box-shadow: inset 0 0 0 1px var(--line); padding: 12px 14px; }
+    .item .t { font-weight: 600; font-size: 15.5px; }
+    .item .m { color: var(--muted); font-size: 12.5px; margin-top: 3px; }
+    .item .p { color: var(--muted); font-size: 13.5px; margin-top: 6px; line-height: 1.45; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .row { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+    .row .btn { flex: 1; min-width: 120px; }
+
+    .person { display: flex; gap: 12px; align-items: center; }
+    .score { width: 54px; height: 54px; border-radius: 16px; display: grid; place-items: center; flex: none; font-family: "Instrument Serif", Georgia, serif; font-size: 26px; color: #fff; }
+    .person .info { flex: 1; min-width: 0; }
+    .mini { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; margin-top: 8px; }
+    .mini i { display: block; height: 22px; border-radius: 4px; background: var(--surface-2); position: relative; overflow: hidden; }
+    .mini i b { position: absolute; left: 0; right: 0; bottom: 0; display: block; }
+    .mini-l { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; font-size: 9.5px; color: var(--muted); text-align: center; margin-top: 2px; }
+
+    .reader h2 { font-family: "Instrument Serif", Georgia, serif; font-weight: 400; font-size: 32px; line-height: 1.1; margin-top: 10px; }
+    .reader .m { color: var(--muted); font-size: 13px; margin-top: 6px; }
+    .convo { margin-top: 16px; display: flex; flex-direction: column; gap: 8px; }
+    .convo p { font-size: 15.5px; line-height: 1.55; white-space: pre-wrap; overflow-wrap: anywhere; }
+    .turn { max-width: 90%; padding: 9px 13px 10px; border-radius: 16px; font-size: 15px; line-height: 1.5; white-space: pre-wrap; overflow-wrap: anywhere; }
+    .turn .who { display: block; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); margin-bottom: 2px; }
+    .turn.me { align-self: flex-end; background: color-mix(in srgb, var(--accent) 18%, var(--surface)); border-bottom-right-radius: 5px; }
+    .turn.ai { align-self: flex-start; background: var(--surface-2); border-bottom-left-radius: 5px; }
+
+    .metric { margin-top: 14px; }
+    .metric .h { display: flex; align-items: baseline; gap: 8px; }
+    .metric .h b { font-weight: 600; font-size: 15px; }
+    .metric .h .v { margin-left: auto; font-family: "JetBrains Mono", monospace; font-size: 14px; }
+    .metric .d { color: var(--muted); font-size: 12.5px; line-height: 1.4; margin-top: 2px; }
+    .metric input[type="range"] { width: 100%; accent-color: var(--accent); height: 30px; }
+    .metric .na { display: inline-flex !important; align-items: center; gap: 6px; font-size: 12.5px !important; margin: 0 0 0 8px !important; color: var(--muted) !important; }
+    .metric.off input[type="range"] { opacity: .3; }
+    textarea.field { font-size: 15px; }
+    .garbage { font-family: "JetBrains Mono", monospace; font-size: 12.5px; line-height: 1.6; color: var(--muted); overflow-wrap: anywhere; white-space: pre-wrap; padding: 14px; }
+  </style>
+</head>
+<body>
+  <main id="app"></main>
+
+  <script src="../shared/store.js"></script>
+  <script>
+  (function () {
+    var esc = Kit.esc, uid = Kit.uid, app = document.getElementById("app");
+    var STORE = "vault:v1", ITER = 600000, IDLE_MS = 10 * 60 * 1000;
+    // Your seven relationship metrics. Weights are the long-term research-based estimates (they sum to 1).
+    var METRICS = [
+      ["trust", "Trust", "You believe they'll act in your interest and keep their word, even when you're not there.", 0.22],
+      ["care", "Care", "You empathize with them and look after them. Their pain is your pain.", 0.20],
+      ["like", "Like", "Being with them makes you happy. You enjoy their company.", 0.20],
+      ["appraise", "Appraise", "You value their opinion, in life or skill.", 0.15],
+      ["recognize", "Recognize", "They have consequence on your life or the world.", 0.10],
+      ["desire", "Desire", "You want them sexually.", 0.10],
+      ["crave", "Crave", "You want more of them. Healthy as wanting; a warning sign as needing.", 0.03]
+    ];
+    var OPTIONAL = { desire: 1, crave: 1 };
+
+    // ---------- Encoding helpers ----------
+    function b64(buf) { var s = "", a = new Uint8Array(buf); for (var i = 0; i < a.length; i++) s += String.fromCharCode(a[i]); return btoa(s); }
+    function unb64(str) { var s = atob(str), a = new Uint8Array(s.length); for (var i = 0; i < s.length; i++) a[i] = s.charCodeAt(i); return a; }
+    function rand(n) { return crypto.getRandomValues(new Uint8Array(n)); }
+    function stored() { try { return JSON.parse(localStorage.getItem(STORE) || "null"); } catch (e) { return null; } }
+
+    // ---------- Crypto: password → PBKDF2-SHA-256 → AES-256-GCM ----------
+    function deriveKey(pw, salt, iter, algo) {
+      return crypto.subtle.importKey("raw", new TextEncoder().encode(pw), "PBKDF2", false, ["deriveKey"]).then(function (base) {
+        return crypto.subtle.deriveKey({ name: "PBKDF2", salt: salt, iterations: iter, hash: "SHA-256" }, base,
+          { name: algo, length: 256 }, false, ["encrypt", "decrypt"]);
+      });
+    }
+    function encrypt(key, salt, obj) {
+      var iv = rand(12);
+      return crypto.subtle.encrypt({ name: "AES-GCM", iv: iv }, key, new TextEncoder().encode(JSON.stringify(obj))).then(function (ct) {
+        return { v: 1, kdf: "PBKDF2-SHA256", iter: ITER, salt: b64(salt), iv: b64(iv), ct: b64(ct) };
+      });
+    }
+    function decrypt(key, rec) {
+      return crypto.subtle.decrypt({ name: "AES-GCM", iv: unb64(rec.iv) }, key, unb64(rec.ct)).then(function (pt) {
+        return JSON.parse(new TextDecoder().decode(pt));
+      });
+    }
+    // A wrong password "decrypts" with the wrong key: the result is noise, shown as text.
+    function garbage(pw, rec) {
+      return deriveKey(pw, unb64(rec.salt), rec.iter, "AES-CTR").then(function (k) {
+        var ct = unb64(rec.ct), body = ct.slice(0, Math.max(16, ct.length - 16)), ctr = unb64(rec.iv);
+        var counter = new Uint8Array(16); counter.set(ctr);
+        return crypto.subtle.decrypt({ name: "AES-CTR", counter: counter, length: 64 }, k, body);
+      }).then(function (bytes) {
+        var a = new Uint8Array(bytes), out = "";
+        for (var i = 0; i < a.length && i < 6000; i++) out += a[i] % 11 === 0 ? " " : String.fromCharCode(33 + (a[i] % 94));
+        return out;
+      });
+    }
+
+    // ---------- Session (only in memory) ----------
+    var session = null; // { key, salt, data }
+    var view = { tab: "diary", open: null, q: "" };
+    var idleTimer = null;
+    function touch() { clearTimeout(idleTimer); if (session) idleTimer = setTimeout(lock, IDLE_MS); }
+    ["pointerdown", "keydown", "scroll"].forEach(function (ev) { document.addEventListener(ev, touch, { passive: true }); });
+    document.addEventListener("visibilitychange", function () { if (document.hidden && (session || app.dataset.state === "garbage")) lock(); });
+    function lock() {
+      session = null; clearTimeout(idleTimer);
+      document.querySelectorAll(".sheet-wrap").forEach(function (w) { w.remove(); document.body.style.overflow = ""; });
+      view = { tab: view.tab, open: null, q: "" };
+      showLock();
+    }
+    var saving = Promise.resolve();
+    function persist() {
+      if (!session) return;
+      var s = session;
+      saving = saving.then(function () { return encrypt(s.key, s.salt, s.data); }).then(function (rec) {
+        try { localStorage.setItem(STORE, JSON.stringify(rec)); } catch (e) { Kit.toast("Couldn't save: storage is full."); }
+      }).catch(function () { Kit.toast("Couldn't save that change."); });
+    }
+
+    // ---------- Lock / setup screens ----------
+    function showLock() {
+      app.dataset.state = "locked";
+      var rec = stored();
+      var setup = !rec;
+      app.innerHTML = '<a class="back" href="../">← Apps</a><section class="lock"><div class="ic">🔒</div><h2>' + (setup ? "Create your vault" : "Vault") + "</h2>" +
+        (setup ? "<p>Choose a password. It <b>is</b> the encryption key: your diary and ratings are scrambled with it and stored only on this phone.</p>" +
+                 '<p class="warn">If you forget it, nobody can recover your data, not even with the site\'s code. Use something you\'ll remember, at least 10 characters.</p>'
+               : "<p>Enter your password.</p>") +
+        '<form id="lf" autocomplete="off"><input class="field" id="pw" type="password" placeholder="Password" autocomplete="' + (setup ? "new-password" : "current-password") + '" />' +
+        (setup ? '<input class="field" id="pw2" type="password" placeholder="Same password again" autocomplete="new-password" />' : "") +
+        '<button class="btn primary" type="submit">' + (setup ? "Create vault" : "Unlock") + '</button></form><div class="busy" id="busy"></div>' +
+        (setup ? "" : '<div class="row" style="justify-content:center"><button class="linkbtn" id="restoreBtn">Restore an encrypted backup</button></div>') + "</section>";
+      var pw = document.getElementById("pw"); setTimeout(function () { pw.focus(); }, 50);
+      document.getElementById("lf").onsubmit = function (e) {
+        e.preventDefault();
+        var p = pw.value, busy = document.getElementById("busy");
+        if (setup) {
+          if (p.length < 10) { busy.textContent = "Use at least 10 characters."; return; }
+          if (p !== document.getElementById("pw2").value) { busy.textContent = "The two passwords don't match."; return; }
+          busy.textContent = "Creating…";
+          var salt = rand(16);
+          deriveKey(p, salt, ITER, "AES-GCM").then(function (key) {
+            session = { key: key, salt: salt, data: { diary: [], people: [] } };
+            return encrypt(key, salt, session.data);
+          }).then(function (rec2) { localStorage.setItem(STORE, JSON.stringify(rec2)); touch(); showApp(); });
+          return;
+        }
+        if (!p) return;
+        busy.textContent = "Unlocking…";
+        var salt2 = unb64(rec.salt);
+        deriveKey(p, salt2, rec.iter, "AES-GCM").then(function (key) {
+          return decrypt(key, rec).then(function (data) {
+            session = { key: key, salt: salt2, data: data };
+            data.diary = data.diary || []; data.people = data.people || [];
+            touch(); showApp();
+          });
+        }).catch(function () { return garbage(p, rec).then(showGarbage); });
+      };
+      var rb = document.getElementById("restoreBtn");
+      if (rb) rb.onclick = restoreBackup;
+    }
+    // What a wrong password produces: scrambled text, read-only, nothing saved.
+    function showGarbage(text) {
+      app.dataset.state = "garbage";
+      var chunks = [], i = 0;
+      while (i < text.length && chunks.length < 8) { var n = 120 + (text.charCodeAt(i) % 260); chunks.push(text.slice(i, i + n)); i += n; }
+      app.innerHTML = '<div class="topbar"><a class="back" href="../">← Apps</a><button class="btn small" id="lockBtn">🔒 Lock</button></div>' +
+        '<header class="app-head" style="margin-bottom:6px"><h1>Vault<em>.</em></h1></header>' +
+        '<ul class="list">' + chunks.map(function (c, k) {
+          return '<li class="card garbage">' + esc(c) + "</li>";
+        }).join("") + "</ul>";
+      document.getElementById("lockBtn").onclick = lock;
+    }
+
+    // ---------- Unlocked app ----------
+    function showApp() {
+      app.dataset.state = "open";
+      var d = session.data;
+      if (view.open) return view.open.kind === "entry" ? showEntry(view.open.id) : null;
+      app.innerHTML = '<div class="topbar"><a class="back" href="../">← Apps</a><button class="btn small" id="lockBtn">🔒 Lock</button></div>' +
+        '<header class="app-head" style="margin-bottom:12px"><h1>Vault<em>.</em></h1><p class="sub">Encrypted on this phone · locks when you leave</p></header>' +
+        '<div class="seg tabs" id="tabs"><button data-t="diary" style="flex:1">Diary · ' + d.diary.length + '</button><button data-t="people" style="flex:1">People · ' + d.people.length + "</button></div>" +
+        '<div id="pane"></div>' +
+        '<details class="about card"><summary>Security and backups</summary><div class="body">' +
+        "<p>Everything here is encrypted with AES-256 using a key made from your password (PBKDF2, 600,000 rounds). This phone stores only the scrambled version: never your password or the readable text. A wrong password shows scrambled noise instead of an error.</p>" +
+        "<p>The vault locks when you leave the app or after 10 minutes idle. Nothing here is uploaded anywhere.</p>" +
+        "<p><b>Forgetting the password means losing the data.</b> Keep an encrypted backup somewhere safe, such as Files or iCloud Drive. It's useless without your password.</p>" +
+        '<div class="backup"><button class="btn small primary" id="bkBtn">Download encrypted backup</button><button class="btn small" id="pwBtn">Change password</button>' +
+        '<button class="btn small" id="plainBtn">Export readable copy</button></div></div></details>';
+      document.querySelectorAll("#tabs button").forEach(function (b) {
+        b.setAttribute("aria-pressed", b.dataset.t === view.tab);
+        b.onclick = function () { view.tab = b.dataset.t; showApp(); };
+      });
+      document.getElementById("lockBtn").onclick = lock;
+      document.getElementById("bkBtn").onclick = function () {
+        saving.then(function () {
+          var blob = new Blob([localStorage.getItem(STORE)], { type: "application/json" });
+          Kit.saveFile(blob, "vault-encrypted-" + Kit.today() + ".json");
+        });
+      };
+      document.getElementById("pwBtn").onclick = changePassword;
+      document.getElementById("plainBtn").onclick = exportPlain;
+      if (view.tab === "diary") renderDiary(); else renderPeople();
+    }
+
+    // ----- Diary -----
+    function renderDiary() {
+      var d = session.data, q = view.q.toLowerCase();
+      var list = d.diary.slice().sort(function (a, b) { return b.date - a.date; })
+        .filter(function (e) { return !q || (e.title + " " + e.source + " " + e.text).toLowerCase().indexOf(q) >= 0; });
+      document.getElementById("pane").innerHTML =
+        '<div class="row"><button class="btn primary" id="addEntry">+ Add conversation</button><button class="btn" id="fileEntry">Import a text file</button></div>' +
+        (d.diary.length > 3 ? '<input class="field" id="dq" type="search" placeholder="Search the diary" style="margin-top:10px" value="' + esc(view.q) + '" />' : "") +
+        '<ul class="list">' + list.map(function (e) {
+          return '<li><button class="item" data-e="' + e.id + '"><div class="t">' + esc(e.title || "Untitled") + '</div><div class="m">' +
+            esc(new Date(e.date).toLocaleDateString(undefined, { day: "numeric", month: "short", year: "numeric" })) + (e.source ? " · " + esc(e.source) : "") +
+            '</div><div class="p">' + esc(e.text.slice(0, 220)) + "</div></button></li>";
+        }).join("") + "</ul>" +
+        (d.diary.length ? "" : '<p class="empty">No conversations yet. Copy a chat from an AI app and paste it in.</p>');
+      document.getElementById("addEntry").onclick = function () { editEntry(null); };
+      document.getElementById("fileEntry").onclick = importFile;
+      var dq = document.getElementById("dq");
+      if (dq) dq.oninput = function () { view.q = dq.value; renderDiary(); var n = document.getElementById("dq"); n.focus(); n.setSelectionRange(n.value.length, n.value.length); };
+      document.querySelectorAll("[data-e]").forEach(function (b) { b.onclick = function () { view.open = { kind: "entry", id: b.dataset.e }; showEntry(b.dataset.e); }; });
+    }
+    var ME = /^(you|me|user|human|i|q|faiyaz)\s*:\s*/i, AI = /^(claude|chatgpt|gpt|assistant|ai|gemini|copilot|a|bot)\s*:\s*/i;
+    function convoHtml(text) {
+      var blocks = [], cur = null;
+      text.replace(/\r\n/g, "\n").split("\n").forEach(function (line) {
+        var m = ME.exec(line), a = AI.exec(line);
+        if (m || a) { cur = { who: m ? "me" : "ai", label: (m || a)[1], text: line.slice((m || a)[0].length) }; blocks.push(cur); return; }
+        if (cur) cur.text += "\n" + line; else blocks.push({ who: null, text: line });
+      });
+      if (!blocks.some(function (b) { return b.who; })) return text.split(/\n{2,}/).map(function (p) { return "<p>" + esc(p) + "</p>"; }).join("");
+      return blocks.map(function (b) {
+        var t = b.text.replace(/^\n+|\n+$/g, "");
+        if (!b.who) return t ? "<p>" + esc(t) + "</p>" : "";
+        return '<div class="turn ' + b.who + '"><span class="who">' + esc(b.label) + "</span>" + esc(t) + "</div>";
+      }).join("");
+    }
+    function showEntry(id) {
+      var e = session.data.diary.find(function (x) { return x.id === id; });
+      if (!e) { view.open = null; return showApp(); }
+      app.innerHTML = '<div class="topbar"><button class="linkbtn" id="backList" style="text-decoration:none">← Diary</button><button class="btn small" id="lockBtn">🔒 Lock</button></div>' +
+        '<article class="reader"><h2>' + esc(e.title || "Untitled") + '</h2><div class="m">' + esc(new Date(e.date).toLocaleDateString(undefined, { weekday: "short", day: "numeric", month: "long", year: "numeric" })) +
+        (e.source ? " · " + esc(e.source) : "") + '</div><div class="convo">' + convoHtml(e.text) + "</div>" +
+        '<div class="row"><button class="btn" id="editE">Edit</button><button class="btn" id="copyE">Copy text</button></div></article>';
+      document.getElementById("backList").onclick = function () { view.open = null; showApp(); };
+      document.getElementById("lockBtn").onclick = lock;
+      document.getElementById("editE").onclick = function () { editEntry(e); };
+      document.getElementById("copyE").onclick = function () { navigator.clipboard && navigator.clipboard.writeText(e.text).then(function () { Kit.toast("Copied"); }); };
+      scrollTo(0, 0);
+    }
+    function editEntry(e, prefill) {
+      Kit.sheet(function (el, close) {
+        var dateStr = new Date(e ? e.date : Date.now()); dateStr = dateStr.getFullYear() + "-" + String(dateStr.getMonth() + 1).padStart(2, "0") + "-" + String(dateStr.getDate()).padStart(2, "0");
+        el.innerHTML = "<div><h2>" + (e ? "Edit conversation" : "New conversation") + "</h2>" +
+          '<label for="fT">Title</label><input class="field" id="fT" placeholder="What was it about?" value="' + esc(e ? e.title : (prefill && prefill.title) || "") + '" />' +
+          '<div style="display:flex;gap:8px"><div style="flex:1"><label for="fS">With</label><input class="field" id="fS" placeholder="Claude, ChatGPT…" value="' + esc(e ? e.source : "Claude") + '" /></div>' +
+          '<div style="flex:1"><label for="fD">Date</label><input class="field" id="fD" type="date" value="' + dateStr + '" /></div></div>' +
+          '<label for="fX">Conversation</label><textarea class="field" id="fX" rows="12" placeholder="Paste the conversation. Lines starting with &quot;You:&quot; and &quot;Claude:&quot; show as chat bubbles.">' + esc(e ? e.text : (prefill && prefill.text) || "") + "</textarea>" +
+          '<div class="actions">' + (e ? '<button class="btn" id="fDel" style="color:var(--bad)">Delete</button>' : "") + '<button class="btn" id="fC">Cancel</button><button class="btn primary" id="fOk">Save</button></div></div>';
+        el.querySelector("#fC").onclick = close;
+        el.querySelector("#fOk").onclick = function () {
+          var text = el.querySelector("#fX").value; if (!text.trim()) return;
+          var dv = el.querySelector("#fD").value, dt = dv ? new Date(dv + "T12:00:00").getTime() : Date.now();
+          var o = e || { id: uid() };
+          o.title = el.querySelector("#fT").value.trim(); o.source = el.querySelector("#fS").value.trim(); o.text = text; o.date = dt;
+          if (!e) session.data.diary.push(o);
+          persist(); close();
+          if (view.open) showEntry(o.id); else showApp();
+          Kit.toast("Saved, encrypted");
+        };
+        if (e) el.querySelector("#fDel").onclick = function () {
+          if (!confirm("Delete this conversation?")) return;
+          session.data.diary = session.data.diary.filter(function (x) { return x !== e; });
+          persist(); close(); view.open = null; showApp();
+        };
+      });
+    }
+    function importFile() {
+      var input = document.createElement("input"); input.type = "file"; input.accept = ".txt,.md,text/plain,text/markdown";
+      input.onchange = function () {
+        var f = input.files && input.files[0]; if (!f) return;
+        f.text().then(function (t) { editEntry(null, { title: f.name.replace(/\.(txt|md)$/i, ""), text: t }); });
+      };
+      input.click();
+    }
+
+    // ----- People -----
+    function scoreOf(p) {
+      var sum = 0, w = 0;
+      METRICS.forEach(function (m) { if (p.na && p.na[m[0]]) return; sum += (p.s[m[0]] || 0) * m[3]; w += m[3]; });
+      return w ? sum / w : 0;
+    }
+    function hue(score) { return Math.round(score * 12.5); }
+    function renderPeople() {
+      var d = session.data;
+      var list = d.people.slice().sort(function (a, b) { return scoreOf(b) - scoreOf(a); });
+      document.getElementById("pane").innerHTML =
+        '<div class="row"><button class="btn primary" id="addP">+ Add person</button></div>' +
+        '<ul class="list">' + list.map(function (p) {
+          var sc = scoreOf(p);
+          return '<li><button class="item" data-p="' + p.id + '"><div class="person"><span class="score" style="background:hsl(' + hue(sc) + ',55%,45%)">' + sc.toFixed(1) + "</span>" +
+            '<div class="info"><div class="t">' + esc(p.name) + '</div><div class="m">' + esc(p.relation || "") + (p.updated ? (p.relation ? " · " : "") + "rated " + esc(new Date(p.updated).toLocaleDateString(undefined, { day: "numeric", month: "short" })) : "") + "</div>" +
+            '<div class="mini">' + METRICS.map(function (m) {
+              var na = p.na && p.na[m[0]], v = p.s[m[0]] || 0;
+              return "<i>" + (na ? "" : '<b style="height:' + v * 10 + "%;background:hsl(" + hue(v) + ',55%,48%)"></b>') + "</i>";
+            }).join("") + '</div><div class="mini-l">' + METRICS.map(function (m) { return "<span>" + m[1].slice(0, 3) + "</span>"; }).join("") + "</div></div></div></button></li>";
+        }).join("") + "</ul>" +
+        (d.people.length ? '<p class="hint" style="margin-top:12px">The score is a weighted average out of 10: Trust 22%, Care 20%, Like 20%, Appraise 15%, Recognize 10%, Desire 10%, Crave 3%. Metrics marked n/a are left out.</p>'
+          : '<p class="empty">Add the people in your life and rate how you feel toward each.</p>');
+      document.getElementById("addP").onclick = function () { editPerson(null); };
+      document.querySelectorAll("[data-p]").forEach(function (b) { b.onclick = function () { editPerson(d.people.find(function (x) { return x.id === b.dataset.p; })); }; });
+    }
+    function editPerson(p) {
+      var s = {}, na = {};
+      METRICS.forEach(function (m) { s[m[0]] = p ? (p.s[m[0]] || 0) : 5; na[m[0]] = p ? !!(p.na && p.na[m[0]]) : !!OPTIONAL[m[0]]; });
+      Kit.sheet(function (el, close) {
+        el.innerHTML = "<div><h2>" + (p ? esc(p.name) : "New person") + "</h2>" +
+          '<div style="display:flex;gap:8px"><div style="flex:1.4"><label for="fN">Name</label><input class="field" id="fN" value="' + esc(p ? p.name : "") + '" /></div>' +
+          '<div style="flex:1"><label for="fR">Relation</label><input class="field" id="fR" placeholder="Friend, family…" value="' + esc(p ? p.relation || "" : "") + '" /></div></div>' +
+          METRICS.map(function (m) {
+            return '<div class="metric' + (na[m[0]] ? " off" : "") + '" id="m-' + m[0] + '"><div class="h"><b>' + m[1] + "</b>" +
+              (OPTIONAL[m[0]] ? '<label class="na"><input type="checkbox" data-na="' + m[0] + '"' + (na[m[0]] ? " checked" : "") + " /> n/a</label>" : "") +
+              '<span class="v" id="v-' + m[0] + '">' + (na[m[0]] ? "–" : s[m[0]]) + '</span></div><div class="d">' + esc(m[2]) + "</div>" +
+              '<input type="range" min="0" max="10" step="1" value="' + s[m[0]] + '" data-m="' + m[0] + '" aria-label="' + m[1] + '"' + (na[m[0]] ? " disabled" : "") + " /></div>";
+          }).join("") +
+          '<label for="fO">Notes</label><textarea class="field" id="fO" rows="3" placeholder="Anything worth remembering">' + esc(p ? p.note || "" : "") + "</textarea>" +
+          '<div class="actions">' + (p ? '<button class="btn" id="fDel" style="color:var(--bad)">Delete</button>' : "") + '<button class="btn" id="fC">Cancel</button><button class="btn primary" id="fOk">Save</button></div></div>';
+        el.addEventListener("input", function (ev) {
+          var k = ev.target.dataset.m; if (!k) return;
+          s[k] = +ev.target.value; el.querySelector("#v-" + k).textContent = s[k];
+        });
+        el.addEventListener("change", function (ev) {
+          var k = ev.target.dataset.na; if (!k) return;
+          na[k] = ev.target.checked;
+          el.querySelector("#m-" + k).classList.toggle("off", na[k]);
+          el.querySelector('[data-m="' + k + '"]').disabled = na[k];
+          el.querySelector("#v-" + k).textContent = na[k] ? "–" : s[k];
+        });
+        el.querySelector("#fC").onclick = close;
+        el.querySelector("#fOk").onclick = function () {
+          var name = el.querySelector("#fN").value.trim(); if (!name) return;
+          var o = p || { id: uid(), hist: [] };
+          var changed = !p || METRICS.some(function (m) { return o.s[m[0]] !== s[m[0]] || !!(o.na && o.na[m[0]]) !== na[m[0]]; });
+          o.name = name; o.relation = el.querySelector("#fR").value.trim(); o.note = el.querySelector("#fO").value;
+          o.s = Object.assign({}, s); o.na = Object.assign({}, na);
+          if (changed) { o.updated = Date.now(); (o.hist = o.hist || []).push({ t: o.updated, s: Object.assign({}, s), na: Object.assign({}, na) }); }
+          if (!p) session.data.people.push(o);
+          persist(); close(); showApp();
+          if (!na.crave && s.crave >= 9) Kit.toast("High Crave: check it's wanting, not needing.");
+        };
+        if (p) el.querySelector("#fDel").onclick = function () {
+          if (!confirm("Delete " + p.name + "?")) return;
+          session.data.people = session.data.people.filter(function (x) { return x !== p; });
+          persist(); close(); showApp();
+        };
+      });
+    }
+
+    // ----- Backups and password -----
+    function restoreBackup() {
+      var input = document.createElement("input"); input.type = "file"; input.accept = "application/json,.json";
+      input.onchange = function () {
+        var f = input.files && input.files[0]; if (!f) return;
+        f.text().then(function (t) {
+          var rec; try { rec = JSON.parse(t); } catch (e) {}
+          if (!rec || rec.v !== 1 || !rec.ct || !rec.salt || !rec.iv) { alert("That isn't a Vault backup."); return; }
+          if (stored() && !confirm("Replace the vault on this phone with this backup? The current vault will be overwritten.")) return;
+          localStorage.setItem(STORE, JSON.stringify(rec)); lock(); Kit.toast("Backup restored. Unlock it with its password.");
+        });
+      };
+      input.click();
+    }
+    function changePassword() {
+      Kit.sheet(function (el, close) {
+        el.innerHTML = '<div><h2>Change password</h2><p class="hint">Your data is re-encrypted with the new password. Old encrypted backups still need the old password.</p>' +
+          '<label for="p1">New password</label><input class="field" id="p1" type="password" autocomplete="new-password" />' +
+          '<label for="p2">Again</label><input class="field" id="p2" type="password" autocomplete="new-password" /><div class="busy" id="cb"></div>' +
+          '<div class="actions"><button class="btn" id="fC">Cancel</button><button class="btn primary" id="fOk">Change</button></div></div>';
+        el.querySelector("#fC").onclick = close;
+        el.querySelector("#fOk").onclick = function () {
+          var a = el.querySelector("#p1").value, b = el.querySelector("#p2").value, cb = el.querySelector("#cb");
+          if (a.length < 10) { cb.textContent = "Use at least 10 characters."; return; }
+          if (a !== b) { cb.textContent = "They don't match."; return; }
+          cb.textContent = "Re-encrypting…";
+          var salt = rand(16);
+          deriveKey(a, salt, ITER, "AES-GCM").then(function (key) {
+            session.key = key; session.salt = salt; persist(); return saving;
+          }).then(function () { close(); Kit.toast("Password changed"); });
+        };
+      });
+    }
+    function exportPlain() {
+      if (!confirm("This saves a readable, unencrypted copy of your diary and ratings. Anyone who opens the file can read it. Continue?")) return;
+      var d = session.data;
+      var md = "# Vault export\n\nExported " + Kit.stamp(Date.now()) + ". This file is NOT encrypted.\n\n## People\n\n| Name | Relation | Score | " + METRICS.map(function (m) { return m[1]; }).join(" | ") + " |\n|---|---|---|" + METRICS.map(function () { return "---"; }).join("|") + "|\n" +
+        d.people.map(function (p) { return "| " + p.name + " | " + (p.relation || "") + " | " + scoreOf(p).toFixed(1) + " | " + METRICS.map(function (m) { return p.na && p.na[m[0]] ? "n/a" : p.s[m[0]]; }).join(" | ") + " |"; }).join("\n") +
+        "\n\n## Diary\n\n" + d.diary.slice().sort(function (a, b) { return a.date - b.date; }).map(function (e) {
+          return "### " + (e.title || "Untitled") + "\n\n" + Kit.stamp(e.date).slice(0, 10) + (e.source ? " · " + e.source : "") + "\n\n" + e.text + "\n";
+        }).join("\n");
+      var rows = [["Name", "Relation", "Score"].concat(METRICS.map(function (m) { return m[1]; })).concat(["Notes", "Last rated"])].concat(d.people.map(function (p) {
+        return [p.name, p.relation || "", scoreOf(p).toFixed(1)].concat(METRICS.map(function (m) { return p.na && p.na[m[0]] ? "n/a" : p.s[m[0]]; })).concat([p.note || "", p.updated ? Kit.stamp(p.updated) : ""]);
+      }));
+      Kit.exportData("vault", [{ name: "people.csv", rows: rows }, { name: "diary.csv", rows: [["Date", "Title", "With", "Conversation"]].concat(d.diary.map(function (e) { return [Kit.stamp(e.date), e.title, e.source, e.text]; })) }], md, d);
+    }
+
+    showLock();
+  })();
+  </script>
+</body>
+</html>

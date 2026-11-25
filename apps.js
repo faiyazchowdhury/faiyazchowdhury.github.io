@@ -40,6 +40,14 @@ window.APPS = [
     section: "Lifestyle",
   },
   {
+    slug: "vault",
+    name: "Vault",
+    blurb: "Password-encrypted diary and people ratings, on this phone only",
+    glyph: "🔒",
+    hue: 230,
+    section: "Lifestyle",
+  },
+  {
     slug: "learn",
     name: "Learn",
     blurb: "Cognitive science topics, with a confidence rating for each",
